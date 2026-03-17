@@ -18,6 +18,8 @@ const sitemapRoutes = [
   { path: "/delay-interest", changefreq: "monthly", priority: "0.8" },
   { path: "/jeonse-vs-wolse", changefreq: "monthly", priority: "0.8" },
   { path: "/brokerage-fee", changefreq: "monthly", priority: "0.8" },
+  { path: "/first-home", changefreq: "monthly", priority: "0.8" },
+  { path: "/housing-subscription", changefreq: "monthly", priority: "0.8" },
   { path: "/about", changefreq: "monthly", priority: "0.4" },
   { path: "/terms", changefreq: "yearly", priority: "0.3" },
   { path: "/privacy", changefreq: "yearly", priority: "0.3" },

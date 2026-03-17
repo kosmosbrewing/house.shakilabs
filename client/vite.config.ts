@@ -58,6 +58,8 @@ export default defineConfig({
         "/delay-interest",
         "/jeonse-vs-wolse",
         "/brokerage-fee",
+        "/first-home",
+        "/housing-subscription",
         "/about",
         "/terms",
         "/privacy",

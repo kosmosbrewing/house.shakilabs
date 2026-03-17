@@ -25,10 +25,21 @@ export const routes: RouteRecordRaw[] = [
     name: "BrokerageFee",
     component: () => import("@/views/BrokerageFeeView.vue"),
   },
+  {
+    path: "/first-home",
+    name: "FirstHome",
+    component: () => import("@/views/FirstHomeView.vue"),
+  },
+  {
+    path: "/housing-subscription",
+    name: "HousingSubscription",
+    component: () => import("@/views/HousingSubscriptionView.vue"),
+  },
   { path: "/interest", redirect: "/delay-interest" },
   { path: "/jeonse", redirect: "/jeonse-vs-wolse" },
   { path: "/rent-compare", redirect: "/jeonse-vs-wolse" },
   { path: "/commission", redirect: "/brokerage-fee" },
+  { path: "/score", redirect: "/housing-subscription" },
 
   {
     path: "/about",

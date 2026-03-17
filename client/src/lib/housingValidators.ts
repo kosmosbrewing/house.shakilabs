@@ -4,6 +4,8 @@ import type { BrokerageDealType } from "@/data/brokerageRates";
 import type {
   BrokerageFeeInput,
   DelayInterestInput,
+  FirstHomeBenefitInput,
+  HousingSubscriptionInput,
   JeonseVsWolseInput,
 } from "@/utils/housingCalculator";
 
@@ -29,6 +31,20 @@ export const DEFAULT_BROKERAGE_FEE_INPUT: BrokerageFeeInput = {
   monthlyRent: 0,
 };
 
+export const DEFAULT_FIRST_HOME_INPUT: FirstHomeBenefitInput = {
+  homePrice: 550_000_000,
+  annualIncome: 60_000_000,
+  isFirstHomeBuyer: true,
+  isRegulatedArea: false,
+  isNewlywedOrMultiChild: false,
+};
+
+export const DEFAULT_HOUSING_SUBSCRIPTION_INPUT: HousingSubscriptionInput = {
+  homelessYears: 6,
+  dependents: 1,
+  accountYears: 4,
+};
+
 const delayInterestSchema = z.object({
   depositAmount: z.number().int().min(1_000_000).max(5_000_000_000),
   overdueDays: z.number().int().min(1).max(730),
@@ -47,6 +63,20 @@ const brokerageFeeSchema = z.object({
   dealType: z.enum(dealTypeValues),
   amount: z.number().int().min(0).max(10_000_000_000),
   monthlyRent: z.number().int().min(0).max(20_000_000),
+});
+
+const firstHomeSchema = z.object({
+  homePrice: z.number().int().min(100_000_000).max(2_000_000_000),
+  annualIncome: z.number().int().min(0).max(300_000_000),
+  isFirstHomeBuyer: z.boolean(),
+  isRegulatedArea: z.boolean(),
+  isNewlywedOrMultiChild: z.boolean(),
+});
+
+const housingSubscriptionSchema = z.object({
+  homelessYears: z.number().min(0).max(30),
+  dependents: z.number().int().min(0).max(6),
+  accountYears: z.number().min(0).max(30),
 });
 
 function toNumber(value: unknown): number | null {
@@ -113,4 +143,42 @@ export function sanitizeBrokerageFeeInput(input: Partial<Record<keyof BrokerageF
 
   const parsed = brokerageFeeSchema.safeParse(candidate);
   return parsed.success ? parsed.data : DEFAULT_BROKERAGE_FEE_INPUT;
+}
+
+export function sanitizeFirstHomeInput(input: Partial<Record<keyof FirstHomeBenefitInput, unknown>>): FirstHomeBenefitInput {
+  const candidate: FirstHomeBenefitInput = {
+    homePrice: clampInt(input.homePrice, DEFAULT_FIRST_HOME_INPUT.homePrice, 100_000_000, 2_000_000_000),
+    annualIncome: clampInt(input.annualIncome, DEFAULT_FIRST_HOME_INPUT.annualIncome, 0, 300_000_000),
+    isFirstHomeBuyer: Boolean(input.isFirstHomeBuyer ?? DEFAULT_FIRST_HOME_INPUT.isFirstHomeBuyer),
+    isRegulatedArea: Boolean(input.isRegulatedArea ?? DEFAULT_FIRST_HOME_INPUT.isRegulatedArea),
+    isNewlywedOrMultiChild: Boolean(
+      input.isNewlywedOrMultiChild ?? DEFAULT_FIRST_HOME_INPUT.isNewlywedOrMultiChild
+    ),
+  };
+
+  const parsed = firstHomeSchema.safeParse(candidate);
+  return parsed.success ? parsed.data : DEFAULT_FIRST_HOME_INPUT;
+}
+
+export function sanitizeHousingSubscriptionInput(
+  input: Partial<Record<keyof HousingSubscriptionInput, unknown>>
+): HousingSubscriptionInput {
+  const candidate: HousingSubscriptionInput = {
+    homelessYears: clampFloat(
+      input.homelessYears,
+      DEFAULT_HOUSING_SUBSCRIPTION_INPUT.homelessYears,
+      0,
+      30
+    ),
+    dependents: clampInt(input.dependents, DEFAULT_HOUSING_SUBSCRIPTION_INPUT.dependents, 0, 6),
+    accountYears: clampFloat(
+      input.accountYears,
+      DEFAULT_HOUSING_SUBSCRIPTION_INPUT.accountYears,
+      0,
+      30
+    ),
+  };
+
+  const parsed = housingSubscriptionSchema.safeParse(candidate);
+  return parsed.success ? parsed.data : DEFAULT_HOUSING_SUBSCRIPTION_INPUT;
 }

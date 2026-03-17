@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   calculateBrokerageFee,
   calculateDelayInterest,
+  calculateFirstHomeBenefits,
+  calculateHousingSubscriptionScore,
   calculateJeonseVsWolse,
 } from "@/utils/housingCalculator";
 
@@ -78,5 +80,36 @@ describe("calculateBrokerageFee", () => {
     const result = calculateBrokerageFee({ dealType: "monthly", amount: 10_000_000, monthlyRent: 300_000 });
     expect(result.dealAmount).toBe(31_000_000);
     expect(Math.round(result.maxFee)).toBe(155_000);
+  });
+});
+
+describe("calculateFirstHomeBenefits", () => {
+  it("비규제지역 생애최초는 LTV 80%와 취득세 감면을 계산한다", () => {
+    const result = calculateFirstHomeBenefits({
+      homePrice: 500_000_000,
+      annualIncome: 60_000_000,
+      isFirstHomeBuyer: true,
+      isRegulatedArea: false,
+      isNewlywedOrMultiChild: false,
+    });
+
+    expect(result.estimatedTaxRelief).toBe(2_000_000);
+    expect(result.didimdolLoanAmount).toBe(300_000_000);
+    expect(result.requiredCash).toBe(200_000_000);
+  });
+});
+
+describe("calculateHousingSubscriptionScore", () => {
+  it("청약가점 3개 항목을 합산한다", () => {
+    const result = calculateHousingSubscriptionScore({
+      homelessYears: 6,
+      dependents: 2,
+      accountYears: 4,
+    });
+
+    expect(result.homelessScore).toBe(14);
+    expect(result.dependentScore).toBe(15);
+    expect(result.accountScore).toBe(6);
+    expect(result.totalScore).toBe(35);
   });
 });
