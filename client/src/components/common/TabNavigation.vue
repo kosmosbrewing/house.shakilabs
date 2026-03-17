@@ -11,6 +11,7 @@ const tabs = [
   { key: "brokerage", label: "중개보수", to: "/brokerage-fee" },
   { key: "first-home", label: "생애최초", to: "/first-home" },
   { key: "subscription", label: "청약가점", to: "/housing-subscription" },
+  { key: "property-tax", label: "보유세", to: "/property-tax" },
 ] as const;
 
 const activePath = computed(() => route.path);
@@ -22,6 +23,7 @@ function isActiveTab(key: (typeof tabs)[number]["key"]): boolean {
   if (key === "brokerage") return activePath.value === "/brokerage-fee";
   if (key === "first-home") return activePath.value === "/first-home";
   if (key === "subscription") return activePath.value === "/housing-subscription";
+  if (key === "property-tax") return activePath.value === "/property-tax";
   return false;
 }
 </script>
