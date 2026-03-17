@@ -1,8 +1,51 @@
 <script setup lang="ts">
+import type { Component } from "vue";
+import { RouterLink } from "vue-router";
+import { Clock, Scale, Landmark, ShieldCheck, Award, ArrowRight } from "lucide-vue-next";
+import { ActionCard } from "@/components/ui/action-card";
+import { buttonVariants } from "@/components/ui/button";
 import RelatedServices from "@/components/common/RelatedServices.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
-import { RouterLink } from "vue-router";
-import { buttonVariants } from "@/components/ui/button";
+
+type ToolItem = {
+  title: string;
+  desc: string;
+  to: string;
+  icon: Component;
+};
+
+const tools: ToolItem[] = [
+  {
+    title: "보증금 반환 지연이자",
+    desc: "연 12% 가정 기준의 예상 지연이자를 빠르게 확인합니다.",
+    to: "/delay-interest",
+    icon: Clock,
+  },
+  {
+    title: "전세 vs 월세",
+    desc: "보증금 기회비용을 반영해 손익분기 월세를 계산합니다.",
+    to: "/jeonse-vs-wolse",
+    icon: Scale,
+  },
+  {
+    title: "주택 중개보수",
+    desc: "매매·전세·월세의 상한요율과 최대 보수를 계산합니다.",
+    to: "/brokerage-fee",
+    icon: Landmark,
+  },
+  {
+    title: "생애최초 혜택",
+    desc: "취득세 감면과 디딤돌 한도를 동시에 체크합니다.",
+    to: "/first-home",
+    icon: ShieldCheck,
+  },
+  {
+    title: "청약 가점",
+    desc: "무주택기간, 부양가족, 가입기간 점수를 합산합니다.",
+    to: "/housing-subscription",
+    icon: Award,
+  },
+];
 
 const faqItems = [
   {
@@ -51,36 +94,27 @@ const faqJsonLd = {
           모바일에서도 즉시 결과를 볼 수 있습니다.
         </p>
         <div class="grid gap-3 md:grid-cols-3">
-          <RouterLink class="retro-panel-muted p-4 hover:border-primary/60" to="/delay-interest">
-            <p class="text-heading font-bold">보증금 반환 지연이자</p>
-            <p class="mt-2 text-caption leading-relaxed text-muted-foreground">
-              연 12% 가정 기준의 예상 지연이자를 빠르게 확인합니다.
-            </p>
-          </RouterLink>
-          <RouterLink class="retro-panel-muted p-4 hover:border-primary/60" to="/jeonse-vs-wolse">
-            <p class="text-heading font-bold">전세 vs 월세</p>
-            <p class="mt-2 text-caption leading-relaxed text-muted-foreground">
-              보증금 기회비용을 반영해 손익분기 월세를 계산합니다.
-            </p>
-          </RouterLink>
-          <RouterLink class="retro-panel-muted p-4 hover:border-primary/60" to="/brokerage-fee">
-            <p class="text-heading font-bold">주택 중개보수</p>
-            <p class="mt-2 text-caption leading-relaxed text-muted-foreground">
-              매매·전세·월세의 상한요율과 최대 보수를 계산합니다.
-            </p>
-          </RouterLink>
-          <RouterLink class="retro-panel-muted p-4 hover:border-primary/60" to="/first-home">
-            <p class="text-heading font-bold">생애최초 혜택</p>
-            <p class="mt-2 text-caption leading-relaxed text-muted-foreground">
-              취득세 감면과 디딤돌 한도를 동시에 체크합니다.
-            </p>
-          </RouterLink>
-          <RouterLink class="retro-panel-muted p-4 hover:border-primary/60" to="/housing-subscription">
-            <p class="text-heading font-bold">청약 가점</p>
-            <p class="mt-2 text-caption leading-relaxed text-muted-foreground">
-              무주택기간, 부양가족, 가입기간 점수를 합산합니다.
-            </p>
-          </RouterLink>
+          <ActionCard
+            v-for="tool in tools"
+            :key="tool.to"
+            as-child
+          >
+            <RouterLink :to="tool.to">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <p class="text-heading font-bold text-foreground">{{ tool.title }}</p>
+                  <p class="mt-2 text-caption leading-relaxed text-muted-foreground">{{ tool.desc }}</p>
+                </div>
+                <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-primary/12 text-primary">
+                  <component :is="tool.icon" class="h-5 w-5" />
+                </span>
+              </div>
+              <p class="mt-3 inline-flex items-center gap-1 text-caption font-semibold text-primary">
+                계산하기
+                <ArrowRight class="h-3.5 w-3.5" />
+              </p>
+            </RouterLink>
+          </ActionCard>
         </div>
       </div>
     </div>
