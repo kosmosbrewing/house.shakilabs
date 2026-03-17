@@ -60,6 +60,7 @@ export default defineConfig({
         "/brokerage-fee",
         "/first-home",
         "/housing-subscription",
+        "/property-tax",
         "/about",
         "/terms",
         "/privacy",

@@ -7,6 +7,8 @@ import type {
   FirstHomeBenefitInput,
   HousingSubscriptionInput,
   JeonseVsWolseInput,
+  PropertyTaxInput,
+  HousingType,
 } from "@/utils/housingCalculator";
 
 const dealTypeValues = ["sale", "jeonse", "monthly"] as const;
@@ -45,6 +47,14 @@ export const DEFAULT_HOUSING_SUBSCRIPTION_INPUT: HousingSubscriptionInput = {
   accountYears: 4,
 };
 
+export const DEFAULT_PROPERTY_TAX_INPUT: PropertyTaxInput = {
+  marketPrice: 1_200_000_000,
+  isUrbanArea: true,
+  ownerAge: 45,
+  holdingYears: 5,
+  housingType: "apartment",
+};
+
 const delayInterestSchema = z.object({
   depositAmount: z.number().int().min(1_000_000).max(5_000_000_000),
   overdueDays: z.number().int().min(1).max(730),
@@ -77,6 +87,16 @@ const housingSubscriptionSchema = z.object({
   homelessYears: z.number().min(0).max(30),
   dependents: z.number().int().min(0).max(6),
   accountYears: z.number().min(0).max(30),
+});
+
+const housingTypeValues = ["apartment", "detached"] as const;
+
+const propertyTaxSchema = z.object({
+  marketPrice: z.number().int().min(100_000_000).max(50_000_000_000),
+  isUrbanArea: z.boolean(),
+  ownerAge: z.number().int().min(20).max(100),
+  holdingYears: z.number().int().min(0).max(50),
+  housingType: z.enum(housingTypeValues),
 });
 
 function toNumber(value: unknown): number | null {
@@ -181,4 +201,25 @@ export function sanitizeHousingSubscriptionInput(
 
   const parsed = housingSubscriptionSchema.safeParse(candidate);
   return parsed.success ? parsed.data : DEFAULT_HOUSING_SUBSCRIPTION_INPUT;
+}
+
+function parseHousingType(value: unknown): HousingType | null {
+  return typeof value === "string" && housingTypeValues.includes(value as HousingType)
+    ? (value as HousingType)
+    : null;
+}
+
+export function sanitizePropertyTaxInput(
+  input: Partial<Record<keyof PropertyTaxInput, unknown>>
+): PropertyTaxInput {
+  const candidate: PropertyTaxInput = {
+    marketPrice: clampInt(input.marketPrice, DEFAULT_PROPERTY_TAX_INPUT.marketPrice, 100_000_000, 50_000_000_000),
+    isUrbanArea: typeof input.isUrbanArea === "boolean" ? input.isUrbanArea : DEFAULT_PROPERTY_TAX_INPUT.isUrbanArea,
+    ownerAge: clampInt(input.ownerAge, DEFAULT_PROPERTY_TAX_INPUT.ownerAge, 20, 100),
+    holdingYears: clampInt(input.holdingYears, DEFAULT_PROPERTY_TAX_INPUT.holdingYears, 0, 50),
+    housingType: parseHousingType(input.housingType) ?? DEFAULT_PROPERTY_TAX_INPUT.housingType,
+  };
+
+  const parsed = propertyTaxSchema.safeParse(candidate);
+  return parsed.success ? parsed.data : DEFAULT_PROPERTY_TAX_INPUT;
 }

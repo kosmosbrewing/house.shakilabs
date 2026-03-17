@@ -9,7 +9,7 @@ import {
 } from "@/lib/housingValidators";
 import { calculateFirstHomeBenefits } from "@/utils/housingCalculator";
 import { FIRST_HOME_SOURCES } from "@/data/firstHome";
-import { formatPercent, formatWon } from "@/lib/utils";
+import { formatPercent, formatWon, parseNumericInput } from "@/lib/utils";
 
 const form = reactive({ ...DEFAULT_FIRST_HOME_INPUT });
 const sanitized = computed(() => sanitizeFirstHomeInput(form));
@@ -30,11 +30,11 @@ const statIconClasses = [
       <div class="grid gap-3 md:grid-cols-2">
         <label class="space-y-1.5">
           <span class="text-caption font-semibold text-foreground">주택 매수가</span>
-          <input v-model.number="form.homePrice" class="retro-input" min="100000000" step="10000000" type="number" />
+          <input type="text" inputmode="numeric" class="retro-input" :value="form.homePrice.toLocaleString('ko-KR')" @input="form.homePrice = parseNumericInput(($event.target as HTMLInputElement).value)" />
         </label>
         <label class="space-y-1.5">
           <span class="text-caption font-semibold text-foreground">부부합산 연소득</span>
-          <input v-model.number="form.annualIncome" class="retro-input" min="0" step="1000000" type="number" />
+          <input type="text" inputmode="numeric" class="retro-input" :value="form.annualIncome.toLocaleString('ko-KR')" @input="form.annualIncome = parseNumericInput(($event.target as HTMLInputElement).value)" />
         </label>
       </div>
 

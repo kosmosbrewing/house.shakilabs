@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { DEPOSIT_PRESETS, OVERDUE_DAY_PRESETS } from "@/data/delayInterest";
 import type { DelayInterestInput } from "@/utils/housingCalculator";
-import { formatNumber } from "@/lib/utils";
+import { formatNumber, parseNumericInput } from "@/lib/utils";
 
 const model = defineModel<DelayInterestInput>({ required: true });
 </script>
@@ -15,12 +15,11 @@ const model = defineModel<DelayInterestInput>({ required: true });
       </div>
       <input
         id="delay-deposit"
-        v-model.number="model.depositAmount"
-        type="number"
+        type="text"
         inputmode="numeric"
-        min="1000000"
-        step="1000000"
         class="retro-input"
+        :value="model.depositAmount.toLocaleString('ko-KR')"
+        @input="model.depositAmount = parseNumericInput(($event.target as HTMLInputElement).value)"
       />
       <div class="flex flex-wrap gap-2">
         <button

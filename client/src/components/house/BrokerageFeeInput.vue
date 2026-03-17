@@ -5,7 +5,7 @@ import {
   SALE_PRICE_PRESETS,
 } from "@/data/brokerageRates";
 import type { BrokerageFeeInput } from "@/utils/housingCalculator";
-import { formatNumber } from "@/lib/utils";
+import { formatNumber, parseNumericInput } from "@/lib/utils";
 
 const model = defineModel<BrokerageFeeInput>({ required: true });
 </script>
@@ -31,7 +31,7 @@ const model = defineModel<BrokerageFeeInput>({ required: true });
       <label for="brokerage-amount" class="text-caption font-semibold text-foreground">
         {{ model.dealType === "sale" ? "거래금액" : "보증금" }}
       </label>
-      <input id="brokerage-amount" v-model.number="model.amount" type="number" inputmode="numeric" min="0" step="1000000" class="retro-input" />
+      <input id="brokerage-amount" type="text" inputmode="numeric" class="retro-input" :value="model.amount.toLocaleString('ko-KR')" @input="model.amount = parseNumericInput(($event.target as HTMLInputElement).value)" />
       <div class="flex flex-wrap gap-2">
         <button
           v-for="preset in model.dealType === 'sale' ? SALE_PRICE_PRESETS : RENT_DEPOSIT_PRESETS"
@@ -47,7 +47,7 @@ const model = defineModel<BrokerageFeeInput>({ required: true });
 
     <div v-if="model.dealType === 'monthly'" class="space-y-2">
       <label for="brokerage-monthly-rent" class="text-caption font-semibold text-foreground">월세</label>
-      <input id="brokerage-monthly-rent" v-model.number="model.monthlyRent" type="number" inputmode="numeric" min="0" step="10000" class="retro-input" />
+      <input id="brokerage-monthly-rent" type="text" inputmode="numeric" class="retro-input" :value="model.monthlyRent.toLocaleString('ko-KR')" @input="model.monthlyRent = parseNumericInput(($event.target as HTMLInputElement).value)" />
       <div class="flex flex-wrap gap-2">
         <button
           v-for="preset in MONTHLY_RENT_PRESETS"

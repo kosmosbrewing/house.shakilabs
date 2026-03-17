@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { OPPORTUNITY_RATE_PRESETS } from "@/data/jeonseWolse";
 import type { JeonseVsWolseInput } from "@/utils/housingCalculator";
-import { formatNumber } from "@/lib/utils";
+import { formatNumber, parseNumericInput } from "@/lib/utils";
 
 const model = defineModel<JeonseVsWolseInput>({ required: true });
 </script>
@@ -11,21 +11,18 @@ const model = defineModel<JeonseVsWolseInput>({ required: true });
     <div class="grid gap-4 md:grid-cols-2">
       <div class="space-y-2">
         <label for="jeonse-deposit" class="text-caption font-semibold text-foreground">전세 보증금</label>
-        <input id="jeonse-deposit" v-model.number="model.jeonseDeposit" type="number" inputmode="numeric" min="10000000" step="1000000" class="retro-input" />
-        <p class="text-tiny text-muted-foreground">{{ formatNumber(model.jeonseDeposit) }}원</p>
+        <input id="jeonse-deposit" type="text" inputmode="numeric" class="retro-input" :value="model.jeonseDeposit.toLocaleString('ko-KR')" @input="model.jeonseDeposit = parseNumericInput(($event.target as HTMLInputElement).value)" />
       </div>
       <div class="space-y-2">
         <label for="wolse-deposit" class="text-caption font-semibold text-foreground">월세 보증금</label>
-        <input id="wolse-deposit" v-model.number="model.wolseDeposit" type="number" inputmode="numeric" min="0" step="1000000" class="retro-input" />
-        <p class="text-tiny text-muted-foreground">{{ formatNumber(model.wolseDeposit) }}원</p>
+        <input id="wolse-deposit" type="text" inputmode="numeric" class="retro-input" :value="model.wolseDeposit.toLocaleString('ko-KR')" @input="model.wolseDeposit = parseNumericInput(($event.target as HTMLInputElement).value)" />
       </div>
     </div>
 
     <div class="grid gap-4 md:grid-cols-2">
       <div class="space-y-2">
         <label for="monthly-rent" class="text-caption font-semibold text-foreground">월세</label>
-        <input id="monthly-rent" v-model.number="model.monthlyRent" type="number" inputmode="numeric" min="0" step="10000" class="retro-input" />
-        <p class="text-tiny text-muted-foreground">{{ formatNumber(model.monthlyRent) }}원</p>
+        <input id="monthly-rent" type="text" inputmode="numeric" class="retro-input" :value="model.monthlyRent.toLocaleString('ko-KR')" @input="model.monthlyRent = parseNumericInput(($event.target as HTMLInputElement).value)" />
       </div>
       <div class="space-y-2">
         <div class="flex items-center justify-between gap-3">

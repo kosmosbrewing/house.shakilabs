@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Component } from "vue";
 import { RouterLink } from "vue-router";
-import { Clock, Scale, Landmark, ShieldCheck, Award, ArrowRight } from "lucide-vue-next";
+import { Clock, Scale, Landmark, ShieldCheck, Award, Building2, ArrowRight } from "lucide-vue-next";
 import { ActionCard } from "@/components/ui/action-card";
 import { buttonVariants } from "@/components/ui/button";
 import RelatedServices from "@/components/common/RelatedServices.vue";
@@ -45,12 +45,18 @@ const tools: ToolItem[] = [
     to: "/housing-subscription",
     icon: Award,
   },
+  {
+    title: "재산세·보유세",
+    desc: "시세 기준으로 재산세와 종부세를 시뮬레이션합니다.",
+    to: "/property-tax",
+    icon: Building2,
+  },
 ];
 
 const faqItems = [
   {
     q: "house.shakilabs.com에서는 어떤 계산을 할 수 있나요?",
-    a: "보증금 반환 지연이자, 전세 vs 월세, 주택 중개보수, 생애최초 혜택, 청약가점까지 한 번에 확인할 수 있습니다.",
+    a: "보증금 반환 지연이자, 전세 vs 월세, 주택 중개보수, 생애최초 혜택, 청약가점, 재산세·보유세까지 한 번에 확인할 수 있습니다.",
   },
   {
     q: "보증금 반환 지연이자는 언제 사용하면 되나요?",
@@ -138,6 +144,9 @@ const faqJsonLd = {
         </RouterLink>
         <RouterLink :class="buttonVariants({ variant: 'outline' })" to="/housing-subscription">
           청약가점 계산
+        </RouterLink>
+        <RouterLink :class="buttonVariants({ variant: 'outline' })" to="/property-tax">
+          보유세 계산
         </RouterLink>
       </div>
     </div>
