@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { OPPORTUNITY_RATE_PRESETS } from "@/data/jeonseWolse";
 import type { JeonseVsWolseInput } from "@/utils/housingCalculator";
-import { formatNumber, parseNumericInput } from "@/lib/utils";
+import { parseNumericInput } from "@/lib/utils";
 
 const model = defineModel<JeonseVsWolseInput>({ required: true });
 </script>
