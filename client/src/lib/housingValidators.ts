@@ -1,12 +1,17 @@
 import { z } from "zod";
 import { LEGAL_DELAY_INTEREST_RATE } from "@/data/delayInterest";
 import type { BrokerageDealType } from "@/data/brokerageRates";
+import type { HomeCount } from "@/data/acquisitionTax";
+import { LEGAL_CONVERSION_RATE_CAP } from "@/data/jeonseWolseRate";
 import type {
+  AcquisitionTaxInput,
   BrokerageFeeInput,
+  CapitalGainsTaxInput,
   DelayInterestInput,
   FirstHomeBenefitInput,
   HousingSubscriptionInput,
   JeonseVsWolseInput,
+  JeonseWolseRateInput,
   PropertyTaxInput,
   HousingType,
 } from "@/utils/housingCalculator";
@@ -53,6 +58,23 @@ export const DEFAULT_PROPERTY_TAX_INPUT: PropertyTaxInput = {
   ownerAge: 45,
   holdingYears: 5,
   housingType: "apartment",
+};
+
+export const DEFAULT_ACQUISITION_TAX_INPUT: AcquisitionTaxInput = {
+  purchasePrice: 600_000_000,
+  homeCount: 1,
+  isRegulatedArea: false,
+  exclusiveArea: 84,
+};
+
+export const DEFAULT_CAPITAL_GAINS_TAX_INPUT: CapitalGainsTaxInput = {
+  sellPrice: 1_200_000_000,
+  buyPrice: 800_000_000,
+  expenseRate: 0.03,
+  holdingYears: 5,
+  residenceYears: 3,
+  isOneHousehold: true,
+  isRegulatedArea: false,
 };
 
 const delayInterestSchema = z.object({
@@ -222,4 +244,130 @@ export function sanitizePropertyTaxInput(
 
   const parsed = propertyTaxSchema.safeParse(candidate);
   return parsed.success ? parsed.data : DEFAULT_PROPERTY_TAX_INPUT;
+}
+
+const capitalGainsTaxSchema = z.object({
+  sellPrice: z.number().int().min(10_000_000).max(50_000_000_000),
+  buyPrice: z.number().int().min(10_000_000).max(50_000_000_000),
+  expenseRate: z.number().min(0).max(0.15),
+  holdingYears: z.number().int().min(0).max(50),
+  residenceYears: z.number().int().min(0).max(50),
+  isOneHousehold: z.boolean(),
+  isRegulatedArea: z.boolean(),
+});
+
+export function sanitizeCapitalGainsTaxInput(
+  input: Partial<Record<keyof CapitalGainsTaxInput, unknown>>
+): CapitalGainsTaxInput {
+  const candidate: CapitalGainsTaxInput = {
+    sellPrice: clampInt(input.sellPrice, DEFAULT_CAPITAL_GAINS_TAX_INPUT.sellPrice, 10_000_000, 50_000_000_000),
+    buyPrice: clampInt(input.buyPrice, DEFAULT_CAPITAL_GAINS_TAX_INPUT.buyPrice, 10_000_000, 50_000_000_000),
+    expenseRate: clampFloat(input.expenseRate, DEFAULT_CAPITAL_GAINS_TAX_INPUT.expenseRate, 0, 0.15),
+    holdingYears: clampInt(input.holdingYears, DEFAULT_CAPITAL_GAINS_TAX_INPUT.holdingYears, 0, 50),
+    residenceYears: clampInt(input.residenceYears, DEFAULT_CAPITAL_GAINS_TAX_INPUT.residenceYears, 0, 50),
+    isOneHousehold: typeof input.isOneHousehold === "boolean" ? input.isOneHousehold : DEFAULT_CAPITAL_GAINS_TAX_INPUT.isOneHousehold,
+    isRegulatedArea: typeof input.isRegulatedArea === "boolean" ? input.isRegulatedArea : DEFAULT_CAPITAL_GAINS_TAX_INPUT.isRegulatedArea,
+  };
+
+  const parsed = capitalGainsTaxSchema.safeParse(candidate);
+  return parsed.success ? parsed.data : DEFAULT_CAPITAL_GAINS_TAX_INPUT;
+}
+
+const homeCountValues = [1, 2, 3] as const;
+
+const acquisitionTaxSchema = z.object({
+  purchasePrice: z.number().int().min(10_000_000).max(50_000_000_000),
+  homeCount: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+  isRegulatedArea: z.boolean(),
+  exclusiveArea: z.number().min(10).max(500),
+});
+
+function parseHomeCount(value: unknown): HomeCount | null {
+  const n = typeof value === "number" ? value : typeof value === "string" ? Number(value) : null;
+  return n != null && homeCountValues.includes(n as HomeCount) ? (n as HomeCount) : null;
+}
+
+export function sanitizeAcquisitionTaxInput(
+  input: Partial<Record<keyof AcquisitionTaxInput, unknown>>
+): AcquisitionTaxInput {
+  const candidate: AcquisitionTaxInput = {
+    purchasePrice: clampInt(input.purchasePrice, DEFAULT_ACQUISITION_TAX_INPUT.purchasePrice, 10_000_000, 50_000_000_000),
+    homeCount: parseHomeCount(input.homeCount) ?? DEFAULT_ACQUISITION_TAX_INPUT.homeCount,
+    isRegulatedArea: typeof input.isRegulatedArea === "boolean" ? input.isRegulatedArea : DEFAULT_ACQUISITION_TAX_INPUT.isRegulatedArea,
+    exclusiveArea: clampFloat(input.exclusiveArea, DEFAULT_ACQUISITION_TAX_INPUT.exclusiveArea, 10, 500),
+  };
+
+  const parsed = acquisitionTaxSchema.safeParse(candidate);
+  return parsed.success ? parsed.data : DEFAULT_ACQUISITION_TAX_INPUT;
+}
+
+// ── 임대수익률 ──
+
+export const DEFAULT_RENTAL_YIELD_INPUT: import("@/utils/housingCalculator").RentalYieldInput = {
+  purchasePrice: 500_000_000,
+  deposit: 100_000_000,
+  monthlyRent: 800_000,
+  loanAmount: 200_000_000,
+  loanRate: 0.04,
+  monthlyExpense: 100_000,
+  vacancyRate: 0.05,
+};
+
+const rentalYieldSchema = z.object({
+  purchasePrice: z.number().int().min(10_000_000).max(50_000_000_000),
+  deposit: z.number().int().min(0).max(10_000_000_000),
+  monthlyRent: z.number().int().min(0).max(50_000_000),
+  loanAmount: z.number().int().min(0).max(30_000_000_000),
+  loanRate: z.number().min(0).max(0.2),
+  monthlyExpense: z.number().int().min(0).max(10_000_000),
+  vacancyRate: z.number().min(0).max(1),
+});
+
+export function sanitizeRentalYieldInput(
+  input: Partial<Record<keyof import("@/utils/housingCalculator").RentalYieldInput, unknown>>
+): import("@/utils/housingCalculator").RentalYieldInput {
+  const d = DEFAULT_RENTAL_YIELD_INPUT;
+  const candidate = {
+    purchasePrice: clampInt(input.purchasePrice, d.purchasePrice, 10_000_000, 50_000_000_000),
+    deposit: clampInt(input.deposit, d.deposit, 0, 10_000_000_000),
+    monthlyRent: clampInt(input.monthlyRent, d.monthlyRent, 0, 50_000_000),
+    loanAmount: clampInt(input.loanAmount, d.loanAmount, 0, 30_000_000_000),
+    loanRate: clampFloat(input.loanRate, d.loanRate, 0, 0.2),
+    monthlyExpense: clampInt(input.monthlyExpense, d.monthlyExpense, 0, 10_000_000),
+    vacancyRate: clampFloat(input.vacancyRate, d.vacancyRate, 0, 1),
+  };
+
+  const parsed = rentalYieldSchema.safeParse(candidate);
+  return parsed.success ? parsed.data : d;
+}
+
+// ── 전월세 전환율 ──
+
+export const DEFAULT_JEONSE_WOLSE_RATE_INPUT: JeonseWolseRateInput = {
+  jeonseDeposit: 300_000_000,
+  wolseDeposit: 50_000_000,
+  monthlyRent: 1_200_000,
+  legalRateCap: LEGAL_CONVERSION_RATE_CAP,
+};
+
+const jeonseWolseRateSchema = z.object({
+  jeonseDeposit: z.number().int().min(10_000_000).max(5_000_000_000),
+  wolseDeposit: z.number().int().min(0).max(5_000_000_000),
+  monthlyRent: z.number().int().min(0).max(20_000_000),
+  legalRateCap: z.number().min(0.01).max(0.2),
+});
+
+export function sanitizeJeonseWolseRateInput(
+  input: Partial<Record<keyof JeonseWolseRateInput, unknown>>
+): JeonseWolseRateInput {
+  const d = DEFAULT_JEONSE_WOLSE_RATE_INPUT;
+  const candidate: JeonseWolseRateInput = {
+    jeonseDeposit: clampInt(input.jeonseDeposit, d.jeonseDeposit, 10_000_000, 5_000_000_000),
+    wolseDeposit: clampInt(input.wolseDeposit, d.wolseDeposit, 0, 5_000_000_000),
+    monthlyRent: clampInt(input.monthlyRent, d.monthlyRent, 0, 20_000_000),
+    legalRateCap: clampFloat(input.legalRateCap, d.legalRateCap, 0.01, 0.2),
+  };
+
+  const parsed = jeonseWolseRateSchema.safeParse(candidate);
+  return parsed.success ? parsed.data : d;
 }

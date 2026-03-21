@@ -7,7 +7,7 @@ import {
 } from "@/lib/housingValidators";
 import { calculateDelayInterest } from "@/utils/housingCalculator";
 
-export function useDelayInterest() {
+export function useDelayInterest(initialOverride?: Partial<import("@/utils/housingCalculator").DelayInterestInput>) {
   const route = useRoute();
   const router = useRouter();
   const form = ref(DEFAULT_DELAY_INTEREST_INPUT);
@@ -16,9 +16,9 @@ export function useDelayInterest() {
     () => route.query,
     (query) => {
       form.value = sanitizeDelayInterestInput({
-        depositAmount: parseQueryInt(query.deposit) ?? DEFAULT_DELAY_INTEREST_INPUT.depositAmount,
-        overdueDays: parseQueryInt(query.days) ?? DEFAULT_DELAY_INTEREST_INPUT.overdueDays,
-        annualRate: parseQueryFloat(query.rate) ?? DEFAULT_DELAY_INTEREST_INPUT.annualRate,
+        depositAmount: parseQueryInt(query.deposit) ?? initialOverride?.depositAmount ?? DEFAULT_DELAY_INTEREST_INPUT.depositAmount,
+        overdueDays: parseQueryInt(query.days) ?? initialOverride?.overdueDays ?? DEFAULT_DELAY_INTEREST_INPUT.overdueDays,
+        annualRate: parseQueryFloat(query.rate) ?? initialOverride?.annualRate ?? DEFAULT_DELAY_INTEREST_INPUT.annualRate,
       });
     },
     { immediate: true }

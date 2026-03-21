@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Component } from "vue";
 import { RouterLink } from "vue-router";
-import { Clock, Scale, Landmark, ShieldCheck, Award, Building2, ArrowRight } from "lucide-vue-next";
+import { Clock, Scale, Landmark, ShieldCheck, Award, Building2, ArrowRight, Repeat } from "lucide-vue-next";
 import { ActionCard } from "@/components/ui/action-card";
 import { buttonVariants } from "@/components/ui/button";
 import RelatedServices from "@/components/common/RelatedServices.vue";
@@ -26,6 +26,12 @@ const tools: ToolItem[] = [
     desc: "보증금 기회비용을 반영해 손익분기 월세를 계산합니다.",
     to: "/jeonse-vs-wolse",
     icon: Scale,
+  },
+  {
+    title: "전월세 전환율",
+    desc: "법정 상한 전환율 대비 적정 월세를 판정합니다.",
+    to: "/jeonse-wolse-rate",
+    icon: Repeat,
   },
   {
     title: "주택 중개보수",
@@ -55,7 +61,7 @@ const tools: ToolItem[] = [
 
 const faqItems = [
   {
-    q: "house.shakilabs.com에서는 어떤 계산을 할 수 있나요?",
+    q: "shakilabs.com/house에서는 어떤 계산을 할 수 있나요?",
     a: "보증금 반환 지연이자, 전세 vs 월세, 주택 중개보수, 생애최초 혜택, 청약가점, 재산세·보유세까지 한 번에 확인할 수 있습니다.",
   },
   {
@@ -85,7 +91,7 @@ const faqJsonLd = {
 <template>
   <SEOHead
     title="주거 계산기"
-    description="보증금 반환 지연이자, 전세 vs 월세, 주택 중개보수를 한 번에 계산하는 house.shakilabs.com입니다."
+    description="보증금 반환 지연이자, 전세 vs 월세, 주택 중개보수를 한 번에 계산하는 shakilabs.com/house입니다."
     :json-ld="faqJsonLd"
   />
 
@@ -135,6 +141,9 @@ const faqJsonLd = {
         </RouterLink>
         <RouterLink :class="buttonVariants({ variant: 'outline' })" to="/jeonse-vs-wolse">
           전세 vs 월세
+        </RouterLink>
+        <RouterLink :class="buttonVariants({ variant: 'outline' })" to="/jeonse-wolse-rate">
+          전환율 계산
         </RouterLink>
         <RouterLink :class="buttonVariants({ variant: 'outline' })" to="/brokerage-fee">
           중개보수 계산

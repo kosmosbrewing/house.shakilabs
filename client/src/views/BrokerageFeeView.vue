@@ -11,12 +11,24 @@ import BrokerageFeeResult from "@/components/house/BrokerageFeeResult.vue";
 import { BROKERAGE_DATA_UPDATED, BROKERAGE_FAQS, BROKERAGE_SOURCES } from "@/data/brokerageRates";
 import { useBrokerageFee } from "@/composables/useBrokerageFee";
 import { useResultShare } from "@/composables/useResultShare";
-import { formatPercent, formatWon } from "@/lib/utils";
+import { formatManWon, formatPercent, formatWon } from "@/lib/utils";
 
-const seoTitle = "주택 중개보수 계산기 — 매매·전세·월세 상한요율";
-const seoDescription = "주택 매매, 전세, 월세 거래의 중개보수 상한요율과 최대 보수를 계산합니다.";
+const props = defineProps<{ initialAmount?: number }>();
+const amountLabel = computed(() => props.initialAmount ? formatManWon(props.initialAmount / 10000) : null);
 
-const { form, result, shareQuery } = useBrokerageFee();
+const seoTitle = computed(() =>
+  amountLabel.value
+    ? `${amountLabel.value} 주택 중개보수 계산기 | shakilabs.com/house`
+    : "주택 중개보수 계산기 — 매매·전세·월세 상한요율",
+);
+const seoDescription = computed(() =>
+  amountLabel.value
+    ? `${amountLabel.value}원 주택 거래 시 중개보수 상한요율과 최대 보수를 계산합니다.`
+    : "주택 매매, 전세, 월세 거래의 중개보수 상한요율과 최대 보수를 계산합니다.",
+);
+
+const override = props.initialAmount ? { amount: props.initialAmount } : undefined;
+const { form, result, shareQuery } = useBrokerageFee(override);
 const share = useResultShare({
   title: computed(() => `중개보수 상한 ${formatWon(result.value.maxFee)}`),
   description: seoDescription,

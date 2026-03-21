@@ -7,7 +7,7 @@ import {
 } from "@/lib/housingValidators";
 import { calculateJeonseVsWolse } from "@/utils/housingCalculator";
 
-export function useJeonseVsWolse() {
+export function useJeonseVsWolse(initialOverride?: Partial<import("@/utils/housingCalculator").JeonseVsWolseInput>) {
   const route = useRoute();
   const router = useRouter();
   const form = ref(DEFAULT_JEONSE_WOLSE_INPUT);
@@ -16,11 +16,11 @@ export function useJeonseVsWolse() {
     () => route.query,
     (query) => {
       form.value = sanitizeJeonseVsWolseInput({
-        jeonseDeposit: parseQueryInt(query.jeonse) ?? DEFAULT_JEONSE_WOLSE_INPUT.jeonseDeposit,
-        wolseDeposit: parseQueryInt(query.deposit) ?? DEFAULT_JEONSE_WOLSE_INPUT.wolseDeposit,
-        monthlyRent: parseQueryInt(query.rent) ?? DEFAULT_JEONSE_WOLSE_INPUT.monthlyRent,
-        annualOpportunityRate: parseQueryFloat(query.rate) ?? DEFAULT_JEONSE_WOLSE_INPUT.annualOpportunityRate,
-        analysisYears: parseQueryInt(query.years) ?? DEFAULT_JEONSE_WOLSE_INPUT.analysisYears,
+        jeonseDeposit: parseQueryInt(query.jeonse) ?? initialOverride?.jeonseDeposit ?? DEFAULT_JEONSE_WOLSE_INPUT.jeonseDeposit,
+        wolseDeposit: parseQueryInt(query.deposit) ?? initialOverride?.wolseDeposit ?? DEFAULT_JEONSE_WOLSE_INPUT.wolseDeposit,
+        monthlyRent: parseQueryInt(query.rent) ?? initialOverride?.monthlyRent ?? DEFAULT_JEONSE_WOLSE_INPUT.monthlyRent,
+        annualOpportunityRate: parseQueryFloat(query.rate) ?? initialOverride?.annualOpportunityRate ?? DEFAULT_JEONSE_WOLSE_INPUT.annualOpportunityRate,
+        analysisYears: parseQueryInt(query.years) ?? initialOverride?.analysisYears ?? DEFAULT_JEONSE_WOLSE_INPUT.analysisYears,
       });
     },
     { immediate: true }

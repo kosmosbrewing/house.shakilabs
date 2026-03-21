@@ -7,7 +7,7 @@ import {
 } from "@/lib/housingValidators";
 import { calculateBrokerageFee } from "@/utils/housingCalculator";
 
-export function useBrokerageFee() {
+export function useBrokerageFee(initialOverride?: Partial<import("@/utils/housingCalculator").BrokerageFeeInput>) {
   const route = useRoute();
   const router = useRouter();
   const form = ref(DEFAULT_BROKERAGE_FEE_INPUT);
@@ -16,9 +16,9 @@ export function useBrokerageFee() {
     () => route.query,
     (query) => {
       form.value = sanitizeBrokerageFeeInput({
-        dealType: queryFirst(query.type) ?? DEFAULT_BROKERAGE_FEE_INPUT.dealType,
-        amount: parseQueryInt(query.amount) ?? DEFAULT_BROKERAGE_FEE_INPUT.amount,
-        monthlyRent: parseQueryInt(query.rent) ?? DEFAULT_BROKERAGE_FEE_INPUT.monthlyRent,
+        dealType: queryFirst(query.type) ?? initialOverride?.dealType ?? DEFAULT_BROKERAGE_FEE_INPUT.dealType,
+        amount: parseQueryInt(query.amount) ?? initialOverride?.amount ?? DEFAULT_BROKERAGE_FEE_INPUT.amount,
+        monthlyRent: parseQueryInt(query.rent) ?? initialOverride?.monthlyRent ?? DEFAULT_BROKERAGE_FEE_INPUT.monthlyRent,
       });
     },
     { immediate: true }

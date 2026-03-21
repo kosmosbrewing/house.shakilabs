@@ -11,12 +11,24 @@ import DelayInterestResult from "@/components/house/DelayInterestResult.vue";
 import { DELAY_INTEREST_DATA_UPDATED, DELAY_INTEREST_FAQS, DELAY_INTEREST_SOURCES } from "@/data/delayInterest";
 import { useDelayInterest } from "@/composables/useDelayInterest";
 import { useResultShare } from "@/composables/useResultShare";
-import { formatWon } from "@/lib/utils";
+import { formatManWon, formatWon } from "@/lib/utils";
 
-const seoTitle = "보증금 반환 지연이자 계산기 — 연 12% 가정";
-const seoDescription = "보증금 반환이 늦어졌을 때 연 12% 가정 기준의 예상 지연이자를 계산합니다.";
+const props = defineProps<{ initialDeposit?: number }>();
+const depositLabel = computed(() => props.initialDeposit ? formatManWon(props.initialDeposit / 10000) : null);
 
-const { form, result, shareQuery } = useDelayInterest();
+const seoTitle = computed(() =>
+  depositLabel.value
+    ? `보증금 ${depositLabel.value} 지연이자 계산기 | shakilabs.com/house`
+    : "보증금 반환 지연이자 계산기 — 연 12% 가정",
+);
+const seoDescription = computed(() =>
+  depositLabel.value
+    ? `보증금 ${depositLabel.value}원 반환이 늦어졌을 때 연 12% 기준 예상 지연이자를 계산합니다.`
+    : "보증금 반환이 늦어졌을 때 연 12% 가정 기준의 예상 지연이자를 계산합니다.",
+);
+
+const override = props.initialDeposit ? { depositAmount: props.initialDeposit } : undefined;
+const { form, result, shareQuery } = useDelayInterest(override);
 const share = useResultShare({
   title: computed(() => `보증금 지연이자 ${formatWon(result.value.totalInterest)}`),
   description: seoDescription,

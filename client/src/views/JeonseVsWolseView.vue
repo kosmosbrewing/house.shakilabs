@@ -11,12 +11,24 @@ import JeonseVsWolseResult from "@/components/house/JeonseVsWolseResult.vue";
 import { JEONSE_WOLSE_DATA_UPDATED, JEONSE_WOLSE_FAQS, JEONSE_WOLSE_SOURCES } from "@/data/jeonseWolse";
 import { useJeonseVsWolse } from "@/composables/useJeonseVsWolse";
 import { useResultShare } from "@/composables/useResultShare";
-import { formatWon } from "@/lib/utils";
+import { formatManWon, formatWon } from "@/lib/utils";
 
-const seoTitle = "전세 vs 월세 비교 계산기 — 손익분기 월세";
-const seoDescription = "전세 보증금의 기회비용까지 반영해 전세와 월세 중 어느 쪽이 유리한지 계산합니다.";
+const props = defineProps<{ initialDeposit?: number }>();
+const depositLabel = computed(() => props.initialDeposit ? formatManWon(props.initialDeposit / 10000) : null);
 
-const { form, result, shareQuery } = useJeonseVsWolse();
+const seoTitle = computed(() =>
+  depositLabel.value
+    ? `전세 ${depositLabel.value} vs 월세 비교 계산기 | shakilabs.com/house`
+    : "전세 vs 월세 비교 계산기 — 손익분기 월세",
+);
+const seoDescription = computed(() =>
+  depositLabel.value
+    ? `전세 보증금 ${depositLabel.value}원 기준으로 전세와 월세 중 어느 쪽이 유리한지 비교합니다.`
+    : "전세 보증금의 기회비용까지 반영해 전세와 월세 중 어느 쪽이 유리한지 계산합니다.",
+);
+
+const override = props.initialDeposit ? { jeonseDeposit: props.initialDeposit } : undefined;
+const { form, result, shareQuery } = useJeonseVsWolse(override);
 const share = useResultShare({
   title: computed(() => result.value.cheaperOption === "jeonse" ? "전세가 더 유리합니다" : "월세가 더 유리합니다"),
   description: seoDescription,

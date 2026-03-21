@@ -6,7 +6,7 @@ const constantsStore = useConstantsStore();
 </script>
 
 <template>
-  <SEOHead title="개인정보 처리방침" description="house.shakilabs.com의 개인정보 처리방침입니다." />
+  <SEOHead title="개인정보 처리방침" description="shakilabs.com/house의 개인정보 처리방침입니다." />
 
   <div class="container py-5">
     <div class="retro-panel">
@@ -16,7 +16,7 @@ const constantsStore = useConstantsStore();
 
       <div class="retro-panel-content space-y-4">
         <p class="text-body text-muted-foreground">
-          house.shakilabs.com(이하 "본 서비스")은 이용자의 개인정보를 중요하게 생각하며,
+          shakilabs.com/house(이하 "본 서비스")은 이용자의 개인정보를 중요하게 생각하며,
           다음과 같이 개인정보를 처리합니다.
         </p>
 

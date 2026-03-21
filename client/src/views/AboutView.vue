@@ -10,7 +10,7 @@ const constantsStore = useConstantsStore();
 <template>
   <SEOHead
     title="서비스 안내"
-    description="house.shakilabs.com은 주거 관련 핵심 계산을 빠르게 확인하는 무료 도구입니다."
+    description="shakilabs.com/house는 주거 관련 핵심 계산을 빠르게 확인하는 무료 도구입니다."
   />
 
   <div class="container py-5 space-y-5">
@@ -20,9 +20,9 @@ const constantsStore = useConstantsStore();
       </div>
 
       <div class="retro-panel-content space-y-4">
-        <h2 class="text-heading font-bold">house.shakilabs.com 소개</h2>
+        <h2 class="text-heading font-bold">shakilabs.com/house 소개</h2>
         <p class="text-body text-muted-foreground">
-          house.shakilabs.com은 임차·매매 의사결정에서 자주 필요한 금액 계산을 빠르게 제공하는 무료 도구입니다.
+          shakilabs.com/house는 임차·매매 의사결정에서 자주 필요한 금액 계산을 빠르게 제공하는 무료 도구입니다.
           로그인 없이 바로 계산할 수 있고, 현재 입력값을 URL로 공유할 수 있습니다.
         </p>
 

@@ -16,14 +16,51 @@ export const routes: RouteRecordRaw[] = [
     component: () => import("@/views/DelayInterestView.vue"),
   },
   {
+    path: "/delay-interest/:deposit(\\d+)",
+    name: "DelayInterestDeposit",
+    component: () => import("@/views/DelayInterestView.vue"),
+    props: (route) => ({
+      initialDeposit: Number(route.params.deposit) * 10000,
+    }),
+  },
+  {
     path: "/jeonse-vs-wolse",
     name: "JeonseVsWolse",
     component: () => import("@/views/JeonseVsWolseView.vue"),
   },
   {
+    path: "/jeonse-vs-wolse/:deposit(\\d+)",
+    name: "JeonseVsWolseDeposit",
+    component: () => import("@/views/JeonseVsWolseView.vue"),
+    props: (route) => ({
+      initialDeposit: Number(route.params.deposit) * 10000,
+    }),
+  },
+  {
+    path: "/jeonse-wolse-rate",
+    name: "JeonseWolseRate",
+    component: () => import("@/views/JeonseWolseRateView.vue"),
+  },
+  {
+    path: "/jeonse-wolse-rate/:deposit(\\d+)",
+    name: "JeonseWolseRateDeposit",
+    component: () => import("@/views/JeonseWolseRateView.vue"),
+    props: (route) => ({
+      initialDeposit: Number(route.params.deposit) * 10000,
+    }),
+  },
+  {
     path: "/brokerage-fee",
     name: "BrokerageFee",
     component: () => import("@/views/BrokerageFeeView.vue"),
+  },
+  {
+    path: "/brokerage-fee/:price(\\d+)",
+    name: "BrokerageFeePrice",
+    component: () => import("@/views/BrokerageFeeView.vue"),
+    props: (route) => ({
+      initialAmount: Number(route.params.price) * 10000,
+    }),
   },
   {
     path: "/first-home",
@@ -40,12 +77,63 @@ export const routes: RouteRecordRaw[] = [
     name: "PropertyTax",
     component: () => import("@/views/PropertyTaxView.vue"),
   },
+  {
+    path: "/property-tax/:price(\\d+)",
+    name: "PropertyTaxPrice",
+    component: () => import("@/views/PropertyTaxView.vue"),
+    props: (route) => ({
+      initialPrice: Number(route.params.price) * 10000,
+    }),
+  },
+  { path: "/conversion-rate", redirect: "/jeonse-wolse-rate" },
   { path: "/interest", redirect: "/delay-interest" },
   { path: "/jeonse", redirect: "/jeonse-vs-wolse" },
   { path: "/rent-compare", redirect: "/jeonse-vs-wolse" },
   { path: "/commission", redirect: "/brokerage-fee" },
   { path: "/score", redirect: "/housing-subscription" },
   { path: "/holding-tax", redirect: "/property-tax" },
+
+  {
+    path: "/capital-gains-tax",
+    name: "CapitalGainsTax",
+    component: () => import("@/views/CapitalGainsTaxView.vue"),
+  },
+  {
+    path: "/capital-gains-tax/:sellPrice(\\d+)",
+    name: "CapitalGainsTaxPrice",
+    component: () => import("@/views/CapitalGainsTaxView.vue"),
+    props: (route) => ({
+      initialSellPrice: Number(route.params.sellPrice) * 10000,
+    }),
+  },
+
+  {
+    path: "/acquisition-tax",
+    name: "AcquisitionTax",
+    component: () => import("@/views/AcquisitionTaxView.vue"),
+  },
+  {
+    path: "/acquisition-tax/:price(\\d+)",
+    name: "AcquisitionTaxPrice",
+    component: () => import("@/views/AcquisitionTaxView.vue"),
+    props: (route) => ({
+      initialPrice: Number(route.params.price) * 10000,
+    }),
+  },
+
+  {
+    path: "/rental-yield",
+    name: "RentalYield",
+    component: () => import("@/views/RentalYieldView.vue"),
+  },
+  {
+    path: "/rental-yield/:price(\\d+)",
+    name: "RentalYieldPrice",
+    component: () => import("@/views/RentalYieldView.vue"),
+    props: (route) => ({
+      initialPrice: Number(route.params.price) * 10000,
+    }),
+  },
 
   {
     path: "/about",

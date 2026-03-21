@@ -7,7 +7,7 @@ import {
 } from "@/lib/housingValidators";
 import { calculatePropertyTax } from "@/utils/housingCalculator";
 
-export function usePropertyTax() {
+export function usePropertyTax(initialOverride?: Partial<import("@/utils/housingCalculator").PropertyTaxInput>) {
   const route = useRoute();
   const router = useRouter();
   const form = ref({ ...DEFAULT_PROPERTY_TAX_INPUT });
@@ -16,11 +16,11 @@ export function usePropertyTax() {
     () => route.query,
     (query) => {
       form.value = sanitizePropertyTaxInput({
-        marketPrice: parseQueryInt(query.price) ?? DEFAULT_PROPERTY_TAX_INPUT.marketPrice,
-        isUrbanArea: parseQueryBoolean(query.urban, DEFAULT_PROPERTY_TAX_INPUT.isUrbanArea),
-        ownerAge: parseQueryInt(query.age) ?? DEFAULT_PROPERTY_TAX_INPUT.ownerAge,
-        holdingYears: parseQueryInt(query.years) ?? DEFAULT_PROPERTY_TAX_INPUT.holdingYears,
-        housingType: queryFirst(query.type) ?? DEFAULT_PROPERTY_TAX_INPUT.housingType,
+        marketPrice: parseQueryInt(query.price) ?? initialOverride?.marketPrice ?? DEFAULT_PROPERTY_TAX_INPUT.marketPrice,
+        isUrbanArea: parseQueryBoolean(query.urban, initialOverride?.isUrbanArea ?? DEFAULT_PROPERTY_TAX_INPUT.isUrbanArea),
+        ownerAge: parseQueryInt(query.age) ?? initialOverride?.ownerAge ?? DEFAULT_PROPERTY_TAX_INPUT.ownerAge,
+        holdingYears: parseQueryInt(query.years) ?? initialOverride?.holdingYears ?? DEFAULT_PROPERTY_TAX_INPUT.holdingYears,
+        housingType: queryFirst(query.type) ?? initialOverride?.housingType ?? DEFAULT_PROPERTY_TAX_INPUT.housingType,
       });
     },
     { immediate: true }

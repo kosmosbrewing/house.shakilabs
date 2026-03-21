@@ -13,7 +13,7 @@ const items: RelatedServiceItem[] = [
   {
     title: "대출 계산기",
     description: "전세·매매 비용을 봤다면 DSR과 상환방식까지 같이 계산해 보세요.",
-    href: "https://loan.shakilabs.com/dsr",
+    href: "/loan/dsr",
     icon: Landmark,
   },
 ];
