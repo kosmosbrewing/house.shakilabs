@@ -1,0 +1,33 @@
+# 부동산 계산기 — shakilabs.com/house
+
+> 전세·월세 비교, 중개수수료, 재산세, 양도소득세, 취득세, 임대수익률 등 부동산 관련 세금·비용을 계산하는 무료 서비스입니다. 2026년 세법 기준.
+
+## 사이트 정보
+
+- URL: https://shakilabs.com/house
+- 언어: 한국어
+- 데이터 기준: 2026년 세법·부동산 정책
+
+## 주요 계산기
+
+- [전세 보증금 반환 지연이자](https://shakilabs.com/house/delay-interest): 보증금 미반환 시 법정 지연이자 계산
+- [전세 vs 월세 비교](https://shakilabs.com/house/jeonse-vs-wolse): 전세·월세 총비용 비교 분석
+- [전월세 전환율 계산기](https://shakilabs.com/house/jeonse-wolse-rate): 전세↔월세 전환 시 적정 금액 계산
+- [중개수수료 계산기](https://shakilabs.com/house/brokerage-fee): 매매·전세·월세 부동산 중개보수 계산
+- [생애최초 주택 혜택](https://shakilabs.com/house/first-home): 생애최초 주택구입 세금 감면·대출 혜택 안내
+- [청약 가점 계산기](https://shakilabs.com/house/housing-subscription): 주택청약 가점 시뮬레이션
+- [재산세 계산기](https://shakilabs.com/house/property-tax): 주택·토지 재산세 계산
+- [양도소득세 계산기](https://shakilabs.com/house/capital-gains-tax): 부동산 양도 시 양도소득세 계산
+- [취득세 계산기](https://shakilabs.com/house/acquisition-tax): 주택 취득 시 취득세 계산
+- [임대수익률 계산기](https://shakilabs.com/house/rental-yield): 부동산 임대수익률(수익형 부동산) 분석
+
+## 데이터 출처
+
+- 재산세: 지방세법 제111조 (세율 0.1%~0.4%)
+- 양도소득세: 소득세법 제104조
+- 취득세: 지방세법 제11조
+- 중개보수: 공인중개사법 시행규칙 별표
+
+## 연락처
+
+- 이메일: skdba1313@gmail.com
