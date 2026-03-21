@@ -35,6 +35,10 @@
     }
   ],
   "rewrites": [
+    { "source": "/house/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/house/fonts/:path*", "destination": "/fonts/:path*" },
+    { "source": "/house/favicon.png", "destination": "/favicon.png" },
+    { "source": "/house/:path*", "destination": "/index.html" },
     { "source": "/((?!assets|fonts|favicon|sitemap|robots).*)", "destination": "/index.html" }
   ]
 }
