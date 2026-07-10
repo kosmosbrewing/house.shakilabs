@@ -8,6 +8,7 @@ import SummaryBanner from "@/components/common/SummaryBanner.vue";
 import DelayInterestFAQ from "@/components/house/DelayInterestFAQ.vue";
 import DelayInterestInput from "@/components/house/DelayInterestInput.vue";
 import DelayInterestResult from "@/components/house/DelayInterestResult.vue";
+import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import {
   CIVIL_DELAY_INTEREST_RATE,
   DELAY_INTEREST_DATA_UPDATED,
@@ -98,6 +99,7 @@ const rateBasis = computed(() => {
     </section>
     <CompareSourceFooter :sources="[...DELAY_INTEREST_SOURCES]" :updated-at="DELAY_INTEREST_DATA_UPDATED" />
     <DelayInterestFAQ :faqs="DELAY_INTEREST_FAQS" />
+    <PopularCalculators />
 
     <ShareModal
       :show="share.showShareModal.value"
