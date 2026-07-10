@@ -5,6 +5,7 @@ import SEOHead from "@/components/common/SEOHead.vue";
 import SummaryBanner from "@/components/common/SummaryBanner.vue";
 import ShareModal from "@/components/share/ShareModal.vue";
 import PropertyTaxCalculator from "@/components/house/PropertyTaxCalculator.vue";
+import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import { PROPERTY_TAX_FAQS, PROPERTY_TAX_UPDATED } from "@/data/propertyTax";
 import { usePropertyTax } from "@/composables/usePropertyTax";
 import { useResultShare } from "@/composables/useResultShare";
@@ -101,6 +102,8 @@ const faqJsonLd = {
         </details>
       </div>
     </div>
+
+    <PopularCalculators />
 
     <!-- 공유 모달 -->
     <ShareModal

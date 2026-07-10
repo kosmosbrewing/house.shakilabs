@@ -5,6 +5,7 @@ import SEOHead from "@/components/common/SEOHead.vue";
 import SummaryBanner from "@/components/common/SummaryBanner.vue";
 import ShareModal from "@/components/share/ShareModal.vue";
 import JeonseWolseRateCalculator from "@/components/house/JeonseWolseRateCalculator.vue";
+import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import { JEONSE_WOLSE_RATE_FAQS, JEONSE_WOLSE_RATE_UPDATED } from "@/data/jeonseWolseRate";
 import { useJeonseWolseRate } from "@/composables/useJeonseWolseRate";
 import { useResultShare } from "@/composables/useResultShare";
@@ -112,6 +113,8 @@ const faqJsonLd = {
         </details>
       </div>
     </div>
+
+    <PopularCalculators />
 
     <!-- 공유 모달 -->
     <ShareModal

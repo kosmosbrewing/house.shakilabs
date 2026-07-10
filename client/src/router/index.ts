@@ -3,6 +3,7 @@ import type { Router, RouteRecordRaw } from "vue-router";
 import { showAlert } from "@/composables/useAlert";
 import { trackPageView } from "@/lib/analytics";
 import { useAuthStore } from "@/stores/auth";
+import { buildPublicPagePath, shouldTrackPageView } from "@/utils/pageTracking";
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -208,10 +209,12 @@ export function setupRouterGuards(router: Router): void {
     return true;
   });
 
-  router.afterEach((to, _from, failure) => {
+  router.afterEach((to, from, failure) => {
     if (failure || !isBrowser()) return;
+    if (!shouldTrackPageView(to.path, from.path, from.matched.length > 0)) return;
+
     void nextTick(() => {
-      trackPageView(to.fullPath, document.title);
+      trackPageView(buildPublicPagePath("/house", to.path), document.title);
     });
   });
 }
