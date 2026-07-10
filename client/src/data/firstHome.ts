@@ -1,9 +1,9 @@
-export const FIRST_HOME_UPDATED = "2026-03-17";
+export const FIRST_HOME_UPDATED = "2026-07-10";
 
 export const FIRST_HOME_SOURCES = [
   {
     name: "행정안전부 고시",
-    url: "https://www.law.go.kr/conAdmrulByLsPop.do?lsiSeq=238819",
+    url: "https://www.law.go.kr/LSW/admRulLsInfoP.do?admRulId=73402&efYd=0",
     basis: "생애최초 주택 구입에 대한 취득세 감면 운영기준",
   },
   {
