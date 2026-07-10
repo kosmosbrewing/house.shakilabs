@@ -52,19 +52,47 @@ describe("calculatePropertyTax", () => {
   it("2026년 1주택 공정시장가액비율과 특례세율을 적용한다", () => {
     const result = calculatePropertyTax(baseInput);
     expect(result.officialPrice).toBe(690_000_000);
+    expect(result.isOfficialPriceEstimated).toBe(true);
     expect(result.fairMarketRatio).toBe(0.45);
     expect(result.propertyTaxBase).toBe(310_500_000);
-    expect(result.calculatedPropertyTax).toBe(456_750);
+    expect(result.propertyTax).toBe(456_750);
   });
 
-  it("전년도 본세가 있으면 공시가격 구간별 세부담상한을 적용한다", () => {
+  it("직접 입력한 공시가격을 시가 추정치보다 우선한다", () => {
     const result = calculatePropertyTax({
       ...baseInput,
-      previousYearPropertyTax: 100_000,
+      officialPrice: 800_000_000,
     });
-    expect(result.burdenCapRate).toBe(1.3);
-    expect(result.propertyTax).toBe(130_000);
-    expect(result.burdenCapReduction).toBe(326_750);
+    expect(result.officialPrice).toBe(800_000_000);
+    expect(result.isOfficialPriceEstimated).toBe(false);
+  });
+
+  it("직전 연도 공시가격으로 5% 과세표준상한을 적용한다", () => {
+    const result = calculatePropertyTax({
+      ...baseInput,
+      officialPrice: 1_000_000_000,
+      previousYearOfficialPrice: 800_000_000,
+    });
+    expect(result.propertyTaxBaseBeforeCap).toBe(450_000_000);
+    expect(result.propertyTaxBaseCapAmount).toBe(382_500_000);
+    expect(result.propertyTaxBase).toBe(382_500_000);
+    expect(result.propertyTaxBaseCapReduction).toBe(67_500_000);
+  });
+
+  it("종부세에서 재산세를 공제하고 전년도 총세액의 150% 상한을 적용한다", () => {
+    const result = calculatePropertyTax({
+      ...baseInput,
+      officialPrice: 2_000_000_000,
+      previousYearPropertyTax: 2_000_000,
+      previousYearComprehensiveTax: 1_000_000,
+      holdingYears: 0,
+    });
+    expect(result.compTaxAmount).toBe(2_760_000);
+    expect(result.deductiblePropertyTax).toBe(864_000);
+    expect(result.compTaxAfterPropertyTaxCredit).toBe(1_896_000);
+    expect(result.compTaxBurdenCapAmount).toBe(4_500_000);
+    expect(result.compTaxBurdenCapReduction).toBe(366_000);
+    expect(result.compTaxAfterBurdenCap).toBe(1_530_000);
   });
 
   it("단독 명의 1세대 1주택이 아니면 지원 대상에서 제외한다", () => {

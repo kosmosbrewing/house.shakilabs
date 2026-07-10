@@ -32,7 +32,7 @@ const share = useResultShare({
   description: seoDescription,
   summaryText: computed(
     () =>
-      `시가 ${formatWon(form.value.marketPrice)} 기준, 연간 보유세 ${formatWon(result.value.annualTotal)} (월 ${formatWon(result.value.monthlyEquivalent)})`
+      `공시가격 ${formatWon(result.value.officialPrice)} 기준, 연간 보유세 ${formatWon(result.value.annualTotal)} (월 ${formatWon(result.value.monthlyEquivalent)})`
   ),
   path: "/property-tax",
   query: shareQuery,
@@ -43,6 +43,9 @@ const facts = computed(() => [
   { label: "종부세 합계", value: formatWon(result.value.compTaxTotal) },
   { label: "공시가격", value: formatWon(result.value.officialPrice) },
 ]);
+const resultBasisTitle = computed(() => result.value.isOfficialPriceEstimated
+  ? "시가로 공시가격을 추정한 결과입니다. 실제 공시가격을 입력하면 정확도가 높아집니다."
+  : "입력한 공시가격과 2026년 세율을 적용한 단순 추정 결과입니다.");
 
 const faqJsonLd = {
   "@context": "https://schema.org",
@@ -72,7 +75,7 @@ const faqJsonLd = {
     <!-- 요약 배너 -->
     <SummaryBanner
       v-if="result.isSupportedScenario"
-      title="시세 기준으로 공시가격을 추정해 재산세·종부세를 시뮬레이션한 결과입니다."
+      :title="resultBasisTitle"
       leader-label="연간 보유세"
       :leader-value="formatWon(result.annualTotal)"
       delta-label="월 환산"
