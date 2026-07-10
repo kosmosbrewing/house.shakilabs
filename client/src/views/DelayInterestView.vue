@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import CalculatorInteractionTracker from "@/components/analytics/CalculatorInteractionTracker.vue";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
 import FreshBadge from "@/components/common/FreshBadge.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
@@ -70,7 +71,12 @@ const rateBasis = computed(() => {
         <FreshBadge :message="`${DELAY_INTEREST_DATA_UPDATED} 확인`" />
       </div>
       <div class="retro-panel-content">
-        <DelayInterestInput v-model="form" />
+        <CalculatorInteractionTracker
+          calculator-id="deposit_delay_interest"
+          page-path="/house/delay-interest"
+        >
+          <DelayInterestInput v-model="form" />
+        </CalculatorInteractionTracker>
       </div>
     </div>
 

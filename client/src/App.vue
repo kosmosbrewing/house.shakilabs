@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import AppLayout from "@/components/layout/AppLayout.vue";
 import AlertHost from "@/components/ui/alert/AlertHost.vue";
+import { getPageGroup } from "@/utils/pageTracking";
 </script>
 
 <template>
   <AppLayout>
     <RouterView v-slot="{ Component, route }">
       <Transition name="page-fade" mode="out-in">
-        <div :key="route.path">
+        <div :key="getPageGroup(route.path)">
           <component :is="Component" />
         </div>
       </Transition>
