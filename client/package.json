@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/build.mjs",
+    "fonts:subset": "node scripts/subset-fonts.mjs",
+    "build": "node scripts/build.mjs && node scripts/verify-fonts.mjs",
     "verify:static": "node scripts/validate-static-output.mjs",
     "sbom:prod": "node scripts/sbom.mjs",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",

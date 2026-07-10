@@ -48,7 +48,7 @@ function setPreset(price: number) {
             :key="preset"
             type="button"
             :aria-pressed="form.marketPrice === preset && !form.officialPrice"
-            class="min-h-11 rounded-lg border border-border/60 bg-background px-2 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+            class="min-h-[44px] rounded-lg border border-border/60 bg-background px-2 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
             :class="{ '!border-primary/30 !bg-primary/15 !text-primary': form.marketPrice === preset && !form.officialPrice }"
             @click="setPreset(preset)"
           >
@@ -92,13 +92,13 @@ function setPreset(price: number) {
         <span class="text-caption font-semibold text-foreground">보유 기간 (년)</span>
         <input v-model.number="form.holdingYears" class="retro-input" min="0" max="50" step="1" type="number" />
       </label>
-      <label class="retro-panel flex min-h-11 items-center gap-2 px-3 py-3">
+      <label class="retro-panel flex min-h-[44px] items-center gap-2 px-3 py-3">
         <input v-model="form.isUrbanArea" class="retro-checkbox" type="checkbox" />
         <span class="text-caption font-semibold">도시지역 (대부분의 아파트)</span>
       </label>
     </div>
 
-    <label class="retro-panel flex min-h-11 items-center gap-2 px-3 py-3">
+    <label class="retro-panel flex min-h-[44px] items-center gap-2 px-3 py-3">
       <input v-model="form.isSingleOwnerOneHome" class="retro-checkbox" type="checkbox" />
       <span class="text-caption font-semibold">단독 명의 1세대 1주택임을 확인합니다</span>
     </label>

@@ -66,7 +66,7 @@ watch([interestStartDate, calculationEndDate], updateOverdueDaysFromDates);
           v-for="preset in DEPOSIT_PRESETS"
           :key="preset"
           type="button"
-          class="min-h-11 rounded-full border border-border bg-background px-3 py-1.5 text-caption font-semibold hover:border-primary hover:text-primary"
+          class="min-h-[44px] rounded-full border border-border bg-background px-3 py-1.5 text-caption font-semibold hover:border-primary hover:text-primary"
           @click="model.depositAmount = preset"
         >
           {{ formatNumber(preset) }}원
@@ -101,7 +101,7 @@ watch([interestStartDate, calculationEndDate], updateOverdueDaysFromDates);
           min="1"
           max="365"
           step="1"
-          class="h-11 w-full accent-primary"
+          class="h-[44px] w-full accent-primary"
           aria-label="지연 일수 슬라이더"
         />
         <input
@@ -118,7 +118,7 @@ watch([interestStartDate, calculationEndDate], updateOverdueDaysFromDates);
             v-for="preset in OVERDUE_DAY_PRESETS"
             :key="preset"
             type="button"
-            class="min-h-11 rounded-full border border-border bg-background px-3 py-1.5 text-caption font-semibold hover:border-primary hover:text-primary"
+            class="min-h-[44px] rounded-full border border-border bg-background px-3 py-1.5 text-caption font-semibold hover:border-primary hover:text-primary"
             @click="model.overdueDays = preset"
           >
             {{ preset }}일
@@ -137,7 +137,7 @@ watch([interestStartDate, calculationEndDate], updateOverdueDaysFromDates);
           min="0.01"
           max="0.2"
           step="0.005"
-          class="h-11 w-full accent-primary"
+          class="h-[44px] w-full accent-primary"
           aria-label="적용 연이율 슬라이더"
         />
         <input
@@ -156,7 +156,7 @@ watch([interestStartDate, calculationEndDate], updateOverdueDaysFromDates);
             v-for="preset in ratePresets"
             :key="preset.value"
             type="button"
-            class="min-h-11 rounded-lg border border-border bg-background px-3 py-2 text-left text-caption font-semibold hover:border-primary hover:text-primary"
+            class="min-h-[44px] rounded-lg border border-border bg-background px-3 py-2 text-left text-caption font-semibold hover:border-primary hover:text-primary"
             :class="{ 'border-primary bg-primary/10 text-primary': model.annualRate === preset.value }"
             :aria-pressed="model.annualRate === preset.value"
             @click="model.annualRate = preset.value"
