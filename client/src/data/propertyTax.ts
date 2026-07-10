@@ -42,16 +42,14 @@ export const PROPERTY_TAX_SPECIAL_TIERS: PropertyTaxTier[] = [
 // 1주택 특례세율 적용 기준: 공시가격 9억원 이하
 export const SPECIAL_RATE_THRESHOLD = 900_000_000;
 
-export const PROPERTY_TAX_BURDEN_CAP_RATES = [
-  { max: 300_000_000, rate: 1.05 },
-  { max: 600_000_000, rate: 1.1 },
-  { max: null, rate: 1.3 },
-] as const;
+// 주택 재산세는 세부담상한 대신 직전 연도 과세표준을 이용한 5% 과표상한을 적용한다.
+export const PROPERTY_TAX_BASE_CAP_RATE = 0.05;
 
 // ── 종합부동산세 (1세대 1주택, 2주택 이하 일반) ──
 export const COMP_TAX_DEDUCTION = 1_200_000_000; // 기본공제 12억
 
 export const COMP_TAX_FAIR_MARKET_RATIO = 0.6; // 공정시장가액비율 60%
+export const COMP_TAX_BURDEN_CAP_RATE = 1.5; // 전년도 재산세+종부세의 150%
 
 export interface CompTaxTier {
   min: number;
@@ -117,14 +115,19 @@ export const PROPERTY_TAX_SOURCES = [
     basis: "2026년 1세대 1주택 공정시장가액비율 43%·44%·45%",
   },
   {
-    name: "지방세법 시행령 제118조",
-    url: "https://law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=00&joNo=0118&lsiSeq=286395",
-    basis: "직전 연도 재산세액 상당액을 이용한 세부담상한 계산",
+    name: "지방세법 제110조·지방세법 시행령 제109조의2",
+    url: "https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1026501427",
+    basis: "직전 연도 공시가격 상당액과 5% 과세표준상한 계산",
   },
   {
     name: "종합부동산세법 제9조",
     url: "https://www.law.go.kr/법령/종합부동산세법",
-    basis: "종부세 세율, 기본공제, 세액공제",
+    basis: "종부세 세율, 기본공제, 공제할 재산세액과 세액공제",
+  },
+  {
+    name: "국세청 종합부동산세 계산 안내",
+    url: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7739&mi=40401",
+    basis: "공제할 재산세액 계산과 전년도 총세액의 150% 세부담상한",
   },
   {
     name: "부동산공시가격알리미 2026 공동주택가격",
@@ -137,7 +140,7 @@ export const PROPERTY_TAX_SOURCES = [
 export const PROPERTY_TAX_FAQS = [
   {
     q: "시가와 공시가격은 어떤 관계인가요?",
-    a: "이 계산기는 시세에 2026년 전국 현실화율 가정을 적용해 공시가격을 추정합니다. 개별 주택의 실제 공시가격은 지역·주택별로 다르므로 부동산공시가격알리미의 값을 우선 사용해야 합니다.",
+    a: "2026년 공시가격을 직접 입력하면 그 금액을 우선 사용합니다. 비워 두면 시세에 전국 현실화율 가정을 적용하지만 지역·주택별 차이가 있으므로 공시가격알리미의 개별 금액을 사용하는 편이 정확합니다.",
   },
   {
     q: "1세대 1주택 특례세율은 누구에게 적용되나요?",
@@ -160,7 +163,7 @@ export const PROPERTY_TAX_FAQS = [
     a: "아니요. 현재 계산은 아파트를 단독 명의로 보유한 1세대 1주택만 지원합니다. 단독주택, 공동명의 특례, 다주택, 법인, 상속주택·지방 저가주택 등은 지원하지 않습니다.",
   },
   {
-    q: "전년도 재산세를 모르면 어떻게 하나요?",
-    a: "전년도 재산세 본세를 입력하지 않으면 세부담상한을 적용하지 않은 산출세액을 보여줍니다. 고지서와 비교할 때 차이가 날 수 있습니다.",
+    q: "전년도 공시가격과 세액을 모르면 어떻게 하나요?",
+    a: "전년도 공시가격이 없으면 재산세 과세표준상한을, 전년도 재산세·종부세 본세가 없으면 종부세 150% 세부담상한을 적용하지 않습니다. 이전 고지서와 공시가격알리미에서 확인해야 실제 고지액에 가까워집니다.",
   },
 ] as const;

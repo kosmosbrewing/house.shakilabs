@@ -6,6 +6,7 @@ import {
   sanitizePropertyTaxInput,
 } from "@/lib/housingValidators";
 import { calculatePropertyTax } from "@/utils/housingCalculator";
+import { sanitizePropertyTaxAmount } from "@/utils/propertyTaxCalculator";
 
 export function usePropertyTax(initialOverride?: Partial<import("@/utils/housingCalculator").PropertyTaxInput>) {
   const route = useRoute();
@@ -15,7 +16,7 @@ export function usePropertyTax(initialOverride?: Partial<import("@/utils/housing
   watch(
     () => route.query,
     (query) => {
-      form.value = sanitizePropertyTaxInput({
+      const baseInput = sanitizePropertyTaxInput({
         marketPrice: parseQueryInt(query.price) ?? initialOverride?.marketPrice ?? DEFAULT_PROPERTY_TAX_INPUT.marketPrice,
         isUrbanArea: parseQueryBoolean(query.urban, initialOverride?.isUrbanArea ?? DEFAULT_PROPERTY_TAX_INPUT.isUrbanArea),
         isSingleOwnerOneHome: parseQueryBoolean(
@@ -30,15 +31,30 @@ export function usePropertyTax(initialOverride?: Partial<import("@/utils/housing
         holdingYears: parseQueryInt(query.years) ?? initialOverride?.holdingYears ?? DEFAULT_PROPERTY_TAX_INPUT.holdingYears,
         housingType: queryFirst(query.type) ?? initialOverride?.housingType ?? DEFAULT_PROPERTY_TAX_INPUT.housingType,
       });
+      form.value = {
+        ...baseInput,
+        officialPrice: sanitizePropertyTaxAmount(
+          parseQueryInt(query.official) ?? initialOverride?.officialPrice,
+        ),
+        previousYearOfficialPrice: sanitizePropertyTaxAmount(
+          parseQueryInt(query.previousPrice) ?? initialOverride?.previousYearOfficialPrice,
+        ),
+        previousYearComprehensiveTax: sanitizePropertyTaxAmount(
+          parseQueryInt(query.previousComp) ?? initialOverride?.previousYearComprehensiveTax,
+        ),
+      };
     },
     { immediate: true }
   );
 
   const shareQuery = computed(() => buildQuery({
     price: form.value.marketPrice !== DEFAULT_PROPERTY_TAX_INPUT.marketPrice ? form.value.marketPrice : null,
+    official: form.value.officialPrice || null,
+    previousPrice: form.value.previousYearOfficialPrice || null,
     urban: form.value.isUrbanArea !== DEFAULT_PROPERTY_TAX_INPUT.isUrbanArea ? form.value.isUrbanArea : null,
     oneHome: form.value.isSingleOwnerOneHome !== DEFAULT_PROPERTY_TAX_INPUT.isSingleOwnerOneHome ? form.value.isSingleOwnerOneHome : null,
     previousTax: form.value.previousYearPropertyTax !== DEFAULT_PROPERTY_TAX_INPUT.previousYearPropertyTax ? form.value.previousYearPropertyTax : null,
+    previousComp: form.value.previousYearComprehensiveTax || null,
     age: form.value.ownerAge !== DEFAULT_PROPERTY_TAX_INPUT.ownerAge ? form.value.ownerAge : null,
     years: form.value.holdingYears !== DEFAULT_PROPERTY_TAX_INPUT.holdingYears ? form.value.holdingYears : null,
     type: form.value.housingType !== DEFAULT_PROPERTY_TAX_INPUT.housingType ? form.value.housingType : null,

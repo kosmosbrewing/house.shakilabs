@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, watch } from "vue";
 import {
   CIVIL_DELAY_INTEREST_RATE,
   DEPOSIT_PRESETS,
@@ -6,6 +7,10 @@ import {
   OVERDUE_DAY_PRESETS,
 } from "@/data/delayInterest";
 import type { DelayInterestInput } from "@/utils/housingCalculator";
+import {
+  calculateInclusiveOverdueDays,
+  parseAnnualRatePercent,
+} from "@/utils/delayInterestInput";
 import { formatNumber, parseNumericInput } from "@/lib/utils";
 
 const model = defineModel<DelayInterestInput>({ required: true });
@@ -14,6 +19,31 @@ const ratePresets = [
   { label: "약정 없음 · 민법 5%", value: CIVIL_DELAY_INTEREST_RATE },
   { label: "소장 송달 다음 날 이후 · 12%", value: LITIGATION_DELAY_INTEREST_RATE },
 ] as const;
+
+const interestStartDate = ref("");
+const calculationEndDate = ref("");
+const dateError = ref("");
+
+function updateAnnualRate(event: Event) {
+  const rate = parseAnnualRatePercent((event.target as HTMLInputElement).value);
+  if (rate != null) model.value.annualRate = rate;
+}
+
+function updateOverdueDaysFromDates() {
+  if (!interestStartDate.value || !calculationEndDate.value) {
+    dateError.value = "";
+    return;
+  }
+  const days = calculateInclusiveOverdueDays(interestStartDate.value, calculationEndDate.value);
+  if (days == null) {
+    dateError.value = "종료일은 시작일 이후여야 하며 계산 범위는 최대 730일입니다.";
+    return;
+  }
+  model.value.overdueDays = days;
+  dateError.value = "";
+}
+
+watch([interestStartDate, calculationEndDate], updateOverdueDaysFromDates);
 </script>
 
 <template>
@@ -36,13 +66,28 @@ const ratePresets = [
           v-for="preset in DEPOSIT_PRESETS"
           :key="preset"
           type="button"
-          class="rounded-full border border-border bg-background px-3 py-1.5 text-caption font-semibold hover:border-primary hover:text-primary"
+          class="min-h-11 rounded-full border border-border bg-background px-3 py-1.5 text-caption font-semibold hover:border-primary hover:text-primary"
           @click="model.depositAmount = preset"
         >
           {{ formatNumber(preset) }}원
         </button>
       </div>
     </div>
+
+    <div class="grid gap-3 md:grid-cols-2">
+      <label class="space-y-1.5">
+        <span class="text-caption font-semibold text-foreground">이자 계산 시작일</span>
+        <input v-model="interestStartDate" type="date" class="retro-input" />
+      </label>
+      <label class="space-y-1.5">
+        <span class="text-caption font-semibold text-foreground">계산 종료일 (포함)</span>
+        <input v-model="calculationEndDate" type="date" class="retro-input" />
+      </label>
+    </div>
+    <p v-if="dateError" role="alert" class="text-caption text-status-danger">{{ dateError }}</p>
+    <p v-else class="text-caption leading-relaxed text-muted-foreground">
+      법적으로 확인한 첫 이자 발생일과 계산 종료일을 넣으면 지연 일수를 자동 계산합니다.
+    </p>
 
     <div class="grid gap-4 md:grid-cols-2">
       <div class="space-y-2">
@@ -56,7 +101,7 @@ const ratePresets = [
           min="1"
           max="365"
           step="1"
-          class="w-full accent-primary"
+          class="h-11 w-full accent-primary"
           aria-label="지연 일수 슬라이더"
         />
         <input
@@ -73,7 +118,7 @@ const ratePresets = [
             v-for="preset in OVERDUE_DAY_PRESETS"
             :key="preset"
             type="button"
-            class="rounded-full border border-border bg-background px-3 py-1.5 text-caption font-semibold hover:border-primary hover:text-primary"
+            class="min-h-11 rounded-full border border-border bg-background px-3 py-1.5 text-caption font-semibold hover:border-primary hover:text-primary"
             @click="model.overdueDays = preset"
           >
             {{ preset }}일
@@ -92,18 +137,19 @@ const ratePresets = [
           min="0.01"
           max="0.2"
           step="0.005"
-          class="w-full accent-primary"
+          class="h-11 w-full accent-primary"
           aria-label="적용 연이율 슬라이더"
         />
         <input
           id="delay-rate"
-          v-model.number="model.annualRate"
+          :value="(model.annualRate * 100).toFixed(1)"
           type="number"
-          inputmode="numeric"
-          min="0.01"
-          max="0.3"
-          step="0.005"
+          inputmode="decimal"
+          min="1"
+          max="30"
+          step="0.5"
           class="retro-input"
+          @input="updateAnnualRate"
         />
         <div class="grid gap-2">
           <button
