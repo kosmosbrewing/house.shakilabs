@@ -16,12 +16,12 @@ const priceLabel = computed(() => props.initialPrice ? formatManWon(props.initia
 const seoTitle = computed(() =>
   priceLabel.value
     ? `${priceLabel.value} 아파트 재산세·보유세 계산기 | shakilabs.com/house`
-    : "재산세·보유세 계산기 — 시세 기준 재산세·종부세 시뮬레이션",
+    : "1세대 1주택 재산세·보유세 계산기 — 2026년 기준",
 );
 const seoDescription = computed(() =>
   priceLabel.value
     ? `시가 ${priceLabel.value}원 아파트의 재산세와 종합부동산세를 자동 계산합니다.`
-    : "시세를 입력하면 공시가격 기준 재산세와 종합부동산세를 자동 계산합니다. 연간 보유세 총액과 월 환산액을 확인하세요.",
+    : "단독 명의 1세대 1주택의 시세를 입력하면 2026년 공정시장가액비율과 특례세율로 재산세·종부세를 추정합니다.",
 );
 
 const override = props.initialPrice ? { marketPrice: props.initialPrice } : undefined;
@@ -70,6 +70,7 @@ const faqJsonLd = {
 
     <!-- 요약 배너 -->
     <SummaryBanner
+      v-if="result.isSupportedScenario"
       title="시세 기준으로 공시가격을 추정해 재산세·종부세를 시뮬레이션한 결과입니다."
       leader-label="연간 보유세"
       :leader-value="formatWon(result.annualTotal)"

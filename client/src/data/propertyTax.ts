@@ -1,6 +1,6 @@
 // 재산세·종부세 상수 (2026년 기준, 1세대 1주택자 전용)
 
-export const PROPERTY_TAX_UPDATED = "2026-03-17";
+export const PROPERTY_TAX_UPDATED = "2026-07-10";
 
 // ── 현실화율 (공시가격 / 시가) ──
 export const REALIZATION_RATES = {
@@ -41,6 +41,12 @@ export const PROPERTY_TAX_SPECIAL_TIERS: PropertyTaxTier[] = [
 
 // 1주택 특례세율 적용 기준: 공시가격 9억원 이하
 export const SPECIAL_RATE_THRESHOLD = 900_000_000;
+
+export const PROPERTY_TAX_BURDEN_CAP_RATES = [
+  { max: 300_000_000, rate: 1.05 },
+  { max: 600_000_000, rate: 1.1 },
+  { max: null, rate: 1.3 },
+] as const;
 
 // ── 종합부동산세 (1세대 1주택, 2주택 이하 일반) ──
 export const COMP_TAX_DEDUCTION = 1_200_000_000; // 기본공제 12억
@@ -101,9 +107,19 @@ export const MARKET_PRICE_PRESETS = [
 // ── 출처 ──
 export const PROPERTY_TAX_SOURCES = [
   {
-    name: "지방세법 제111조·제112조",
-    url: "https://www.law.go.kr/법령/지방세법",
-    basis: "재산세 세율 및 1세대 1주택 특례세율",
+    name: "지방세법 제111조의2",
+    url: "https://www.law.go.kr/lsSideInfoP.do?docCls=jo&joBrNo=02&joNo=0111&lsiSeq=282559",
+    basis: "2026년 1세대 1주택 9억원 이하 특례세율",
+  },
+  {
+    name: "지방세법 시행령 제109조",
+    url: "https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=00&joNo=0109&lsiSeq=286395",
+    basis: "2026년 1세대 1주택 공정시장가액비율 43%·44%·45%",
+  },
+  {
+    name: "지방세법 시행령 제118조",
+    url: "https://law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=00&joNo=0118&lsiSeq=286395",
+    basis: "직전 연도 재산세액 상당액을 이용한 세부담상한 계산",
   },
   {
     name: "종합부동산세법 제9조",
@@ -111,9 +127,9 @@ export const PROPERTY_TAX_SOURCES = [
     basis: "종부세 세율, 기본공제, 세액공제",
   },
   {
-    name: "2026년 공시가격 현실화율",
-    url: "https://www.realtyprice.kr",
-    basis: "아파트 69%, 단독주택 53.6%",
+    name: "부동산공시가격알리미 2026 공동주택가격",
+    url: "https://realtyprice.kr/notice/town/objectionGuide.htm",
+    basis: "2026년 개별 공동주택 공시가격 확인",
   },
 ] as const;
 
@@ -121,7 +137,7 @@ export const PROPERTY_TAX_SOURCES = [
 export const PROPERTY_TAX_FAQS = [
   {
     q: "시가와 공시가격은 어떤 관계인가요?",
-    a: "공시가격은 국토교통부가 매년 공시하는 가격으로, 실거래 시가의 일정 비율(현실화율)을 반영합니다. 2026년 기준 아파트는 약 69%, 단독주택은 약 53.6%입니다.",
+    a: "이 계산기는 시세에 2026년 전국 현실화율 가정을 적용해 공시가격을 추정합니다. 개별 주택의 실제 공시가격은 지역·주택별로 다르므로 부동산공시가격알리미의 값을 우선 사용해야 합니다.",
   },
   {
     q: "1세대 1주택 특례세율은 누구에게 적용되나요?",
@@ -138,5 +154,13 @@ export const PROPERTY_TAX_FAQS = [
   {
     q: "도시지역분은 항상 부과되나요?",
     a: "도시지역(「국토의 계획 및 이용에 관한 법률」상 도시지역)에 소재한 주택에만 과세표준의 0.14%가 추가됩니다. 대부분의 아파트는 도시지역에 해당합니다.",
+  },
+  {
+    q: "공동명의나 다주택도 계산할 수 있나요?",
+    a: "아니요. 현재 계산은 아파트를 단독 명의로 보유한 1세대 1주택만 지원합니다. 단독주택, 공동명의 특례, 다주택, 법인, 상속주택·지방 저가주택 등은 지원하지 않습니다.",
+  },
+  {
+    q: "전년도 재산세를 모르면 어떻게 하나요?",
+    a: "전년도 재산세 본세를 입력하지 않으면 세부담상한을 적용하지 않은 산출세액을 보여줍니다. 고지서와 비교할 때 차이가 날 수 있습니다.",
   },
 ] as const;

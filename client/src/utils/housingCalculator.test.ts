@@ -8,6 +8,7 @@ import {
   calculateHousingSubscriptionScore,
   calculateJeonseVsWolse,
   calculateJeonseWolseRate,
+  calculatePropertyTax,
   calculateRentalYield,
 } from "@/utils/housingCalculator";
 
@@ -25,6 +26,63 @@ describe("calculateDelayInterest", () => {
   it("원금 포함 합계를 계산한다", () => {
     const result = calculateDelayInterest({ depositAmount: 500_000_000, overdueDays: 180, annualRate: 0.12 });
     expect(Math.round(result.totalWithPrincipal)).toBe(529_589_041);
+  });
+
+  it("약정이 없을 때 검토하는 민법상 5%도 계산한다", () => {
+    const result = calculateDelayInterest({
+      depositAmount: 300_000_000,
+      overdueDays: 90,
+      annualRate: 0.05,
+    });
+    expect(Math.round(result.totalInterest)).toBe(3_698_630);
+  });
+});
+
+describe("calculatePropertyTax", () => {
+  const baseInput = {
+    marketPrice: 1_000_000_000,
+    isUrbanArea: true,
+    isSingleOwnerOneHome: true,
+    previousYearPropertyTax: 0,
+    ownerAge: 45,
+    holdingYears: 5,
+    housingType: "apartment" as const,
+  };
+
+  it("2026년 1주택 공정시장가액비율과 특례세율을 적용한다", () => {
+    const result = calculatePropertyTax(baseInput);
+    expect(result.officialPrice).toBe(690_000_000);
+    expect(result.fairMarketRatio).toBe(0.45);
+    expect(result.propertyTaxBase).toBe(310_500_000);
+    expect(result.calculatedPropertyTax).toBe(456_750);
+  });
+
+  it("전년도 본세가 있으면 공시가격 구간별 세부담상한을 적용한다", () => {
+    const result = calculatePropertyTax({
+      ...baseInput,
+      previousYearPropertyTax: 100_000,
+    });
+    expect(result.burdenCapRate).toBe(1.3);
+    expect(result.propertyTax).toBe(130_000);
+    expect(result.burdenCapReduction).toBe(326_750);
+  });
+
+  it("단독 명의 1세대 1주택이 아니면 지원 대상에서 제외한다", () => {
+    const result = calculatePropertyTax({
+      ...baseInput,
+      isSingleOwnerOneHome: false,
+    });
+    expect(result.isSupportedScenario).toBe(false);
+    expect(result.isSpecialRate).toBe(false);
+    expect(result.isCompTaxSubject).toBe(false);
+  });
+
+  it("단독주택 추정은 현재 지원 대상에서 제외한다", () => {
+    const result = calculatePropertyTax({
+      ...baseInput,
+      housingType: "detached",
+    });
+    expect(result.isSupportedScenario).toBe(false);
   });
 });
 

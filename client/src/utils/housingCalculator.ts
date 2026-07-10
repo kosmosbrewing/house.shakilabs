@@ -33,6 +33,7 @@ import {
   PROPERTY_FAIR_MARKET_RATIOS,
   PROPERTY_TAX_STANDARD_TIERS,
   PROPERTY_TAX_SPECIAL_TIERS,
+  PROPERTY_TAX_BURDEN_CAP_RATES,
   SPECIAL_RATE_THRESHOLD,
   COMP_TAX_DEDUCTION,
   COMP_TAX_FAIR_MARKET_RATIO,
@@ -84,6 +85,8 @@ export type HousingType = "apartment" | "detached";
 export interface PropertyTaxInput {
   marketPrice: number;
   isUrbanArea: boolean;
+  isSingleOwnerOneHome: boolean;
+  previousYearPropertyTax: number;
   ownerAge: number;
   holdingYears: number;
   housingType: HousingType;
@@ -242,6 +245,12 @@ function getPropertyFairMarketRatio(officialPrice: number): number {
   return PROPERTY_FAIR_MARKET_RATIOS[PROPERTY_FAIR_MARKET_RATIOS.length - 1]!.rate;
 }
 
+function getPropertyTaxBurdenCapRate(officialPrice: number): number {
+  return PROPERTY_TAX_BURDEN_CAP_RATES.find(
+    (tier) => tier.max == null || officialPrice <= tier.max
+  )!.rate;
+}
+
 interface ProgressiveTier {
   min: number;
   max: number | null;
@@ -278,17 +287,32 @@ export function calculatePropertyTax(input: PropertyTaxInput) {
   const fairMarketRatio = getPropertyFairMarketRatio(officialPrice);
   const propertyTaxBase = roundWon(officialPrice * fairMarketRatio);
 
-  // 공시가 9억 이하: 특례세율, 초과: 일반세율
-  const isSpecialRate = officialPrice <= SPECIAL_RATE_THRESHOLD;
+  // 단독 명의 1세대 1주택이면서 공시가 9억 이하일 때만 특례세율 적용
+  const isSupportedScenario =
+    input.isSingleOwnerOneHome && input.housingType === "apartment";
+  const isSpecialRate =
+    isSupportedScenario && officialPrice <= SPECIAL_RATE_THRESHOLD;
   const tiers = isSpecialRate ? PROPERTY_TAX_SPECIAL_TIERS : PROPERTY_TAX_STANDARD_TIERS;
-  const { tax: propertyTax, tier: appliedTier } = applyProgressiveTax(propertyTaxBase, tiers);
+  const { tax: calculatedPropertyTax, tier: appliedTier } = applyProgressiveTax(propertyTaxBase, tiers);
+  const burdenCapRate = getPropertyTaxBurdenCapRate(officialPrice);
+  const burdenCapAmount =
+    input.previousYearPropertyTax > 0
+      ? roundWon(input.previousYearPropertyTax * burdenCapRate)
+      : null;
+  const propertyTax =
+    burdenCapAmount == null
+      ? calculatedPropertyTax
+      : Math.min(calculatedPropertyTax, burdenCapAmount);
+  const burdenCapReduction = calculatedPropertyTax - propertyTax;
 
   const urbanAreaTax = input.isUrbanArea ? roundWon(propertyTaxBase * URBAN_AREA_TAX_RATE) : 0;
   const localEducationTax = roundWon(propertyTax * LOCAL_EDUCATION_TAX_RATE);
   const propertyTaxTotal = propertyTax + urbanAreaTax + localEducationTax;
 
   // ── 종부세 ──
-  const compTaxablePrice = Math.max(0, officialPrice - COMP_TAX_DEDUCTION);
+  const compTaxablePrice = isSupportedScenario
+    ? Math.max(0, officialPrice - COMP_TAX_DEDUCTION)
+    : 0;
   const isCompTaxSubject = compTaxablePrice > 0;
   const compTaxBase = roundWon(compTaxablePrice * COMP_TAX_FAIR_MARKET_RATIO);
 
@@ -321,11 +345,16 @@ export function calculatePropertyTax(input: PropertyTaxInput) {
     propertyTaxBase,
     propertyTaxRate: appliedTier.rate,
     propertyTaxRateLabel: appliedTier.label,
+    calculatedPropertyTax,
     propertyTax,
+    burdenCapRate,
+    burdenCapAmount,
+    burdenCapReduction,
     urbanAreaTax,
     localEducationTax,
     propertyTaxTotal,
     isSpecialRate,
+    isSupportedScenario,
     // 종부세
     compTaxBase,
     compTaxAmount,
