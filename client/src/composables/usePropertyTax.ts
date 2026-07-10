@@ -18,6 +18,14 @@ export function usePropertyTax(initialOverride?: Partial<import("@/utils/housing
       form.value = sanitizePropertyTaxInput({
         marketPrice: parseQueryInt(query.price) ?? initialOverride?.marketPrice ?? DEFAULT_PROPERTY_TAX_INPUT.marketPrice,
         isUrbanArea: parseQueryBoolean(query.urban, initialOverride?.isUrbanArea ?? DEFAULT_PROPERTY_TAX_INPUT.isUrbanArea),
+        isSingleOwnerOneHome: parseQueryBoolean(
+          query.oneHome,
+          initialOverride?.isSingleOwnerOneHome ?? DEFAULT_PROPERTY_TAX_INPUT.isSingleOwnerOneHome
+        ),
+        previousYearPropertyTax:
+          parseQueryInt(query.previousTax) ??
+          initialOverride?.previousYearPropertyTax ??
+          DEFAULT_PROPERTY_TAX_INPUT.previousYearPropertyTax,
         ownerAge: parseQueryInt(query.age) ?? initialOverride?.ownerAge ?? DEFAULT_PROPERTY_TAX_INPUT.ownerAge,
         holdingYears: parseQueryInt(query.years) ?? initialOverride?.holdingYears ?? DEFAULT_PROPERTY_TAX_INPUT.holdingYears,
         housingType: queryFirst(query.type) ?? initialOverride?.housingType ?? DEFAULT_PROPERTY_TAX_INPUT.housingType,
@@ -29,6 +37,8 @@ export function usePropertyTax(initialOverride?: Partial<import("@/utils/housing
   const shareQuery = computed(() => buildQuery({
     price: form.value.marketPrice !== DEFAULT_PROPERTY_TAX_INPUT.marketPrice ? form.value.marketPrice : null,
     urban: form.value.isUrbanArea !== DEFAULT_PROPERTY_TAX_INPUT.isUrbanArea ? form.value.isUrbanArea : null,
+    oneHome: form.value.isSingleOwnerOneHome !== DEFAULT_PROPERTY_TAX_INPUT.isSingleOwnerOneHome ? form.value.isSingleOwnerOneHome : null,
+    previousTax: form.value.previousYearPropertyTax !== DEFAULT_PROPERTY_TAX_INPUT.previousYearPropertyTax ? form.value.previousYearPropertyTax : null,
     age: form.value.ownerAge !== DEFAULT_PROPERTY_TAX_INPUT.ownerAge ? form.value.ownerAge : null,
     years: form.value.holdingYears !== DEFAULT_PROPERTY_TAX_INPUT.holdingYears ? form.value.holdingYears : null,
     type: form.value.housingType !== DEFAULT_PROPERTY_TAX_INPUT.housingType ? form.value.housingType : null,

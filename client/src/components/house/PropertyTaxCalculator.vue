@@ -72,7 +72,7 @@ function setPreset(price: number) {
           <span class="text-caption font-semibold text-foreground">주택 유형</span>
           <select v-model="form.housingType" class="retro-input">
             <option value="apartment">아파트</option>
-            <option value="detached">단독주택</option>
+            <option value="detached">단독주택 (현재 미지원)</option>
           </select>
         </label>
 
@@ -98,10 +98,37 @@ function setPreset(price: number) {
           </label>
         </div>
       </div>
+
+      <div class="grid gap-3 md:grid-cols-2">
+        <label class="retro-panel flex min-h-11 items-center gap-2 px-3 py-3">
+          <input v-model="form.isSingleOwnerOneHome" class="retro-checkbox" type="checkbox" />
+          <span class="text-caption font-semibold">단독 명의 1세대 1주택</span>
+        </label>
+        <label class="space-y-1.5">
+          <span class="text-caption font-semibold text-foreground">전년도 동일 주택 재산세 본세 (선택)</span>
+          <input
+            type="text"
+            inputmode="numeric"
+            class="retro-input"
+            :value="form.previousYearPropertyTax.toLocaleString('ko-KR')"
+            @input="form.previousYearPropertyTax = parseNumericInput(($event.target as HTMLInputElement).value)"
+          />
+        </label>
+      </div>
+      <p class="text-caption leading-relaxed text-muted-foreground">
+        시세로 추정한 공시가격을 사용합니다. 실제 고지액 비교에는 공시가격알리미의 개별 공시가격과 전년도 재산세 본세를 확인하세요.
+      </p>
     </section>
 
+    <div
+      v-if="!result.isSupportedScenario"
+      class="rounded-xl border border-status-warning/40 bg-status-warning/10 p-4 text-caption leading-relaxed text-foreground"
+    >
+      현재는 아파트를 단독 명의로 보유한 1세대 1주택만 지원합니다. 단독주택·공동명의·다주택·법인·주택 수 제외 특례는 잘못된 세액을 피하기 위해 결과를 숨깁니다.
+    </div>
+
     <!-- 4칸 stat grid -->
-    <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    <div v-if="result.isSupportedScenario" class="grid grid-cols-2 gap-2 sm:grid-cols-4">
       <Card
         v-for="(stat, index) in statItems"
         :key="stat.label"
@@ -123,7 +150,7 @@ function setPreset(price: number) {
     </div>
 
     <!-- 상세 내역 2컬럼 -->
-    <div class="grid gap-4 lg:grid-cols-2">
+    <div v-if="result.isSupportedScenario" class="grid gap-4 lg:grid-cols-2">
       <!-- 재산세 내역 -->
       <Card>
         <CardContent class="p-4">
@@ -156,6 +183,12 @@ function setPreset(price: number) {
             <li class="flex justify-between">
               <span>재산세 본세 ({{ result.propertyTaxRateLabel }})</span>
               <span class="font-medium text-foreground tabular-nums">{{ formatWon(result.propertyTax) }}</span>
+            </li>
+            <li v-if="result.burdenCapAmount != null" class="flex justify-between">
+              <span>세부담상한 (전년 본세 × {{ formatPercent(result.burdenCapRate, 0) }})</span>
+              <span class="font-medium text-foreground tabular-nums">
+                {{ result.burdenCapReduction > 0 ? `-${formatWon(result.burdenCapReduction)}` : "감액 없음" }}
+              </span>
             </li>
             <li v-if="form.isUrbanArea" class="flex justify-between">
               <span>도시지역분 (0.14%)</span>
@@ -250,6 +283,10 @@ function setPreset(price: number) {
       </Card>
     </div>
 
-    <CompareSourceFooter :sources="[...PROPERTY_TAX_SOURCES]" :updated-at="PROPERTY_TAX_UPDATED" />
+    <CompareSourceFooter
+      :sources="[...PROPERTY_TAX_SOURCES]"
+      :updated-at="PROPERTY_TAX_UPDATED"
+      note="※ 아파트 단독 명의 1세대 1주택 전용 추정치입니다. 전년도 본세 미입력 시 세부담상한을 적용하지 않으며, 도시지역분의 별도 상한 계산은 지원하지 않습니다."
+    />
   </div>
 </template>

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { LEGAL_DELAY_INTEREST_RATE } from "@/data/delayInterest";
+import { DEFAULT_DELAY_INTEREST_RATE } from "@/data/delayInterest";
 import type { BrokerageDealType } from "@/data/brokerageRates";
 import type { HomeCount } from "@/data/acquisitionTax";
 import { LEGAL_CONVERSION_RATE_CAP } from "@/data/jeonseWolseRate";
@@ -21,7 +21,7 @@ const dealTypeValues = ["sale", "jeonse", "monthly"] as const;
 export const DEFAULT_DELAY_INTEREST_INPUT: DelayInterestInput = {
   depositAmount: 300_000_000,
   overdueDays: 90,
-  annualRate: LEGAL_DELAY_INTEREST_RATE,
+  annualRate: DEFAULT_DELAY_INTEREST_RATE,
 };
 
 export const DEFAULT_JEONSE_WOLSE_INPUT: JeonseVsWolseInput = {
@@ -55,6 +55,8 @@ export const DEFAULT_HOUSING_SUBSCRIPTION_INPUT: HousingSubscriptionInput = {
 export const DEFAULT_PROPERTY_TAX_INPUT: PropertyTaxInput = {
   marketPrice: 1_200_000_000,
   isUrbanArea: true,
+  isSingleOwnerOneHome: true,
+  previousYearPropertyTax: 0,
   ownerAge: 45,
   holdingYears: 5,
   housingType: "apartment",
@@ -116,6 +118,8 @@ const housingTypeValues = ["apartment", "detached"] as const;
 const propertyTaxSchema = z.object({
   marketPrice: z.number().int().min(100_000_000).max(50_000_000_000),
   isUrbanArea: z.boolean(),
+  isSingleOwnerOneHome: z.boolean(),
+  previousYearPropertyTax: z.number().int().min(0).max(1_000_000_000),
   ownerAge: z.number().int().min(20).max(100),
   holdingYears: z.number().int().min(0).max(50),
   housingType: z.enum(housingTypeValues),
@@ -237,6 +241,16 @@ export function sanitizePropertyTaxInput(
   const candidate: PropertyTaxInput = {
     marketPrice: clampInt(input.marketPrice, DEFAULT_PROPERTY_TAX_INPUT.marketPrice, 100_000_000, 50_000_000_000),
     isUrbanArea: typeof input.isUrbanArea === "boolean" ? input.isUrbanArea : DEFAULT_PROPERTY_TAX_INPUT.isUrbanArea,
+    isSingleOwnerOneHome:
+      typeof input.isSingleOwnerOneHome === "boolean"
+        ? input.isSingleOwnerOneHome
+        : DEFAULT_PROPERTY_TAX_INPUT.isSingleOwnerOneHome,
+    previousYearPropertyTax: clampInt(
+      input.previousYearPropertyTax,
+      DEFAULT_PROPERTY_TAX_INPUT.previousYearPropertyTax,
+      0,
+      1_000_000_000
+    ),
     ownerAge: clampInt(input.ownerAge, DEFAULT_PROPERTY_TAX_INPUT.ownerAge, 20, 100),
     holdingYears: clampInt(input.holdingYears, DEFAULT_PROPERTY_TAX_INPUT.holdingYears, 0, 50),
     housingType: parseHousingType(input.housingType) ?? DEFAULT_PROPERTY_TAX_INPUT.housingType,

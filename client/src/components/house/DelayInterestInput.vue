@@ -1,9 +1,19 @@
 <script setup lang="ts">
-import { DEPOSIT_PRESETS, OVERDUE_DAY_PRESETS } from "@/data/delayInterest";
+import {
+  CIVIL_DELAY_INTEREST_RATE,
+  DEPOSIT_PRESETS,
+  LITIGATION_DELAY_INTEREST_RATE,
+  OVERDUE_DAY_PRESETS,
+} from "@/data/delayInterest";
 import type { DelayInterestInput } from "@/utils/housingCalculator";
 import { formatNumber, parseNumericInput } from "@/lib/utils";
 
 const model = defineModel<DelayInterestInput>({ required: true });
+
+const ratePresets = [
+  { label: "약정 없음 · 민법 5%", value: CIVIL_DELAY_INTEREST_RATE },
+  { label: "소장 송달 다음 날 이후 · 12%", value: LITIGATION_DELAY_INTEREST_RATE },
+] as const;
 </script>
 
 <template>
@@ -95,8 +105,21 @@ const model = defineModel<DelayInterestInput>({ required: true });
           step="0.005"
           class="retro-input"
         />
+        <div class="grid gap-2">
+          <button
+            v-for="preset in ratePresets"
+            :key="preset.value"
+            type="button"
+            class="min-h-11 rounded-lg border border-border bg-background px-3 py-2 text-left text-caption font-semibold hover:border-primary hover:text-primary"
+            :class="{ 'border-primary bg-primary/10 text-primary': model.annualRate === preset.value }"
+            :aria-pressed="model.annualRate === preset.value"
+            @click="model.annualRate = preset.value"
+          >
+            {{ preset.label }}
+          </button>
+        </div>
         <p class="text-caption text-muted-foreground">
-          기본값은 소송촉진 등에 관한 특례법상 12% 가정입니다.
+          약정 이율이 있으면 직접 입력하세요. 12%는 계약 종료일에 자동 적용되지 않습니다.
         </p>
       </div>
     </div>

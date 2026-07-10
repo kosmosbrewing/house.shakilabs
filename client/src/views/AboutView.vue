@@ -37,7 +37,7 @@ const constantsStore = useConstantsStore();
         <h2 class="text-heading font-bold">데이터 기준</h2>
         <ul class="text-body text-muted-foreground space-y-1 list-disc list-inside">
           <li>법령·조례 확인일: {{ constantsStore.feeDataUpdated }}</li>
-          <li>보증금 지연이자는 소송촉진 등에 관한 특례법상 연 12% 가정</li>
+          <li>보증금 지연이자는 약정·민법상 5%·소장 등 송달 이후 12%를 구분</li>
           <li>중개보수는 서울시 주택 중개보수 표 기준</li>
         </ul>
         <p class="text-body text-muted-foreground">

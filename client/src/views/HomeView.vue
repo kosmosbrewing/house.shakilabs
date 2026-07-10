@@ -17,7 +17,7 @@ type ToolItem = {
 const tools: ToolItem[] = [
   {
     title: "보증금 반환 지연이자",
-    desc: "연 12% 가정 기준의 예상 지연이자를 빠르게 확인합니다.",
+    desc: "약정 이율, 민법상 5%, 소장 등 송달 이후 12%를 구분해 계산합니다.",
     to: "/delay-interest",
     icon: Clock,
   },
