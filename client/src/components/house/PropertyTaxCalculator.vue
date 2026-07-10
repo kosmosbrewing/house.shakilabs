@@ -13,6 +13,8 @@ import { formatWon, formatPercent, parseNumericInput } from "@/lib/utils";
 import type { PropertyTaxInput } from "@/utils/housingCalculator";
 
 const form = defineModel<PropertyTaxInput>({ required: true });
+const marketPriceInputId = "property-market-price";
+const previousYearPropertyTaxInputId = "previous-year-property-tax";
 
 const props = defineProps<{
   result: ReturnType<typeof import("@/utils/housingCalculator").calculatePropertyTax>;
@@ -44,8 +46,9 @@ function setPreset(price: number) {
     <section class="retro-panel-muted space-y-4 p-4">
       <!-- 시가 + 프리셋 -->
       <div class="space-y-1.5">
-        <label class="text-caption font-semibold text-foreground">시가 (시세)</label>
+        <label :for="marketPriceInputId" class="text-caption font-semibold text-foreground">시가 (시세)</label>
         <input
+          :id="marketPriceInputId"
           type="text"
           inputmode="numeric"
           class="retro-input"
@@ -104,16 +107,17 @@ function setPreset(price: number) {
           <input v-model="form.isSingleOwnerOneHome" class="retro-checkbox" type="checkbox" />
           <span class="text-caption font-semibold">단독 명의 1세대 1주택</span>
         </label>
-        <label class="space-y-1.5">
-          <span class="text-caption font-semibold text-foreground">전년도 동일 주택 재산세 본세 (선택)</span>
+        <div class="space-y-1.5">
+          <label :for="previousYearPropertyTaxInputId" class="text-caption font-semibold text-foreground">전년도 동일 주택 재산세 본세 (선택)</label>
           <input
+            :id="previousYearPropertyTaxInputId"
             type="text"
             inputmode="numeric"
             class="retro-input"
             :value="form.previousYearPropertyTax.toLocaleString('ko-KR')"
             @input="form.previousYearPropertyTax = parseNumericInput(($event.target as HTMLInputElement).value)"
           />
-        </label>
+        </div>
       </div>
       <p class="text-caption leading-relaxed text-muted-foreground">
         시세로 추정한 공시가격을 사용합니다. 실제 고지액 비교에는 공시가격알리미의 개별 공시가격과 전년도 재산세 본세를 확인하세요.
