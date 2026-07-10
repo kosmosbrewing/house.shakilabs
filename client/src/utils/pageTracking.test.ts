@@ -8,7 +8,10 @@ import {
 describe("pageTracking", () => {
   it("공개 서비스 경로를 앱 내부 경로에 붙인다", () => {
     expect(buildPublicPagePath("/house/", "/property-tax/30000?owners=1")).toBe(
-      "/house/property-tax/30000",
+      "/house/property-tax",
+    );
+    expect(buildPublicPagePath("/house", "/delay-interest/30000?days=30")).toBe(
+      "/house/delay-interest",
     );
     expect(buildPublicPagePath("house", "/")).toBe("/house");
   });

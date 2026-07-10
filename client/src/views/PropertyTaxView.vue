@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import CalculatorInteractionTracker from "@/components/analytics/CalculatorInteractionTracker.vue";
 import FreshBadge from "@/components/common/FreshBadge.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import SummaryBanner from "@/components/common/SummaryBanner.vue";
@@ -68,7 +69,13 @@ const faqJsonLd = {
         <FreshBadge :message="`${PROPERTY_TAX_UPDATED} 확인`" />
       </div>
       <div class="retro-panel-content">
-        <PropertyTaxCalculator v-model="form" :result="result" />
+        <CalculatorInteractionTracker
+          calculator-id="property_tax"
+          page-path="/house/property-tax"
+          :can-view-result="result.isSupportedScenario"
+        >
+          <PropertyTaxCalculator v-model="form" :result="result" />
+        </CalculatorInteractionTracker>
       </div>
     </div>
 
