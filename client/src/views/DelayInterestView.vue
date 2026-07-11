@@ -5,7 +5,7 @@ import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
 import FreshBadge from "@/components/common/FreshBadge.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import ShareModal from "@/components/share/ShareModal.vue";
-import SummaryBanner from "@/components/common/SummaryBanner.vue";
+import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import DelayInterestFAQ from "@/components/house/DelayInterestFAQ.vue";
 import DelayInterestInput from "@/components/house/DelayInterestInput.vue";
 import DelayInterestResult from "@/components/house/DelayInterestResult.vue";

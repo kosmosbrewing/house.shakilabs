@@ -30,6 +30,7 @@ const model = defineModel<JeonseVsWolseInput>({ required: true });
           <span class="retro-kbd">{{ (model.annualOpportunityRate * 100).toFixed(1) }}%</span>
         </div>
         <input
+          id="opportunity-rate"
           v-model.number="model.annualOpportunityRate"
           type="range"
           min="0.01"

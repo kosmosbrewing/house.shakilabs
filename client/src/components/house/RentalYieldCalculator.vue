@@ -62,7 +62,7 @@ function setPricePreset(price: number) {
       <!-- 매매가 + 프리셋 -->
       <div class="space-y-1.5">
         <label class="text-caption font-semibold text-foreground">매매가</label>
-        <input
+        <input aria-label="매매가"
           type="text"
           inputmode="numeric"
           class="retro-input"
@@ -88,6 +88,7 @@ function setPricePreset(price: number) {
         <div class="space-y-1.5">
           <label class="text-caption font-semibold text-foreground">보증금 (전세금)</label>
           <input
+            aria-label="보증금"
             type="text"
             inputmode="numeric"
             class="retro-input"
@@ -100,6 +101,7 @@ function setPricePreset(price: number) {
         <div class="space-y-1.5">
           <label class="text-caption font-semibold text-foreground">월세</label>
           <input
+            aria-label="월세"
             type="text"
             inputmode="numeric"
             class="retro-input"
@@ -114,6 +116,7 @@ function setPricePreset(price: number) {
         <div class="space-y-1.5">
           <label class="text-caption font-semibold text-foreground">대출 금액</label>
           <input
+            aria-label="대출 금액"
             type="text"
             inputmode="numeric"
             class="retro-input"
@@ -128,6 +131,7 @@ function setPricePreset(price: number) {
             대출 금리: {{ (form.loanRate * 100).toFixed(1) }}%
           </label>
           <input
+            aria-label="대출 금리 범위"
             v-model.number="form.loanRate"
             type="range"
             min="0"
@@ -155,6 +159,7 @@ function setPricePreset(price: number) {
         <div class="space-y-1.5">
           <label class="text-caption font-semibold text-foreground">월 관리비·수선비</label>
           <input
+            aria-label="월 관리비와 수선비"
             type="text"
             inputmode="numeric"
             class="retro-input"
@@ -169,6 +174,7 @@ function setPricePreset(price: number) {
             공실률: {{ (form.vacancyRate * 100).toFixed(0) }}%
           </label>
           <input
+            aria-label="공실률 범위"
             v-model.number="form.vacancyRate"
             type="range"
             min="0"
