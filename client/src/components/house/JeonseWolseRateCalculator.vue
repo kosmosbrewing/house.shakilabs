@@ -86,9 +86,9 @@ function setDepositPreset(price: number) {
     <section class="retro-panel-muted space-y-4 p-4">
       <!-- 전세 보증금 + 프리셋 -->
       <div class="space-y-1.5">
-        <label class="text-caption font-semibold text-foreground">전세 보증금</label>
+        <label for="conversion-jeonse-deposit" class="text-caption font-semibold text-foreground">전세 보증금</label>
         <input
-          aria-label="전세 보증금"
+          id="conversion-jeonse-deposit"
           type="text"
           inputmode="numeric"
           class="retro-input"
@@ -112,9 +112,9 @@ function setDepositPreset(price: number) {
       <div class="grid gap-3 md:grid-cols-2">
         <!-- 월세 보증금 -->
         <div class="space-y-1.5">
-          <label class="text-caption font-semibold text-foreground">월세 보증금</label>
+          <label for="conversion-wolse-deposit" class="text-caption font-semibold text-foreground">월세 보증금</label>
           <input
-            aria-label="월세 보증금"
+            id="conversion-wolse-deposit"
             type="text"
             inputmode="numeric"
             class="retro-input"
@@ -125,9 +125,9 @@ function setDepositPreset(price: number) {
 
         <!-- 월세 -->
         <div class="space-y-1.5">
-          <label class="text-caption font-semibold text-foreground">월세</label>
+          <label for="conversion-monthly-rent" class="text-caption font-semibold text-foreground">월세</label>
           <input
-            aria-label="월세"
+            id="conversion-monthly-rent"
             type="text"
             inputmode="numeric"
             class="retro-input"

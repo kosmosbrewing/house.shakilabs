@@ -34,7 +34,7 @@ defineProps<{
       </div>
     </div>
 
-    <div class="retro-panel-muted p-4">
+    <div class="delay-result-note retro-panel-muted p-4">
       <p class="text-caption leading-relaxed text-muted-foreground">
         {{ form.overdueDays }}일 동안 {{ formatPercent(form.annualRate, 1) }} 가정 시
         보증금 {{ formatWon(form.depositAmount) }}에 대한 지연이자는

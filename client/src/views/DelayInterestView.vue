@@ -64,7 +64,7 @@ const rateBasis = computed(() => {
 
 <template>
   <SEOHead :title="seoTitle" :description="seoDescription" />
-  <div class="container space-y-5 py-5">
+  <div class="text-resize-layout container space-y-5 py-5">
     <div class="retro-panel overflow-hidden">
       <div class="retro-titlebar rounded-t-2xl">
         <h1 class="retro-title">보증금 반환 지연이자 계산기</h1>
