@@ -61,8 +61,9 @@ function setPricePreset(price: number) {
     <section class="retro-panel-muted space-y-4 p-4">
       <!-- 매매가 + 프리셋 -->
       <div class="space-y-1.5">
-        <label class="text-caption font-semibold text-foreground">매매가</label>
-        <input aria-label="매매가"
+        <label for="rental-purchase-price" class="text-caption font-semibold text-foreground">매매가</label>
+        <input
+          id="rental-purchase-price"
           type="text"
           inputmode="numeric"
           class="retro-input"
@@ -86,9 +87,9 @@ function setPricePreset(price: number) {
       <div class="grid gap-3 md:grid-cols-2">
         <!-- 보증금 -->
         <div class="space-y-1.5">
-          <label class="text-caption font-semibold text-foreground">보증금 (전세금)</label>
+          <label for="rental-deposit" class="text-caption font-semibold text-foreground">보증금 (전세금)</label>
           <input
-            aria-label="보증금"
+            id="rental-deposit"
             type="text"
             inputmode="numeric"
             class="retro-input"
@@ -99,9 +100,9 @@ function setPricePreset(price: number) {
 
         <!-- 월세 -->
         <div class="space-y-1.5">
-          <label class="text-caption font-semibold text-foreground">월세</label>
+          <label for="rental-monthly-rent" class="text-caption font-semibold text-foreground">월세</label>
           <input
-            aria-label="월세"
+            id="rental-monthly-rent"
             type="text"
             inputmode="numeric"
             class="retro-input"
@@ -114,9 +115,9 @@ function setPricePreset(price: number) {
       <div class="grid gap-3 md:grid-cols-2">
         <!-- 대출금액 -->
         <div class="space-y-1.5">
-          <label class="text-caption font-semibold text-foreground">대출 금액</label>
+          <label for="rental-loan-amount" class="text-caption font-semibold text-foreground">대출 금액</label>
           <input
-            aria-label="대출 금액"
+            id="rental-loan-amount"
             type="text"
             inputmode="numeric"
             class="retro-input"
@@ -127,11 +128,11 @@ function setPricePreset(price: number) {
 
         <!-- 대출금리 -->
         <div class="space-y-1.5">
-          <label class="text-caption font-semibold text-foreground">
+          <label for="rental-loan-rate" class="text-caption font-semibold text-foreground">
             대출 금리: {{ (form.loanRate * 100).toFixed(1) }}%
           </label>
           <input
-            aria-label="대출 금리 범위"
+            id="rental-loan-rate"
             v-model.number="form.loanRate"
             type="range"
             min="0"
@@ -157,9 +158,9 @@ function setPricePreset(price: number) {
       <div class="grid gap-3 md:grid-cols-2">
         <!-- 월 관리비·수선비 -->
         <div class="space-y-1.5">
-          <label class="text-caption font-semibold text-foreground">월 관리비·수선비</label>
+          <label for="rental-monthly-expense" class="text-caption font-semibold text-foreground">월 관리비·수선비</label>
           <input
-            aria-label="월 관리비와 수선비"
+            id="rental-monthly-expense"
             type="text"
             inputmode="numeric"
             class="retro-input"
@@ -170,11 +171,11 @@ function setPricePreset(price: number) {
 
         <!-- 공실률 -->
         <div class="space-y-1.5">
-          <label class="text-caption font-semibold text-foreground">
+          <label for="rental-vacancy-rate" class="text-caption font-semibold text-foreground">
             공실률: {{ (form.vacancyRate * 100).toFixed(0) }}%
           </label>
           <input
-            aria-label="공실률 범위"
+            id="rental-vacancy-rate"
             v-model.number="form.vacancyRate"
             type="range"
             min="0"
@@ -199,21 +200,21 @@ function setPricePreset(price: number) {
     </section>
 
     <!-- 4칸 stat grid -->
-    <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    <div class="rental-stat-grid grid grid-cols-2 gap-2 sm:grid-cols-4">
       <Card
         v-for="(stat, index) in statItems"
         :key="stat.label"
         class="border-border/50 bg-muted/30"
       >
         <CardContent class="p-3.5">
-          <div class="flex items-center gap-2">
+          <div class="rental-stat-heading flex items-center gap-2">
             <span
               class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
               :class="statIconClasses[index]"
             >
               <component :is="statIcons[index]" class="h-3.5 w-3.5" />
             </span>
-            <p class="truncate text-caption uppercase tracking-wide text-muted-foreground">{{ stat.label }}</p>
+            <p class="rental-stat-label truncate text-caption uppercase tracking-wide text-muted-foreground">{{ stat.label }}</p>
           </div>
           <p class="mt-2 text-heading font-bold tabular-nums" :class="stat.cls">{{ stat.value }}</p>
         </CardContent>

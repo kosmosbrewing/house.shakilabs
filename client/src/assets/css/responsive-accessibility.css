@@ -1,0 +1,116 @@
+.text-tiny,
+.text-\[10px\],
+.text-\[11px\] {
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 400px) {
+  .text-caption,
+  .text-tiny,
+  .text-xs,
+  [class*="text-[0.6"],
+  [class*="text-[0.7"],
+  [class*="text-[10px]"],
+  [class*="text-[11px]"],
+  [class~="!text-xs"] {
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+  }
+
+  main input[type="range"] {
+    min-height: 24px;
+  }
+
+  main input[type="checkbox"] {
+    min-width: 24px;
+    min-height: 24px;
+  }
+
+  main button,
+  main a[target="_blank"],
+  main a.underline,
+  main summary,
+  footer a {
+    min-height: 24px;
+  }
+
+  main a[target="_blank"],
+  main a.underline,
+  main summary,
+  footer a {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  main button,
+  footer a {
+    min-width: 24px;
+  }
+
+  .text-resize-layout.container {
+    padding-inline: 12px;
+  }
+
+  .text-resize-layout .retro-panel-content,
+  .text-resize-layout .retro-titlebar {
+    padding-inline: 12px;
+  }
+
+  .text-resize-layout :is(h1, h2, h3, p, a, button, span, strong, label, li) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .text-resize-layout .delay-field-heading {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .text-resize-layout .delay-current-value {
+    flex-basis: 100%;
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  .text-resize-layout .delay-date-input {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .text-resize-layout .retro-stat-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .text-resize-layout .rental-stat-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .text-resize-layout .rental-stat-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .text-resize-layout .rental-stat-label {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  .text-resize-layout .retro-stat-label,
+  .text-resize-layout .retro-stat-value {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  .text-resize-layout .delay-result-note,
+  .text-resize-layout .retro-panel-content > .grid > a {
+    padding: 12px;
+  }
+
+  .text-resize-layout .retro-panel-content table :is(td, th) {
+    padding-inline: 12px;
+  }
+}

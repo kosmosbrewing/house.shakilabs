@@ -49,9 +49,9 @@ watch([interestStartDate, calculationEndDate], updateOverdueDaysFromDates);
 <template>
   <div class="space-y-4">
     <div class="space-y-2">
-      <div class="flex items-center justify-between gap-3">
+      <div class="delay-field-heading flex items-center justify-between gap-3">
         <label for="delay-deposit" class="text-caption font-semibold text-foreground">보증금</label>
-        <span class="retro-kbd">현재 {{ formatNumber(model.depositAmount) }}원</span>
+        <span class="delay-current-value retro-kbd">현재 {{ formatNumber(model.depositAmount) }}원</span>
       </div>
       <input
         id="delay-deposit"
@@ -77,11 +77,11 @@ watch([interestStartDate, calculationEndDate], updateOverdueDaysFromDates);
     <div class="grid gap-3 md:grid-cols-2">
       <label class="space-y-1.5">
         <span class="text-caption font-semibold text-foreground">이자 계산 시작일</span>
-        <input v-model="interestStartDate" type="date" class="retro-input" />
+        <input v-model="interestStartDate" type="date" class="delay-date-input retro-input" />
       </label>
       <label class="space-y-1.5">
         <span class="text-caption font-semibold text-foreground">계산 종료일 (포함)</span>
-        <input v-model="calculationEndDate" type="date" class="retro-input" />
+        <input v-model="calculationEndDate" type="date" class="delay-date-input retro-input" />
       </label>
     </div>
     <p v-if="dateError" role="alert" class="text-caption text-status-danger">{{ dateError }}</p>
@@ -91,9 +91,9 @@ watch([interestStartDate, calculationEndDate], updateOverdueDaysFromDates);
 
     <div class="grid gap-4 md:grid-cols-2">
       <div class="space-y-2">
-        <div class="flex items-center justify-between gap-3">
+        <div class="delay-field-heading flex items-center justify-between gap-3">
           <label for="delay-days" class="text-caption font-semibold text-foreground">지연 일수</label>
-          <span class="retro-kbd">{{ model.overdueDays }}일</span>
+          <span class="delay-current-value retro-kbd">{{ model.overdueDays }}일</span>
         </div>
         <input
           v-model.number="model.overdueDays"
@@ -127,9 +127,9 @@ watch([interestStartDate, calculationEndDate], updateOverdueDaysFromDates);
       </div>
 
       <div class="space-y-2">
-        <div class="flex items-center justify-between gap-3">
+        <div class="delay-field-heading flex items-center justify-between gap-3">
           <label for="delay-rate" class="text-caption font-semibold text-foreground">적용 연이율</label>
-          <span class="retro-kbd">{{ (model.annualRate * 100).toFixed(1) }}%</span>
+          <span class="delay-current-value retro-kbd">{{ (model.annualRate * 100).toFixed(1) }}%</span>
         </div>
         <input
           v-model.number="model.annualRate"

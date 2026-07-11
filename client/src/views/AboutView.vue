@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import SEOHead from "@/components/common/SEOHead.vue";
-import { RouterLink } from "vue-router";
 import { buttonVariants } from "@/components/ui/button";
 import { useConstantsStore } from "@/stores/constants";
 
@@ -55,9 +54,9 @@ const constantsStore = useConstantsStore();
     </div>
 
     <div class="text-center">
-      <RouterLink :class="buttonVariants({ variant: 'default' })" to="/">
+      <a :class="buttonVariants({ variant: 'default' })" href="/house">
         홈으로 돌아가기
-      </RouterLink>
+      </a>
     </div>
   </div>
 </template>

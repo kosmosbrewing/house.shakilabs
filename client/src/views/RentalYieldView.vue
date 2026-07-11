@@ -56,7 +56,7 @@ const faqJsonLd = {
 
 <template>
   <SEOHead :title="seoTitle" :description="seoDescription" :json-ld="faqJsonLd" />
-  <div class="container space-y-5 py-5">
+  <div class="text-resize-layout container space-y-5 py-5">
     <!-- 입력 + 결과 -->
     <div class="retro-panel overflow-hidden">
       <div class="retro-titlebar rounded-t-2xl">
