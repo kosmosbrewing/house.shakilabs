@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import FreshBadge from "@/components/common/FreshBadge.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
-import SummaryBanner from "@/components/common/SummaryBanner.vue";
+import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import RentalYieldCalculator from "@/components/house/RentalYieldCalculator.vue";
 import { RENTAL_YIELD_FAQS, RENTAL_YIELD_UPDATED } from "@/data/rentalYield";

@@ -88,6 +88,7 @@ function setDepositPreset(price: number) {
       <div class="space-y-1.5">
         <label class="text-caption font-semibold text-foreground">전세 보증금</label>
         <input
+          aria-label="전세 보증금"
           type="text"
           inputmode="numeric"
           class="retro-input"
@@ -113,6 +114,7 @@ function setDepositPreset(price: number) {
         <div class="space-y-1.5">
           <label class="text-caption font-semibold text-foreground">월세 보증금</label>
           <input
+            aria-label="월세 보증금"
             type="text"
             inputmode="numeric"
             class="retro-input"
@@ -125,6 +127,7 @@ function setDepositPreset(price: number) {
         <div class="space-y-1.5">
           <label class="text-caption font-semibold text-foreground">월세</label>
           <input
+            aria-label="월세"
             type="text"
             inputmode="numeric"
             class="retro-input"
@@ -236,12 +239,12 @@ function setDepositPreset(price: number) {
         </p>
 
         <div class="overflow-x-auto">
-          <table class="w-full text-caption">
+          <table aria-label="보증금 조정별 적정 월세" class="w-full text-caption">
             <thead>
               <tr class="border-b border-border/40 text-muted-foreground">
-                <th class="pb-2 text-left font-semibold">보증금 증액</th>
-                <th class="pb-2 text-right font-semibold">조정 후 보증금</th>
-                <th class="pb-2 text-right font-semibold">적정 월세</th>
+                <th scope="col" class="pb-2 text-left font-semibold">보증금 증액</th>
+                <th scope="col" class="pb-2 text-right font-semibold">조정 후 보증금</th>
+                <th scope="col" class="pb-2 text-right font-semibold">적정 월세</th>
               </tr>
             </thead>
             <tbody>

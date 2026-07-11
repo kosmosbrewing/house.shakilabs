@@ -46,6 +46,7 @@ function setPreset(price: number) {
       <div class="space-y-1.5">
         <label class="text-caption font-semibold text-foreground">양도가 (매도가)</label>
         <input
+          aria-label="양도가"
           type="text"
           inputmode="numeric"
           class="retro-input"
@@ -70,6 +71,7 @@ function setPreset(price: number) {
       <div class="space-y-1.5">
         <label class="text-caption font-semibold text-foreground">취득가 (매입가)</label>
         <input
+          aria-label="취득가"
           type="text"
           inputmode="numeric"
           class="retro-input"

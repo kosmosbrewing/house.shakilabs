@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import FreshBadge from "@/components/common/FreshBadge.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
-import SummaryBanner from "@/components/common/SummaryBanner.vue";
+import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import AcquisitionTaxCalculator from "@/components/house/AcquisitionTaxCalculator.vue";
 import { ACQUISITION_TAX_FAQS, ACQUISITION_TAX_UPDATED } from "@/data/acquisitionTax";

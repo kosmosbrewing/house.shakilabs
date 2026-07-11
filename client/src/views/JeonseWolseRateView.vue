@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import FreshBadge from "@/components/common/FreshBadge.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
-import SummaryBanner from "@/components/common/SummaryBanner.vue";
+import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import JeonseWolseRateCalculator from "@/components/house/JeonseWolseRateCalculator.vue";
 import PopularCalculators from "@/components/house/PopularCalculators.vue";

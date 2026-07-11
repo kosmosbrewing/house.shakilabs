@@ -46,6 +46,7 @@ function setPreset(price: number) {
       <div class="space-y-1.5">
         <label class="text-caption font-semibold text-foreground">매매가</label>
         <input
+          aria-label="매매가"
           type="text"
           inputmode="numeric"
           class="retro-input"

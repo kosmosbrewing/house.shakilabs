@@ -4,7 +4,7 @@ import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
 import FreshBadge from "@/components/common/FreshBadge.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import ShareModal from "@/components/share/ShareModal.vue";
-import SummaryBanner from "@/components/common/SummaryBanner.vue";
+import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import BrokerageFeeFAQ from "@/components/house/BrokerageFeeFAQ.vue";
 import BrokerageFeeInput from "@/components/house/BrokerageFeeInput.vue";
 import BrokerageFeeResult from "@/components/house/BrokerageFeeResult.vue";
