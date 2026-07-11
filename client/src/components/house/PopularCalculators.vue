@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { ArrowRight } from "lucide-vue-next";
 import { RouterLink, useRoute } from "vue-router";
 import { trackEvent } from "@/lib/analytics";
@@ -32,11 +32,21 @@ const relatedItems = computed(() =>
   items.filter((item) => item.key !== currentGroup.value),
 );
 
+onMounted(() => {
+  relatedItems.value.forEach((item) => trackEvent("related_tool_impression", {
+    app_id: "house",
+    from_tool: currentGroup.value,
+    to_tool: item.key,
+    placement: "after_result",
+  }));
+});
+
 function trackRelatedClick(toTool: string): void {
-  trackEvent("popular_tool_click", {
+  trackEvent("related_tool_click", {
+    app_id: "house",
     from_tool: currentGroup.value,
     to_tool: toTool,
-    placement: "calculator_footer",
+    placement: "after_result",
   });
 }
 </script>
@@ -59,7 +69,7 @@ function trackRelatedClick(toTool: string): void {
           {{ item.description }}
         </p>
         <span class="mt-3 inline-flex items-center gap-1 text-caption font-semibold text-primary">
-          계산하기
+          {{ item.title }} 계산
           <ArrowRight class="h-3.5 w-3.5" />
         </span>
       </RouterLink>
