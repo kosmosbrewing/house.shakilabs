@@ -1,8 +1,8 @@
-/** 전월세 전환율 계산기 상수 (2026-03-20 기준) */
+/** 전월세 전환율 계산기 상수 (2026-07-10 기준) */
 
-export const JEONSE_WOLSE_RATE_UPDATED = "2026-03-20";
+export const JEONSE_WOLSE_RATE_UPDATED = "2026-07-10";
 
-/** 한국은행 기준금리 (2026.03 기준 2.5%) */
+/** 한국은행 기준금리 (2026-07-10 확인, 2.5%) */
 export const BOK_BASE_RATE = 0.025;
 
 /** 법정 전환율 상한 가산 금리 (주택임대차보호법 시행령 §9) */
@@ -31,7 +31,7 @@ export const JEONSE_WOLSE_RATE_FAQS: readonly { q: string; a: string }[] = [
   },
   {
     q: "법정 전환율 상한은 어떻게 정해지나요?",
-    a: "주택임대차보호법 시행령 제9조에 따라 한국은행 기준금리 + 2%p로 정해집니다. 2026년 3월 기준 기준금리 2.5%이므로 법정 상한은 4.5%입니다.",
+    a: "주택임대차보호법 시행령 제9조에 따라 한국은행 기준금리 + 2%p로 정해집니다. 2026년 7월 10일 확인 기준 기준금리 2.5%이므로 법정 상한은 4.5%입니다.",
   },
   {
     q: "전환율이 법정 상한을 초과하면 어떻게 되나요?",
@@ -47,7 +47,7 @@ export const JEONSE_WOLSE_RATE_SOURCES = [
   {
     name: "한국은행",
     url: "https://www.bok.or.kr/portal/singl/baseRate/list.do?dataSeCd=01&menuNo=200643",
-    basis: "기준금리 2.5% (2026.03)",
+    basis: "기준금리 2.5% (2026-07-10 확인)",
   },
   {
     name: "법제처 국가법령정보센터",

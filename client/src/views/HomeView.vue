@@ -2,6 +2,7 @@
 import type { Component } from "vue";
 import { RouterLink } from "vue-router";
 import { Clock, Scale, Landmark, ShieldCheck, Award, Building2, ArrowRight, Repeat } from "lucide-vue-next";
+import { ShSurface, ShText } from "@shakilabs/ui";
 import { ActionCard } from "@/components/ui/action-card";
 import RelatedServices from "@/components/common/RelatedServices.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
@@ -113,9 +114,9 @@ const faqJsonLd = {
   />
 
   <div class="container py-5 space-y-5">
-    <div class="retro-panel overflow-hidden">
+    <ShSurface padding="none" class="overflow-hidden">
       <div class="retro-titlebar rounded-t-2xl">
-        <h1 class="retro-title">주거 계산기 홈</h1>
+        <ShText as="h1" variant="heading">주거 계산기 홈</ShText>
       </div>
       <div class="retro-panel-content space-y-4">
         <p class="text-body leading-relaxed text-muted-foreground">
@@ -146,7 +147,7 @@ const faqJsonLd = {
           </ActionCard>
         </div>
       </div>
-    </div>
+    </ShSurface>
 
     <div class="retro-panel overflow-hidden">
       <div class="retro-titlebar rounded-t-2xl">
