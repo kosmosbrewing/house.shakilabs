@@ -67,42 +67,75 @@ function trackNavigation(item: NavigationItem): void {
   <nav class="sticky top-0 z-50 border-b border-primary/20 bg-primary shadow-sm" aria-label="주요 계산기">
     <div class="container px-3 py-1.5 sm:px-4 sm:py-0">
       <div class="grid grid-cols-3 gap-1 sm:hidden">
-        <RouterLink
-          v-for="item in mobileItems"
-          :key="item.key"
-          :to="item.to"
-          :aria-current="isActive(item) ? 'page' : undefined"
-          :class="[
-            'flex min-h-[44px] items-center justify-center rounded-lg px-1 py-1.5 text-center text-[0.7rem] font-medium leading-tight transition-colors',
-            isActive(item)
-              ? 'bg-white/20 font-semibold text-white'
-              : 'text-white/75 active:bg-white/10',
-          ]"
-          @click="trackNavigation(item)"
-        >
-          <span class="break-keep">{{ item.label }}</span>
-        </RouterLink>
+        <template v-for="item in mobileItems" :key="item.key">
+          <a
+            v-if="item.key === 'home'"
+            href="/house"
+            :aria-current="isActive(item) ? 'page' : undefined"
+            :class="[
+              'flex min-h-[44px] items-center justify-center rounded-lg px-1 py-1.5 text-center text-[0.7rem] font-medium leading-tight transition-colors',
+              isActive(item)
+                ? 'bg-white/20 font-semibold text-white'
+                : 'text-white/75 active:bg-white/10',
+            ]"
+            @click="trackNavigation(item)"
+          >
+            <span class="break-keep">{{ item.label }}</span>
+          </a>
+          <RouterLink
+            v-else
+            :to="item.to"
+            :aria-current="isActive(item) ? 'page' : undefined"
+            :class="[
+              'flex min-h-[44px] items-center justify-center rounded-lg px-1 py-1.5 text-center text-[0.7rem] font-medium leading-tight transition-colors',
+              isActive(item)
+                ? 'bg-white/20 font-semibold text-white'
+                : 'text-white/75 active:bg-white/10',
+            ]"
+            @click="trackNavigation(item)"
+          >
+            <span class="break-keep">{{ item.label }}</span>
+          </RouterLink>
+        </template>
       </div>
 
       <div class="tab-scroll hidden h-12 items-center gap-2 overflow-x-auto sm:flex">
-        <RouterLink
-          v-for="item in navigationItems"
-          :key="item.key"
-          :to="item.to"
-          :aria-current="isActive(item) ? 'page' : undefined"
-          :class="[
-            'relative flex h-12 shrink-0 items-center justify-center px-3 text-body font-semibold transition-colors',
-            isActive(item) ? 'text-white' : 'text-white/70 hover:text-white',
-          ]"
-          @click="trackNavigation(item)"
-        >
-          {{ item.label }}
-          <span
-            v-if="isActive(item)"
-            class="absolute inset-x-1 bottom-0 h-[3px] rounded-full bg-white"
-            aria-hidden="true"
-          />
-        </RouterLink>
+        <template v-for="item in navigationItems" :key="item.key">
+          <a
+            v-if="item.key === 'home'"
+            href="/house"
+            :aria-current="isActive(item) ? 'page' : undefined"
+            :class="[
+              'relative flex h-12 shrink-0 items-center justify-center px-3 text-body font-semibold transition-colors',
+              isActive(item) ? 'text-white' : 'text-white/70 hover:text-white',
+            ]"
+            @click="trackNavigation(item)"
+          >
+            {{ item.label }}
+            <span
+              v-if="isActive(item)"
+              class="absolute inset-x-1 bottom-0 h-[3px] rounded-full bg-white"
+              aria-hidden="true"
+            />
+          </a>
+          <RouterLink
+            v-else
+            :to="item.to"
+            :aria-current="isActive(item) ? 'page' : undefined"
+            :class="[
+              'relative flex h-12 shrink-0 items-center justify-center px-3 text-body font-semibold transition-colors',
+              isActive(item) ? 'text-white' : 'text-white/70 hover:text-white',
+            ]"
+            @click="trackNavigation(item)"
+          >
+            {{ item.label }}
+            <span
+              v-if="isActive(item)"
+              class="absolute inset-x-1 bottom-0 h-[3px] rounded-full bg-white"
+              aria-hidden="true"
+            />
+          </RouterLink>
+        </template>
       </div>
     </div>
   </nav>
