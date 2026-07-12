@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import FreshBadge from "@/components/common/FreshBadge.vue";
+import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import CapitalGainsTaxCalculator from "@/components/house/CapitalGainsTaxCalculator.vue";
-import { CAPITAL_GAINS_TAX_FAQS, CAPITAL_GAINS_TAX_UPDATED } from "@/data/capitalGainsTax";
+import { CAPITAL_GAINS_TAX_FAQS } from "@/data/capitalGainsTax";
 import { useCapitalGainsTax } from "@/composables/useCapitalGainsTax";
 import { useResultShare } from "@/composables/useResultShare";
 import { formatManWon, formatWon } from "@/lib/utils";
@@ -57,16 +57,16 @@ const faqJsonLd = {
 <template>
   <SEOHead :title="seoTitle" :description="seoDescription" :json-ld="faqJsonLd" />
   <div class="container space-y-5 py-5">
-    <!-- 입력 + 결과 -->
-    <div class="retro-panel overflow-hidden">
+    <CalculatorPageHeader title="양도소득세 계산기" />
+
+    <section class="retro-panel overflow-hidden" aria-labelledby="capital-gains-tax-input-title">
       <div class="retro-titlebar rounded-t-2xl">
-        <h1 class="retro-title">양도소득세 계산기</h1>
-        <FreshBadge :message="`${CAPITAL_GAINS_TAX_UPDATED} 기준`" />
+        <h2 id="capital-gains-tax-input-title" class="retro-title">양도 조건 입력</h2>
       </div>
       <div class="retro-panel-content">
         <CapitalGainsTaxCalculator v-model="form" :result="result" />
       </div>
-    </div>
+    </section>
 
     <!-- 요약 배너 -->
     <SummaryBanner

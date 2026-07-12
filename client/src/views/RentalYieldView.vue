@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import FreshBadge from "@/components/common/FreshBadge.vue";
+import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import RentalYieldCalculator from "@/components/house/RentalYieldCalculator.vue";
-import { RENTAL_YIELD_FAQS, RENTAL_YIELD_UPDATED } from "@/data/rentalYield";
+import { RENTAL_YIELD_FAQS } from "@/data/rentalYield";
 import { useRentalYield } from "@/composables/useRentalYield";
 import { useResultShare } from "@/composables/useResultShare";
 import { formatManWon, formatPercent, formatWon } from "@/lib/utils";
@@ -57,16 +57,16 @@ const faqJsonLd = {
 <template>
   <SEOHead :title="seoTitle" :description="seoDescription" :json-ld="faqJsonLd" />
   <div class="text-resize-layout container space-y-5 py-5">
-    <!-- 입력 + 결과 -->
-    <div class="retro-panel overflow-hidden">
+    <CalculatorPageHeader title="임대수익률 계산기" />
+
+    <section class="retro-panel overflow-hidden" aria-labelledby="rental-yield-input-title">
       <div class="retro-titlebar rounded-t-2xl">
-        <h1 class="retro-title">임대수익률 계산기</h1>
-        <FreshBadge :message="`${RENTAL_YIELD_UPDATED} 기준`" />
+        <h2 id="rental-yield-input-title" class="retro-title">투자 조건 입력</h2>
       </div>
       <div class="retro-panel-content">
         <RentalYieldCalculator v-model="form" :result="result" />
       </div>
-    </div>
+    </section>
 
     <!-- 요약 배너 -->
     <SummaryBanner

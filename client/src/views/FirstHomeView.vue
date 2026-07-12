@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import FreshBadge from "@/components/common/FreshBadge.vue";
+import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FirstHomeCalculator from "@/components/house/FirstHomeCalculator.vue";
-import { FIRST_HOME_FAQS, FIRST_HOME_UPDATED } from "@/data/firstHome";
+import { FIRST_HOME_FAQS } from "@/data/firstHome";
 
 const faqJsonLd = {
   "@context": "https://schema.org",
@@ -22,10 +22,11 @@ const faqJsonLd = {
     :json-ld="faqJsonLd"
   />
   <div class="container space-y-5 py-5">
-    <div class="retro-panel overflow-hidden">
+    <CalculatorPageHeader title="생애최초 주택 혜택 계산기" />
+
+    <section class="retro-panel overflow-hidden" aria-labelledby="first-home-input-title">
       <div class="retro-titlebar rounded-t-2xl">
-        <h1 class="retro-title">생애최초 주택 혜택 계산기</h1>
-        <FreshBadge :message="`${FIRST_HOME_UPDATED} 확인`" />
+        <h2 id="first-home-input-title" class="retro-title">주택 조건 입력</h2>
       </div>
       <div class="retro-panel-content space-y-4">
         <p class="text-caption leading-relaxed text-muted-foreground">
@@ -33,7 +34,7 @@ const faqJsonLd = {
         </p>
         <FirstHomeCalculator />
       </div>
-    </div>
+    </section>
 
     <div class="retro-panel overflow-hidden">
       <div class="retro-titlebar rounded-t-2xl">

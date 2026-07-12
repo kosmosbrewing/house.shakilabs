@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import CalculatorInteractionTracker from "@/components/analytics/CalculatorInteractionTracker.vue";
-import FreshBadge from "@/components/common/FreshBadge.vue";
+import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import PropertyTaxCalculator from "@/components/house/PropertyTaxCalculator.vue";
 import PopularCalculators from "@/components/house/PopularCalculators.vue";
-import { PROPERTY_TAX_FAQS, PROPERTY_TAX_UPDATED } from "@/data/propertyTax";
+import { PROPERTY_TAX_FAQS } from "@/data/propertyTax";
 import { usePropertyTax } from "@/composables/usePropertyTax";
 import { useResultShare } from "@/composables/useResultShare";
 import { formatManWon, formatWon } from "@/lib/utils";
@@ -62,11 +62,11 @@ const faqJsonLd = {
 <template>
   <SEOHead :title="seoTitle" :description="seoDescription" :json-ld="faqJsonLd" />
   <div class="container space-y-5 py-5">
-    <!-- 입력 + 결과 -->
-    <div class="retro-panel overflow-hidden">
+    <CalculatorPageHeader title="재산세·보유세 계산기" />
+
+    <section class="retro-panel overflow-hidden" aria-labelledby="property-tax-input-title">
       <div class="retro-titlebar rounded-t-2xl">
-        <h1 class="retro-title">재산세·보유세 계산기</h1>
-        <FreshBadge :message="`${PROPERTY_TAX_UPDATED} 확인`" />
+        <h2 id="property-tax-input-title" class="retro-title">보유세 조건 입력</h2>
       </div>
       <div class="retro-panel-content">
         <CalculatorInteractionTracker
@@ -77,7 +77,7 @@ const faqJsonLd = {
           <PropertyTaxCalculator v-model="form" :result="result" />
         </CalculatorInteractionTracker>
       </div>
-    </div>
+    </section>
 
     <!-- 요약 배너 -->
     <SummaryBanner

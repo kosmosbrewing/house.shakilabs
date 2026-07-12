@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
-import FreshBadge from "@/components/common/FreshBadge.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import ShareModal from "@/components/share/ShareModal.vue";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
@@ -47,15 +47,16 @@ const facts = computed(() => [
 <template>
   <SEOHead :title="seoTitle" :description="seoDescription" />
   <div class="container space-y-5 py-5">
-    <div class="retro-panel overflow-hidden">
+    <CalculatorPageHeader title="전세 vs 월세 비교 계산기" />
+
+    <section class="retro-panel overflow-hidden" aria-labelledby="jeonse-vs-wolse-input-title">
       <div class="retro-titlebar rounded-t-2xl">
-        <h1 class="retro-title">전세 vs 월세 비교 계산기</h1>
-        <FreshBadge :message="`${JEONSE_WOLSE_DATA_UPDATED} 기준`" />
+        <h2 id="jeonse-vs-wolse-input-title" class="retro-title">비교 조건 입력</h2>
       </div>
       <div class="retro-panel-content">
         <JeonseVsWolseInput v-model="form" />
       </div>
-    </div>
+    </section>
 
     <SummaryBanner
       title="보증금 기회비용과 월세 현금지출만 비교합니다."
