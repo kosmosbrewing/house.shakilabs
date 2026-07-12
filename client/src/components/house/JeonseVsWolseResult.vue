@@ -3,6 +3,7 @@ import { computed } from "vue";
 import { Home, Banknote, Scale, PiggyBank } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import MetricComparisonBars from "@/components/result-visualization/MetricComparisonBars.vue";
+import HouseStatGrid from "@/components/house/HouseStatGrid.vue";
 import type { JeonseVsWolseInput } from "@/utils/housingCalculator";
 import { formatPercent, formatWon } from "@/lib/utils";
 
@@ -29,10 +30,10 @@ const headline = computed(() => {
 });
 
 const statItems = computed(() => [
-  { label: "전세 연간 부담", value: formatWon(props.result.jeonseAnnualCost), cls: "", icon: Home, iconCls: "bg-muted text-muted-foreground" },
-  { label: "월세 연간 부담", value: formatWon(props.result.wolseAnnualCost), cls: "", icon: Banknote, iconCls: "bg-muted text-muted-foreground" },
-  { label: "손익분기 월세", value: formatWon(props.result.breakEvenMonthlyRent), cls: "", icon: Scale, iconCls: "bg-primary/10 text-primary" },
-  { label: "손익분기 전세금", value: formatWon(props.result.breakEvenJeonseDeposit), cls: "", icon: PiggyBank, iconCls: "bg-primary/10 text-primary" },
+  { label: "전세 연간 부담", value: formatWon(props.result.jeonseAnnualCost), cls: "" },
+  { label: "월세 연간 부담", value: formatWon(props.result.wolseAnnualCost), cls: "" },
+  { label: "손익분기 월세", value: formatWon(props.result.breakEvenMonthlyRent), cls: "" },
+  { label: "손익분기 전세금", value: formatWon(props.result.breakEvenJeonseDeposit), cls: "" },
 ]);
 const costMetrics = computed(() => [
   {
@@ -52,27 +53,18 @@ const costMetrics = computed(() => [
     ],
   },
 ]);
+const statIcons = [Home, Banknote, Scale, PiggyBank] as const;
+const statIconClasses = [
+  "bg-muted text-muted-foreground",
+  "bg-muted text-muted-foreground",
+  "bg-primary/10 text-primary",
+  "bg-primary/10 text-primary",
+] as const;
 </script>
 
 <template>
   <div class="space-y-4">
-    <div class="house-stat-grid grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
-      <Card
-        v-for="stat in statItems"
-        :key="stat.label"
-        class="border-border/50 bg-muted/30"
-      >
-        <CardContent class="p-3.5">
-          <div class="flex items-center gap-2">
-            <span class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" :class="stat.iconCls">
-              <component :is="stat.icon" class="h-3.5 w-3.5" />
-            </span>
-            <p class="truncate text-caption uppercase tracking-wide text-muted-foreground">{{ stat.label }}</p>
-          </div>
-          <p class="mt-2 text-heading font-bold tabular-nums" :class="stat.cls">{{ stat.value }}</p>
-        </CardContent>
-      </Card>
-    </div>
+    <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" />
 
     <MetricComparisonBars
       title="전세·월세 부담 비교"

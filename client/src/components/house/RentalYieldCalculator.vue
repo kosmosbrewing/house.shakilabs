@@ -5,6 +5,7 @@ import { TrendingUp, Wallet, Home, Percent } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
 import RentalYieldCharts from "@/components/house/RentalYieldCharts.vue";
+import HouseStatGrid from "@/components/house/HouseStatGrid.vue";
 import {
   PURCHASE_PRICE_PRESETS,
   LOAN_RATE_PRESETS,
@@ -177,26 +178,7 @@ function setPricePreset(price: number) {
       </div>
     </section>
 
-    <div class="rental-stat-grid grid grid-cols-2 gap-2 sm:grid-cols-4">
-      <Card
-        v-for="(stat, index) in statItems"
-        :key="stat.label"
-        class="border-border/50 bg-muted/30"
-      >
-        <CardContent class="p-3.5">
-          <div class="rental-stat-heading flex items-center gap-2">
-            <span
-              class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
-              :class="statIconClasses[index]"
-            >
-              <component :is="statIcons[index]" class="h-3.5 w-3.5" />
-            </span>
-            <p class="rental-stat-label truncate text-caption uppercase tracking-wide text-muted-foreground">{{ stat.label }}</p>
-          </div>
-          <p class="mt-2 text-heading font-bold tabular-nums" :class="stat.cls">{{ stat.value }}</p>
-        </CardContent>
-      </Card>
-    </div>
+    <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" />
 
     <RentalYieldCharts :result="result" />
 
