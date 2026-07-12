@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { ShSlider } from "@shakilabs/ui";
 import {
   TrendingUp,
   TrendingDown,
@@ -90,13 +91,12 @@ function formatPresetPrice(price: number): string {
           <span class="text-caption font-semibold text-foreground">
             필요경비율: {{ (form.expenseRate * 100).toFixed(0) }}%
           </span>
-          <input
-            v-model.number="form.expenseRate"
-            type="range"
-            min="0"
-            max="0.15"
-            step="0.01"
-            class="w-full accent-primary"
+          <ShSlider
+            v-model="form.expenseRate"
+            :min="0"
+            :max="0.15"
+            :step="0.01"
+            :value-text="`필요경비율 ${(form.expenseRate * 100).toFixed(0)}%`"
           />
           <div class="grid grid-cols-2 text-[10px] text-muted-foreground tabular-nums">
             <span class="justify-self-start">0%</span>
