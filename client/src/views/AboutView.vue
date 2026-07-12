@@ -26,7 +26,7 @@ const constantsStore = useConstantsStore();
         </p>
 
         <h2 class="text-heading font-bold">주요 기능</h2>
-        <ul class="text-body text-muted-foreground space-y-1 list-disc list-inside">
+        <ul class="about-feature-list text-body text-muted-foreground space-y-1 list-disc list-inside">
           <li>보증금 반환 지연이자 계산</li>
           <li>전세 vs 월세 손익분기 비교</li>
           <li>주택 중개보수 상한 계산</li>

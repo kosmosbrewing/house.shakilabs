@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import FreshBadge from "@/components/common/FreshBadge.vue";
+import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import HousingSubscriptionCalculator from "@/components/house/HousingSubscriptionCalculator.vue";
-import {
-  HOUSING_SUBSCRIPTION_FAQS,
-  HOUSING_SUBSCRIPTION_UPDATED,
-} from "@/data/housingSubscription";
+import { HOUSING_SUBSCRIPTION_FAQS } from "@/data/housingSubscription";
 
 const faqJsonLd = {
   "@context": "https://schema.org",
@@ -25,10 +22,11 @@ const faqJsonLd = {
     :json-ld="faqJsonLd"
   />
   <div class="container space-y-5 py-5">
-    <div class="retro-panel overflow-hidden">
+    <CalculatorPageHeader title="청약 가점 계산기" />
+
+    <section class="retro-panel overflow-hidden" aria-labelledby="housing-subscription-input-title">
       <div class="retro-titlebar rounded-t-2xl">
-        <h1 class="retro-title">청약 가점 계산기</h1>
-        <FreshBadge :message="`${HOUSING_SUBSCRIPTION_UPDATED} 확인`" />
+        <h2 id="housing-subscription-input-title" class="retro-title">청약 조건 입력</h2>
       </div>
       <div class="retro-panel-content space-y-4">
         <p class="text-caption leading-relaxed text-muted-foreground">
@@ -36,7 +34,7 @@ const faqJsonLd = {
         </p>
         <HousingSubscriptionCalculator />
       </div>
-    </div>
+    </section>
 
     <div class="retro-panel overflow-hidden">
       <div class="retro-titlebar rounded-t-2xl">

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import FreshBadge from "@/components/common/FreshBadge.vue";
+import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import JeonseWolseRateCalculator from "@/components/house/JeonseWolseRateCalculator.vue";
 import PopularCalculators from "@/components/house/PopularCalculators.vue";
-import { JEONSE_WOLSE_RATE_FAQS, JEONSE_WOLSE_RATE_UPDATED } from "@/data/jeonseWolseRate";
+import { JEONSE_WOLSE_RATE_FAQS } from "@/data/jeonseWolseRate";
 import { useJeonseWolseRate } from "@/composables/useJeonseWolseRate";
 import { useResultShare } from "@/composables/useResultShare";
 import { formatManWon, formatPercent, formatWon } from "@/lib/utils";
@@ -70,16 +70,16 @@ const faqJsonLd = {
 <template>
   <SEOHead :title="seoTitle" :description="seoDescription" :json-ld="faqJsonLd" />
   <div class="container space-y-5 py-5">
-    <!-- 입력 + 결과 -->
-    <div class="retro-panel overflow-hidden">
+    <CalculatorPageHeader title="전월세 전환율 계산기" />
+
+    <section class="retro-panel overflow-hidden" aria-labelledby="jeonse-wolse-rate-input-title">
       <div class="retro-titlebar rounded-t-2xl">
-        <h1 class="retro-title">전월세 전환율 계산기</h1>
-        <FreshBadge :message="`${JEONSE_WOLSE_RATE_UPDATED} 기준`" />
+        <h2 id="jeonse-wolse-rate-input-title" class="retro-title">전월세 조건 입력</h2>
       </div>
       <div class="retro-panel-content">
         <JeonseWolseRateCalculator v-model="form" :result="result" />
       </div>
-    </div>
+    </section>
 
     <!-- 요약 배너 -->
     <SummaryBanner

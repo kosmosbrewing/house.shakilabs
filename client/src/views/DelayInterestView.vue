@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import CalculatorInteractionTracker from "@/components/analytics/CalculatorInteractionTracker.vue";
+import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
-import FreshBadge from "@/components/common/FreshBadge.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import ShareModal from "@/components/share/ShareModal.vue";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
@@ -65,10 +65,11 @@ const rateBasis = computed(() => {
 <template>
   <SEOHead :title="seoTitle" :description="seoDescription" />
   <div class="text-resize-layout container space-y-5 py-5">
-    <div class="retro-panel overflow-hidden">
+    <CalculatorPageHeader title="보증금 반환 지연이자 계산기" />
+
+    <section class="retro-panel overflow-hidden" aria-labelledby="delay-interest-input-title">
       <div class="retro-titlebar rounded-t-2xl">
-        <h1 class="retro-title">보증금 반환 지연이자 계산기</h1>
-        <FreshBadge :message="`${DELAY_INTEREST_DATA_UPDATED} 확인`" />
+        <h2 id="delay-interest-input-title" class="retro-title">지연이자 조건 입력</h2>
       </div>
       <div class="retro-panel-content">
         <CalculatorInteractionTracker
@@ -78,7 +79,7 @@ const rateBasis = computed(() => {
           <DelayInterestInput v-model="form" />
         </CalculatorInteractionTracker>
       </div>
-    </div>
+    </section>
 
     <SummaryBanner
       :title="rateBasis"

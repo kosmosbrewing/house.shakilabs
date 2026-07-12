@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import FreshBadge from "@/components/common/FreshBadge.vue";
+import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import AcquisitionTaxCalculator from "@/components/house/AcquisitionTaxCalculator.vue";
-import { ACQUISITION_TAX_FAQS, ACQUISITION_TAX_UPDATED } from "@/data/acquisitionTax";
+import { ACQUISITION_TAX_FAQS } from "@/data/acquisitionTax";
 import { useAcquisitionTax } from "@/composables/useAcquisitionTax";
 import { useResultShare } from "@/composables/useResultShare";
 import { formatManWon, formatWon, formatPercent } from "@/lib/utils";
@@ -57,15 +57,16 @@ const faqJsonLd = {
 <template>
   <SEOHead :title="seoTitle" :description="seoDescription" :json-ld="faqJsonLd" />
   <div class="container space-y-5 py-5">
-    <div class="retro-panel overflow-hidden">
+    <CalculatorPageHeader title="주택 취득세 계산기" />
+
+    <section class="retro-panel overflow-hidden" aria-labelledby="acquisition-tax-input-title">
       <div class="retro-titlebar rounded-t-2xl">
-        <h1 class="retro-title">주택 취득세 계산기</h1>
-        <FreshBadge :message="`${ACQUISITION_TAX_UPDATED} 기준`" />
+        <h2 id="acquisition-tax-input-title" class="retro-title">취득 조건 입력</h2>
       </div>
       <div class="retro-panel-content">
         <AcquisitionTaxCalculator v-model="form" :result="result" />
       </div>
-    </div>
+    </section>
 
     <SummaryBanner
       title="매매가, 주택 수, 조정대상지역 여부를 반영한 취득세 시뮬레이션 결과입니다."

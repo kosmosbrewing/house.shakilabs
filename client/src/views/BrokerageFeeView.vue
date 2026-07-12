@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
-import FreshBadge from "@/components/common/FreshBadge.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import ShareModal from "@/components/share/ShareModal.vue";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
@@ -47,15 +47,16 @@ const facts = computed(() => [
 <template>
   <SEOHead :title="seoTitle" :description="seoDescription" />
   <div class="container space-y-5 py-5">
-    <div class="retro-panel overflow-hidden">
+    <CalculatorPageHeader title="주택 중개보수 계산기" />
+
+    <section class="retro-panel overflow-hidden" aria-labelledby="brokerage-fee-input-title">
       <div class="retro-titlebar rounded-t-2xl">
-        <h1 class="retro-title">주택 중개보수 계산기</h1>
-        <FreshBadge :message="`${BROKERAGE_DATA_UPDATED} 확인`" />
+        <h2 id="brokerage-fee-input-title" class="retro-title">거래 조건 입력</h2>
       </div>
       <div class="retro-panel-content">
         <BrokerageFeeInput v-model="form" />
       </div>
-    </div>
+    </section>
 
     <SummaryBanner
       title="서울시 부동산중개업정보의 주택 요율표를 기준으로 계산한 상한 보수입니다."
@@ -69,7 +70,7 @@ const facts = computed(() => [
     />
 
     <BrokerageFeeResult :result="result" />
-    <CompareSourceFooter :sources="[...BROKERAGE_SOURCES]" updated-at="2026-03-15" />
+    <CompareSourceFooter :sources="[...BROKERAGE_SOURCES]" :updated-at="BROKERAGE_DATA_UPDATED" />
     <BrokerageFeeFAQ :faqs="BROKERAGE_FAQS" />
 
     <ShareModal

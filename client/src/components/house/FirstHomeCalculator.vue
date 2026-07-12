@@ -54,7 +54,7 @@ const statIconClasses = [
       </div>
     </section>
 
-    <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    <div class="house-stat-grid grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
       <Card
         v-for="(stat, index) in [
           { label: '예상 취득세', value: formatWon(result.acquisitionTax), cls: '' },

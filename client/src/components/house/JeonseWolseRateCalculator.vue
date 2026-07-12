@@ -155,7 +155,7 @@ function setDepositPreset(price: number) {
     </div>
 
     <!-- 4칸 stat grid -->
-    <div v-if="!isDepositInvalid" class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    <div v-if="!isDepositInvalid" class="house-stat-grid grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
       <Card
         v-for="stat in statItems"
         :key="stat.label"
@@ -239,7 +239,7 @@ function setDepositPreset(price: number) {
         </p>
 
         <div class="overflow-x-auto">
-          <table aria-label="보증금 조정별 적정 월세" class="w-full text-caption">
+          <table aria-label="보증금 조정별 적정 월세" class="w-max min-w-full text-caption">
             <thead>
               <tr class="border-b border-border/40 text-muted-foreground">
                 <th scope="col" class="pb-2 text-left font-semibold">보증금 증액</th>

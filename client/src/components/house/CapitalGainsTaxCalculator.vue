@@ -36,6 +36,10 @@ const statIconClasses = [
 function setPreset(price: number) {
   form.value = { ...form.value, sellPrice: price };
 }
+
+function formatPresetPrice(price: number): string {
+  return price % 100_000_000 === 0 ? `${price / 100_000_000}억원` : formatWon(price);
+}
 </script>
 
 <template>
@@ -58,11 +62,11 @@ function setPreset(price: number) {
             v-for="preset in SELL_PRICE_PRESETS"
             :key="preset"
             :aria-pressed="form.sellPrice === preset"
-            class="rounded-lg border border-border/60 bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+            class="rounded-lg border border-border/60 bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary whitespace-nowrap tabular-nums"
             :class="{ '!bg-primary/15 !text-primary !border-primary/30': form.sellPrice === preset }"
             @click="setPreset(preset)"
           >
-            {{ formatWon(preset) }}
+            {{ formatPresetPrice(preset) }}
           </button>
         </div>
       </div>
@@ -94,9 +98,9 @@ function setPreset(price: number) {
             step="0.01"
             class="w-full accent-primary"
           />
-          <div class="flex justify-between text-[10px] text-muted-foreground">
-            <span>0%</span>
-            <span>15%</span>
+          <div class="grid grid-cols-2 text-[10px] text-muted-foreground tabular-nums">
+            <span class="justify-self-start">0%</span>
+            <span class="justify-self-end">15%</span>
           </div>
         </label>
 
@@ -130,7 +134,7 @@ function setPreset(price: number) {
     </section>
 
     <!-- 4칸 stat grid -->
-    <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    <div class="house-stat-grid grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
       <Card
         v-for="(stat, index) in statItems"
         :key="stat.label"
@@ -154,20 +158,20 @@ function setPreset(price: number) {
     <!-- 상세 내역 -->
     <Card>
       <CardContent class="p-4">
-        <div class="flex items-center gap-2 mb-3">
+        <div class="flex flex-wrap items-center gap-2 mb-3">
           <span class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <Receipt class="h-3.5 w-3.5" />
           </span>
           <p class="text-caption font-semibold text-foreground">양도소득세 산출 내역</p>
           <span
             v-if="result.isExempt && result.totalTax === 0"
-            class="ml-auto rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary"
+            class="ml-auto inline-flex shrink-0 whitespace-nowrap rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary"
           >
             비과세
           </span>
           <span
             v-else-if="result.isExempt"
-            class="ml-auto rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary"
+            class="ml-auto inline-flex shrink-0 whitespace-nowrap rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary"
           >
             12억 초과분 과세
           </span>
