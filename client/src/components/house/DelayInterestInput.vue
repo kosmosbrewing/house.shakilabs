@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { ShSlider } from "@shakilabs/ui";
+import { ShPresetGroup, ShSlider } from "@shakilabs/ui";
 import {
   CIVIL_DELAY_INTEREST_RATE,
   DEPOSIT_PRESETS,
@@ -20,6 +20,10 @@ const ratePresets = [
   { label: "약정 없음 · 민법 5%", value: CIVIL_DELAY_INTEREST_RATE },
   { label: "소장 송달 다음 날 이후 · 12%", value: LITIGATION_DELAY_INTEREST_RATE },
 ] as const;
+const overdueDayPresets = OVERDUE_DAY_PRESETS.map((value) => ({
+  label: `${value}일`,
+  value,
+}));
 
 const interestStartDate = ref("");
 const calculationEndDate = ref("");
@@ -113,17 +117,11 @@ watch([interestStartDate, calculationEndDate], updateOverdueDaysFromDates);
           max="730"
           class="retro-input"
         />
-        <div class="flex flex-wrap gap-2">
-          <button
-            v-for="preset in OVERDUE_DAY_PRESETS"
-            :key="preset"
-            type="button"
-            class="min-h-[44px] rounded-full border border-border bg-background px-3 py-1.5 text-caption font-semibold hover:border-primary hover:text-primary"
-            @click="model.overdueDays = preset"
-          >
-            {{ preset }}일
-          </button>
-        </div>
+        <ShPresetGroup
+          v-model="model.overdueDays"
+          :options="overdueDayPresets"
+          label="지연 일수 빠른 선택"
+        />
       </div>
 
       <div class="space-y-2">
@@ -150,19 +148,11 @@ watch([interestStartDate, calculationEndDate], updateOverdueDaysFromDates);
           class="retro-input"
           @input="updateAnnualRate"
         />
-        <div class="grid gap-2">
-          <button
-            v-for="preset in ratePresets"
-            :key="preset.value"
-            type="button"
-            class="min-h-[44px] rounded-lg border border-border bg-background px-3 py-2 text-left text-caption font-semibold hover:border-primary hover:text-primary"
-            :class="{ 'border-primary bg-primary/10 text-primary': model.annualRate === preset.value }"
-            :aria-pressed="model.annualRate === preset.value"
-            @click="model.annualRate = preset.value"
-          >
-            {{ preset.label }}
-          </button>
-        </div>
+        <ShPresetGroup
+          v-model="model.annualRate"
+          :options="ratePresets"
+          label="적용 연이율 빠른 선택"
+        />
         <p class="text-caption text-muted-foreground">
           약정 이율이 있으면 직접 입력하세요. 12%는 계약 종료일에 자동 적용되지 않습니다.
         </p>

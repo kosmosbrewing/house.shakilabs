@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { ShSlider } from "@shakilabs/ui";
+import { ShPresetGroup, ShSlider } from "@shakilabs/ui";
 import { OPPORTUNITY_RATE_PRESETS } from "@/data/jeonseWolse";
 import type { JeonseVsWolseInput } from "@/utils/housingCalculator";
 import { parseNumericInput } from "@/lib/utils";
 
 const model = defineModel<JeonseVsWolseInput>({ required: true });
+const opportunityRatePresets = OPPORTUNITY_RATE_PRESETS.map((value) => ({
+  label: `${(value * 100).toFixed(1)}%`,
+  value,
+}));
 </script>
 
 <template>
@@ -39,17 +43,11 @@ const model = defineModel<JeonseVsWolseInput>({ required: true });
           :value-text="`연 ${(model.annualOpportunityRate * 100).toFixed(1)}%`"
           aria-label="보증금 기회비용 금리 슬라이더"
         />
-        <div class="flex flex-wrap gap-2">
-          <button
-            v-for="preset in OPPORTUNITY_RATE_PRESETS"
-            :key="preset"
-            type="button"
-            class="rounded-full border border-border bg-background px-3 py-1.5 text-caption font-semibold hover:border-primary hover:text-primary"
-            @click="model.annualOpportunityRate = preset"
-          >
-            {{ (preset * 100).toFixed(1) }}%
-          </button>
-        </div>
+        <ShPresetGroup
+          v-model="model.annualOpportunityRate"
+          :options="opportunityRatePresets"
+          label="보증금 기회비용 금리 빠른 선택"
+        />
       </div>
     </div>
 
