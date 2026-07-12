@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { ShSlider } from "@shakilabs/ui";
 import { TrendingUp, Wallet, Home, Percent } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
@@ -131,14 +132,13 @@ function setPricePreset(price: number) {
           <label for="rental-loan-rate" class="text-caption font-semibold text-foreground">
             대출 금리: {{ (form.loanRate * 100).toFixed(1) }}%
           </label>
-          <input
+          <ShSlider
             id="rental-loan-rate"
-            v-model.number="form.loanRate"
-            type="range"
-            min="0"
-            max="0.1"
-            step="0.005"
-            class="w-full accent-primary"
+            v-model="form.loanRate"
+            :min="0"
+            :max="0.1"
+            :step="0.005"
+            :value-text="`대출 금리 ${(form.loanRate * 100).toFixed(1)}%`"
           />
           <div class="flex flex-wrap gap-1.5">
             <button
@@ -174,14 +174,13 @@ function setPricePreset(price: number) {
           <label for="rental-vacancy-rate" class="text-caption font-semibold text-foreground">
             공실률: {{ (form.vacancyRate * 100).toFixed(0) }}%
           </label>
-          <input
+          <ShSlider
             id="rental-vacancy-rate"
-            v-model.number="form.vacancyRate"
-            type="range"
-            min="0"
-            max="0.5"
-            step="0.05"
-            class="w-full accent-primary"
+            v-model="form.vacancyRate"
+            :min="0"
+            :max="0.5"
+            :step="0.05"
+            :value-text="`공실률 ${(form.vacancyRate * 100).toFixed(0)}%`"
           />
           <div class="flex flex-wrap gap-1.5">
             <button

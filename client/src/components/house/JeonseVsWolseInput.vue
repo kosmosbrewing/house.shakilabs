@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ShSlider } from "@shakilabs/ui";
 import { OPPORTUNITY_RATE_PRESETS } from "@/data/jeonseWolse";
 import type { JeonseVsWolseInput } from "@/utils/housingCalculator";
 import { parseNumericInput } from "@/lib/utils";
@@ -29,14 +30,13 @@ const model = defineModel<JeonseVsWolseInput>({ required: true });
           <label for="opportunity-rate" class="text-caption font-semibold text-foreground">보증금 기회비용 금리</label>
           <span class="retro-kbd">{{ (model.annualOpportunityRate * 100).toFixed(1) }}%</span>
         </div>
-        <input
+        <ShSlider
           id="opportunity-rate"
-          v-model.number="model.annualOpportunityRate"
-          type="range"
-          min="0.01"
-          max="0.1"
-          step="0.005"
-          class="w-full accent-primary"
+          v-model="model.annualOpportunityRate"
+          :min="0.01"
+          :max="0.1"
+          :step="0.005"
+          :value-text="`연 ${(model.annualOpportunityRate * 100).toFixed(1)}%`"
           aria-label="보증금 기회비용 금리 슬라이더"
         />
         <div class="flex flex-wrap gap-2">
@@ -58,7 +58,14 @@ const model = defineModel<JeonseVsWolseInput>({ required: true });
         <label for="analysis-years" class="text-caption font-semibold text-foreground">비교 기간</label>
         <span class="retro-kbd">{{ model.analysisYears }}년</span>
       </div>
-      <input id="analysis-years" v-model.number="model.analysisYears" type="range" min="1" max="5" step="1" class="w-full accent-primary" />
+      <ShSlider
+        id="analysis-years"
+        v-model="model.analysisYears"
+        :min="1"
+        :max="5"
+        :step="1"
+        :value-text="`${model.analysisYears}년`"
+      />
     </div>
   </div>
 </template>

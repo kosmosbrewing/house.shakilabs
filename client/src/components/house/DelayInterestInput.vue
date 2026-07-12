@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import { ShSlider } from "@shakilabs/ui";
 import {
   CIVIL_DELAY_INTEREST_RATE,
   DEPOSIT_PRESETS,
@@ -95,13 +96,12 @@ watch([interestStartDate, calculationEndDate], updateOverdueDaysFromDates);
           <label for="delay-days" class="text-caption font-semibold text-foreground">지연 일수</label>
           <span class="delay-current-value retro-kbd">{{ model.overdueDays }}일</span>
         </div>
-        <input
-          v-model.number="model.overdueDays"
-          type="range"
-          min="1"
-          max="365"
-          step="1"
-          class="h-[44px] w-full accent-primary"
+        <ShSlider
+          v-model="model.overdueDays"
+          :min="1"
+          :max="365"
+          :step="1"
+          :value-text="`${model.overdueDays}일`"
           aria-label="지연 일수 슬라이더"
         />
         <input
@@ -131,13 +131,12 @@ watch([interestStartDate, calculationEndDate], updateOverdueDaysFromDates);
           <label for="delay-rate" class="text-caption font-semibold text-foreground">적용 연이율</label>
           <span class="delay-current-value retro-kbd">{{ (model.annualRate * 100).toFixed(1) }}%</span>
         </div>
-        <input
-          v-model.number="model.annualRate"
-          type="range"
-          min="0.01"
-          max="0.2"
-          step="0.005"
-          class="h-[44px] w-full accent-primary"
+        <ShSlider
+          v-model="model.annualRate"
+          :min="0.01"
+          :max="0.2"
+          :step="0.005"
+          :value-text="`연 ${(model.annualRate * 100).toFixed(1)}%`"
           aria-label="적용 연이율 슬라이더"
         />
         <input
