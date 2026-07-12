@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { ShPresetGroup, ShSlider } from "@shakilabs/ui";
 import { TrendingUp, Wallet, Home, Percent } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
@@ -131,27 +132,19 @@ function setPricePreset(price: number) {
           <label for="rental-loan-rate" class="text-caption font-semibold text-foreground">
             대출 금리: {{ (form.loanRate * 100).toFixed(1) }}%
           </label>
-          <input
+          <ShSlider
             id="rental-loan-rate"
-            v-model.number="form.loanRate"
-            type="range"
-            min="0"
-            max="0.1"
-            step="0.005"
-            class="w-full accent-primary"
+            v-model="form.loanRate"
+            :min="0"
+            :max="0.1"
+            :step="0.005"
+            :value-text="`대출 금리 ${(form.loanRate * 100).toFixed(1)}%`"
           />
-          <div class="flex flex-wrap gap-1.5">
-            <button
-              v-for="preset in LOAN_RATE_PRESETS"
-              :key="preset.value"
-              :aria-pressed="form.loanRate === preset.value"
-              class="rounded-lg border border-border/60 bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
-              :class="{ '!bg-primary/15 !text-primary !border-primary/30': form.loanRate === preset.value }"
-              @click="form.loanRate = preset.value"
-            >
-              {{ preset.label }}
-            </button>
-          </div>
+          <ShPresetGroup
+            v-model="form.loanRate"
+            :options="LOAN_RATE_PRESETS"
+            label="대출 금리 빠른 선택"
+          />
         </div>
       </div>
 
@@ -174,27 +167,19 @@ function setPricePreset(price: number) {
           <label for="rental-vacancy-rate" class="text-caption font-semibold text-foreground">
             공실률: {{ (form.vacancyRate * 100).toFixed(0) }}%
           </label>
-          <input
+          <ShSlider
             id="rental-vacancy-rate"
-            v-model.number="form.vacancyRate"
-            type="range"
-            min="0"
-            max="0.5"
-            step="0.05"
-            class="w-full accent-primary"
+            v-model="form.vacancyRate"
+            :min="0"
+            :max="0.5"
+            :step="0.05"
+            :value-text="`공실률 ${(form.vacancyRate * 100).toFixed(0)}%`"
           />
-          <div class="flex flex-wrap gap-1.5">
-            <button
-              v-for="preset in VACANCY_RATE_PRESETS"
-              :key="preset.value"
-              :aria-pressed="form.vacancyRate === preset.value"
-              class="rounded-lg border border-border/60 bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
-              :class="{ '!bg-primary/15 !text-primary !border-primary/30': form.vacancyRate === preset.value }"
-              @click="form.vacancyRate = preset.value"
-            >
-              {{ preset.label }}
-            </button>
-          </div>
+          <ShPresetGroup
+            v-model="form.vacancyRate"
+            :options="VACANCY_RATE_PRESETS"
+            label="공실률 빠른 선택"
+          />
         </div>
       </div>
     </section>
