@@ -4,6 +4,7 @@ import { Home, Users, CalendarClock, Trophy } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
+import HouseStatGrid from "@/components/house/HouseStatGrid.vue";
 import {
   DEFAULT_HOUSING_SUBSCRIPTION_INPUT,
   sanitizeHousingSubscriptionInput,
@@ -43,28 +44,16 @@ const statIconClasses = [
       </div>
     </section>
 
-    <div class="house-stat-grid grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
-      <Card
-        v-for="(stat, index) in [
-          { label: '무주택기간', value: `${result.homelessScore}점`, cls: '' },
-          { label: '부양가족', value: `${result.dependentScore}점`, cls: '' },
-          { label: '가입기간', value: `${result.accountScore}점`, cls: '' },
-          { label: '총 가점', value: `${result.totalScore}점`, cls: 'text-primary' },
-        ]"
-        :key="stat.label"
-        class="border-border/50 bg-muted/30"
-      >
-        <CardContent class="p-3.5">
-          <div class="flex items-center gap-2">
-            <span class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" :class="statIconClasses[index]">
-              <component :is="statIcons[index]" class="h-3.5 w-3.5" />
-            </span>
-            <p class="truncate text-caption uppercase tracking-wide text-muted-foreground">{{ stat.label }}</p>
-          </div>
-          <p class="mt-2 text-heading font-bold tabular-nums" :class="stat.cls">{{ stat.value }}</p>
-        </CardContent>
-      </Card>
-    </div>
+    <HouseStatGrid
+      :items="[
+        { label: '무주택기간', value: `${result.homelessScore}점`, cls: '' },
+        { label: '부양가족', value: `${result.dependentScore}점`, cls: '' },
+        { label: '가입기간', value: `${result.accountScore}점`, cls: '' },
+        { label: '총 가점', value: `${result.totalScore}점`, cls: 'text-primary' },
+      ]"
+      :icons="statIcons"
+      :icon-classes="statIconClasses"
+    />
 
     <Card>
       <CardContent class="p-4">

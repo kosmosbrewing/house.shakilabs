@@ -2,9 +2,9 @@
 import { computed } from "vue";
 import { Building2, CalendarDays, Landmark, Receipt } from "lucide-vue-next";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
+import HouseStatGrid from "@/components/house/HouseStatGrid.vue";
 import PropertyTaxBreakdown from "@/components/house/PropertyTaxBreakdown.vue";
 import PropertyTaxInputPanel from "@/components/house/PropertyTaxInputPanel.vue";
-import { Card, CardContent } from "@/components/ui/card";
 import { PROPERTY_TAX_SOURCES, PROPERTY_TAX_UPDATED } from "@/data/propertyTax";
 import { formatWon } from "@/lib/utils";
 import type { PropertyTaxInput } from "@/utils/housingCalculator";
@@ -44,22 +44,12 @@ const statIconClasses = [
       현재는 아파트를 단독 명의로 보유한 1세대 1주택만 지원합니다. 단독주택·공동명의·다주택·법인·주택 수 제외 특례는 잘못된 세액을 피하기 위해 결과를 숨깁니다.
     </div>
 
-    <div v-if="result.isSupportedScenario" class="house-stat-grid grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
-      <Card v-for="(stat, index) in statItems" :key="stat.label" class="border-border/50 bg-muted/30">
-        <CardContent class="p-3.5">
-          <div class="flex items-center gap-2">
-            <span
-              class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
-              :class="statIconClasses[index]"
-            >
-              <component :is="statIcons[index]" class="h-3.5 w-3.5" />
-            </span>
-            <p class="truncate text-caption uppercase tracking-wide text-muted-foreground">{{ stat.label }}</p>
-          </div>
-          <p class="mt-2 text-heading font-bold tabular-nums" :class="stat.cls">{{ stat.value }}</p>
-        </CardContent>
-      </Card>
-    </div>
+    <HouseStatGrid
+      v-if="result.isSupportedScenario"
+      :items="statItems"
+      :icons="statIcons"
+      :icon-classes="statIconClasses"
+    />
 
     <PropertyTaxBreakdown :form="form" :result="result" />
 

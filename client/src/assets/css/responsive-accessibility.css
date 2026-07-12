@@ -10,11 +10,6 @@
   white-space: nowrap;
 }
 
-.house-stat-grid .tabular-nums {
-  font-size: clamp(0.875rem, 7vw, 1.25rem);
-  line-height: 1.25;
-}
-
 @media (max-width: 400px) {
   .text-caption,
   .text-tiny,
@@ -152,21 +147,6 @@
 
   .text-resize-layout .retro-stat-grid {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .text-resize-layout .rental-stat-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .text-resize-layout .rental-stat-heading {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .text-resize-layout .rental-stat-label {
-    overflow: visible;
-    text-overflow: clip;
-    white-space: normal;
   }
 
   .text-resize-layout .retro-stat-label {

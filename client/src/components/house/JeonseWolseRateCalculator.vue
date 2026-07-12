@@ -3,6 +3,7 @@ import { computed } from "vue";
 import { Percent, Scale, AlertTriangle, CheckCircle2, ArrowDown } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
+import HouseStatGrid from "@/components/house/HouseStatGrid.vue";
 import {
   JEONSE_DEPOSIT_PRESETS,
   JEONSE_WOLSE_RATE_SOURCES,
@@ -49,31 +50,35 @@ const statItems = computed(() => [
     label: "실제 전환율",
     value: formatPercent(props.result.actualConversionRate, 2),
     cls: props.result.judgment === "excessive" ? "text-fee" : "text-primary",
-    icon: Percent,
-    iconCls: props.result.judgment === "excessive" ? "bg-fee/10 text-fee" : "bg-primary/10 text-primary",
   },
   {
     label: "법정 상한",
     value: formatPercent(props.result.legalRateCap, 1),
     cls: "text-muted-foreground",
-    icon: Scale,
-    iconCls: "bg-muted text-muted-foreground",
   },
   {
     label: "판정",
     value: judgmentLabel.value,
     cls: judgmentCls.value,
-    icon: props.result.judgment === "excessive" ? AlertTriangle : CheckCircle2,
-    iconCls: props.result.judgment === "excessive" ? "bg-fee/10 text-fee" : "bg-primary/10 text-primary",
   },
   {
     label: "적정 월세",
     value: formatWon(props.result.fairMonthlyRent),
     cls: "",
-    icon: ArrowDown,
-    iconCls: "bg-muted text-muted-foreground",
   },
 ]);
+const statIcons = computed(() => [
+  Percent,
+  Scale,
+  props.result.judgment === "excessive" ? AlertTriangle : CheckCircle2,
+  ArrowDown,
+] as const);
+const statIconClasses = computed(() => [
+  props.result.judgment === "excessive" ? "bg-fee/10 text-fee" : "bg-primary/10 text-primary",
+  "bg-muted text-muted-foreground",
+  props.result.judgment === "excessive" ? "bg-fee/10 text-fee" : "bg-primary/10 text-primary",
+  "bg-muted text-muted-foreground",
+] as const);
 
 function setDepositPreset(price: number) {
   form.value = { ...form.value, jeonseDeposit: price };
@@ -154,27 +159,12 @@ function setDepositPreset(price: number) {
       </p>
     </div>
 
-    <!-- 4칸 stat grid -->
-    <div v-if="!isDepositInvalid" class="house-stat-grid grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
-      <Card
-        v-for="stat in statItems"
-        :key="stat.label"
-        class="border-border/50 bg-muted/30"
-      >
-        <CardContent class="p-3.5">
-          <div class="flex items-center gap-2">
-            <span
-              class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
-              :class="stat.iconCls"
-            >
-              <component :is="stat.icon" class="h-3.5 w-3.5" />
-            </span>
-            <p class="truncate text-caption uppercase tracking-wide text-muted-foreground">{{ stat.label }}</p>
-          </div>
-          <p class="mt-2 text-heading font-bold tabular-nums" :class="stat.cls">{{ stat.value }}</p>
-        </CardContent>
-      </Card>
-    </div>
+    <HouseStatGrid
+      v-if="!isDepositInvalid"
+      :items="statItems"
+      :icons="statIcons"
+      :icon-classes="statIconClasses"
+    />
 
     <!-- 분석 상세 -->
     <Card v-if="!isDepositInvalid">

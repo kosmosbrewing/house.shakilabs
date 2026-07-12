@@ -3,6 +3,7 @@ import { computed, reactive } from "vue";
 import { Receipt, ShieldCheck, Landmark, Wallet, ListChecks, Lightbulb } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
+import HouseStatGrid from "@/components/house/HouseStatGrid.vue";
 import {
   DEFAULT_FIRST_HOME_INPUT,
   sanitizeFirstHomeInput,
@@ -54,28 +55,16 @@ const statIconClasses = [
       </div>
     </section>
 
-    <div class="house-stat-grid grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
-      <Card
-        v-for="(stat, index) in [
-          { label: '예상 취득세', value: formatWon(result.acquisitionTax), cls: '' },
-          { label: '감면 반영 후', value: formatWon(result.acquisitionTaxAfterRelief), cls: 'text-primary' },
-          { label: '디딤돌 최대 한도', value: formatWon(result.didimdolLoanAmount), cls: '' },
-          { label: '필요 자기자금', value: formatWon(result.requiredCash), cls: 'text-fee' },
-        ]"
-        :key="stat.label"
-        class="border-border/50 bg-muted/30"
-      >
-        <CardContent class="p-3.5">
-          <div class="flex items-center gap-2">
-            <span class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" :class="statIconClasses[index]">
-              <component :is="statIcons[index]" class="h-3.5 w-3.5" />
-            </span>
-            <p class="truncate text-caption uppercase tracking-wide text-muted-foreground">{{ stat.label }}</p>
-          </div>
-          <p class="mt-2 text-heading font-bold tabular-nums" :class="stat.cls">{{ stat.value }}</p>
-        </CardContent>
-      </Card>
-    </div>
+    <HouseStatGrid
+      :items="[
+        { label: '예상 취득세', value: formatWon(result.acquisitionTax), cls: '' },
+        { label: '감면 반영 후', value: formatWon(result.acquisitionTaxAfterRelief), cls: 'text-primary' },
+        { label: '디딤돌 최대 한도', value: formatWon(result.didimdolLoanAmount), cls: '' },
+        { label: '필요 자기자금', value: formatWon(result.requiredCash), cls: 'text-fee' },
+      ]"
+      :icons="statIcons"
+      :icon-classes="statIconClasses"
+    />
 
     <div class="grid gap-4 lg:grid-cols-2">
       <Card>
