@@ -3,6 +3,7 @@ import { computed, reactive } from "vue";
 import { Receipt, ShieldCheck, Landmark, Wallet, ListChecks, Lightbulb } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
+import BreakdownStackedBar from "@/components/result-visualization/BreakdownStackedBar.vue";
 import {
   DEFAULT_FIRST_HOME_INPUT,
   sanitizeFirstHomeInput,
@@ -22,6 +23,10 @@ const statIconClasses = [
   "bg-muted text-muted-foreground",
   "bg-fee/10 text-fee",
 ] as const;
+const fundingSegments = computed(() => [
+  { key: "cash", label: "필요 자기자금", value: result.value.requiredCash, tone: "fee" as const },
+  { key: "loan", label: "디딤돌 대출", value: result.value.didimdolLoanAmount, tone: "primary" as const },
+]);
 </script>
 
 <template>
@@ -76,6 +81,13 @@ const statIconClasses = [
         </CardContent>
       </Card>
     </div>
+
+    <BreakdownStackedBar
+      title="주택 매수가 자금 구성"
+      note="현재 조건에서 주택 매수가를 필요 자기자금과 디딤돌 대출 한도로 나눴습니다."
+      :segments="fundingSegments"
+      :format-value="formatWon"
+    />
 
     <div class="grid gap-4 lg:grid-cols-2">
       <Card>

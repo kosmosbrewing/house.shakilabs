@@ -3,6 +3,7 @@ import { computed } from "vue";
 import { Percent, Scale, AlertTriangle, CheckCircle2, ArrowDown } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
+import MetricComparisonBars from "@/components/result-visualization/MetricComparisonBars.vue";
 import {
   JEONSE_DEPOSIT_PRESETS,
   JEONSE_WOLSE_RATE_SOURCES,
@@ -74,6 +75,14 @@ const statItems = computed(() => [
     iconCls: "bg-muted text-muted-foreground",
   },
 ]);
+const rateMetrics = computed(() => [{
+  key: "rate",
+  label: "연 전환율",
+  values: [
+    { key: "actual", label: "실제 전환율", value: props.result.actualConversionRate, tone: props.result.judgment === "excessive" ? "fee" as const : "primary" as const },
+    { key: "cap", label: "법정 상한", value: props.result.legalRateCap, tone: "muted" as const },
+  ],
+}]);
 
 function setDepositPreset(price: number) {
   form.value = { ...form.value, jeonseDeposit: price };
@@ -175,6 +184,14 @@ function setDepositPreset(price: number) {
         </CardContent>
       </Card>
     </div>
+
+    <MetricComparisonBars
+      v-if="!isDepositInvalid"
+      title="실제·법정 전환율 비교"
+      note="같은 0% 기준에서 실제 전환율과 법정 상한을 비교하며, 상한 초과 시 실제 전환율을 경고색으로 표시합니다."
+      :metrics="rateMetrics"
+      :format-value="formatPercent"
+    />
 
     <!-- 분석 상세 -->
     <Card v-if="!isDepositInvalid">

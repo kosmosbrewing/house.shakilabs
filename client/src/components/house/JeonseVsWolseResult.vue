@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { Home, Banknote, Scale, PiggyBank } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
+import MetricComparisonBars from "@/components/result-visualization/MetricComparisonBars.vue";
 import type { JeonseVsWolseInput } from "@/utils/housingCalculator";
 import { formatPercent, formatWon } from "@/lib/utils";
 
@@ -33,6 +34,24 @@ const statItems = computed(() => [
   { label: "손익분기 월세", value: formatWon(props.result.breakEvenMonthlyRent), cls: "", icon: Scale, iconCls: "bg-primary/10 text-primary" },
   { label: "손익분기 전세금", value: formatWon(props.result.breakEvenJeonseDeposit), cls: "", icon: PiggyBank, iconCls: "bg-primary/10 text-primary" },
 ]);
+const costMetrics = computed(() => [
+  {
+    key: "annual",
+    label: "연간 부담",
+    values: [
+      { key: "jeonse", label: "전세", value: props.result.jeonseAnnualCost, tone: props.result.cheaperOption === "jeonse" ? "profit" as const : "muted" as const },
+      { key: "wolse", label: "월세", value: props.result.wolseAnnualCost, tone: props.result.cheaperOption === "wolse" ? "profit" as const : "muted" as const },
+    ],
+  },
+  {
+    key: "total",
+    label: `${props.form.analysisYears}년 누적 부담`,
+    values: [
+      { key: "jeonse", label: "전세", value: props.result.jeonseTotalCost, tone: props.result.cheaperOption === "jeonse" ? "profit" as const : "muted" as const },
+      { key: "wolse", label: "월세", value: props.result.wolseTotalCost, tone: props.result.cheaperOption === "wolse" ? "profit" as const : "muted" as const },
+    ],
+  },
+]);
 </script>
 
 <template>
@@ -54,6 +73,13 @@ const statItems = computed(() => [
         </CardContent>
       </Card>
     </div>
+
+    <MetricComparisonBars
+      title="전세·월세 부담 비교"
+      note="연간 부담과 선택한 기간의 누적 부담은 각각 0원 기준으로 비교합니다."
+      :metrics="costMetrics"
+      :format-value="formatWon"
+    />
 
     <Card class="border-border/50 bg-muted/30">
       <CardContent class="p-4 space-y-2">
