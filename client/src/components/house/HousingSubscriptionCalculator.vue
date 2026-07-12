@@ -4,6 +4,7 @@ import { Home, Users, CalendarClock, Trophy } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
+import BreakdownStackedBar from "@/components/result-visualization/BreakdownStackedBar.vue";
 import {
   DEFAULT_HOUSING_SUBSCRIPTION_INPUT,
   sanitizeHousingSubscriptionInput,
@@ -22,6 +23,12 @@ const statIconClasses = [
   "bg-muted text-muted-foreground",
   "bg-primary/10 text-primary",
 ] as const;
+const scoreSegments = computed(() => [
+  { key: "homeless", label: "무주택기간", value: result.value.homelessScore, tone: "primary" as const },
+  { key: "dependent", label: "부양가족", value: result.value.dependentScore, tone: "profit" as const },
+  { key: "account", label: "가입기간", value: result.value.accountScore, tone: "fee" as const },
+  { key: "remaining", label: "최고점까지", value: result.value.remainingToMax, tone: "muted" as const },
+]);
 </script>
 
 <template>
@@ -65,6 +72,13 @@ const statIconClasses = [
         </CardContent>
       </Card>
     </div>
+
+    <BreakdownStackedBar
+      title="청약 가점 84점 구성"
+      note="세 평가 항목의 현재 점수와 최고점까지 남은 점수를 한 막대에 표시합니다."
+      :segments="scoreSegments"
+      :format-value="(value) => `${value}점`"
+    />
 
     <Card>
       <CardContent class="p-4">

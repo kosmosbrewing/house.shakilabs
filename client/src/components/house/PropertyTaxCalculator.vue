@@ -4,6 +4,7 @@ import { Building2, CalendarDays, Landmark, Receipt } from "lucide-vue-next";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
 import PropertyTaxBreakdown from "@/components/house/PropertyTaxBreakdown.vue";
 import PropertyTaxInputPanel from "@/components/house/PropertyTaxInputPanel.vue";
+import BreakdownStackedBar from "@/components/result-visualization/BreakdownStackedBar.vue";
 import { Card, CardContent } from "@/components/ui/card";
 import { PROPERTY_TAX_SOURCES, PROPERTY_TAX_UPDATED } from "@/data/propertyTax";
 import { formatWon } from "@/lib/utils";
@@ -31,6 +32,10 @@ const statIconClasses = [
   "bg-primary/10 text-primary",
   "bg-muted text-muted-foreground",
 ] as const;
+const taxSegments = computed(() => [
+  { key: "property", label: "재산세 합계", value: props.result.propertyTaxTotal, tone: "primary" as const },
+  { key: "comprehensive", label: "종부세 합계", value: props.result.compTaxTotal, tone: "fee" as const },
+]);
 </script>
 
 <template>
@@ -60,6 +65,14 @@ const statIconClasses = [
         </CardContent>
       </Card>
     </div>
+
+    <BreakdownStackedBar
+      v-if="result.isSupportedScenario"
+      title="연간 보유세 구성"
+      note="연간 보유세 총액을 재산세와 종합부동산세로 나눴습니다."
+      :segments="taxSegments"
+      :format-value="formatWon"
+    />
 
     <PropertyTaxBreakdown :form="form" :result="result" />
 

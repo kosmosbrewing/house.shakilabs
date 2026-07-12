@@ -4,6 +4,7 @@ import { ShPresetGroup, ShSlider } from "@shakilabs/ui";
 import { TrendingUp, Wallet, Home, Percent } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
+import RentalYieldCharts from "@/components/house/RentalYieldCharts.vue";
 import {
   PURCHASE_PRICE_PRESETS,
   LOAN_RATE_PRESETS,
@@ -58,9 +59,7 @@ function setPricePreset(price: number) {
 
 <template>
   <div class="space-y-4">
-    <!-- 입력 영역 -->
     <section class="retro-panel-muted space-y-4 p-4">
-      <!-- 매매가 + 프리셋 -->
       <div class="space-y-1.5">
         <label for="rental-purchase-price" class="text-caption font-semibold text-foreground">매매가</label>
         <input
@@ -184,7 +183,6 @@ function setPricePreset(price: number) {
       </div>
     </section>
 
-    <!-- 4칸 stat grid -->
     <div class="rental-stat-grid grid grid-cols-2 gap-2 sm:grid-cols-4">
       <Card
         v-for="(stat, index) in statItems"
@@ -206,7 +204,8 @@ function setPricePreset(price: number) {
       </Card>
     </div>
 
-    <!-- 수익 분석 상세 -->
+    <RentalYieldCharts :result="result" />
+
     <Card>
       <CardContent class="p-4">
         <div class="flex items-center gap-2 mb-3">
