@@ -37,7 +37,7 @@ const statItems = computed(() => [
 
 <template>
   <div class="space-y-4">
-    <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    <div class="house-stat-grid grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
       <Card
         v-for="stat in statItems"
         :key="stat.label"

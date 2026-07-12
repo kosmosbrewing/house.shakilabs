@@ -5,6 +5,16 @@
   line-height: 1.4;
 }
 
+.tabular-nums {
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+.house-stat-grid .tabular-nums {
+  font-size: clamp(0.875rem, 7vw, 1.25rem);
+  line-height: 1.25;
+}
+
 @media (max-width: 400px) {
   .text-caption,
   .text-tiny,
@@ -48,7 +58,8 @@
     min-width: 24px;
   }
 
-  .text-resize-layout.container {
+  .text-resize-layout.container,
+  .text-resize-layout .container {
     padding-inline: 12px;
   }
 
@@ -57,9 +68,69 @@
     padding-inline: 12px;
   }
 
-  .text-resize-layout :is(h1, h2, h3, p, a, button, span, strong, label, li) {
+  .text-resize-layout :is(h1, h2, h3, h4) {
+    min-width: 0;
+    overflow-wrap: break-word;
+    text-wrap-style: balance;
+    word-break: keep-all;
+  }
+
+  .text-resize-layout :is(p, li, dt, dd) {
     min-width: 0;
     overflow-wrap: anywhere;
+    text-wrap-style: pretty;
+  }
+
+  .text-resize-layout .about-feature-list > li {
+    text-wrap-style: balance;
+  }
+
+  header p.truncate {
+    width: 100%;
+    min-width: 0;
+    overflow: visible;
+    overflow-wrap: break-word;
+    text-overflow: clip;
+    text-wrap-style: pretty;
+    white-space: normal;
+  }
+
+  .retro-link[href^="mailto:"] {
+    overflow-wrap: anywhere;
+  }
+
+  .text-resize-layout .sh-summary__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  .text-resize-layout .sh-summary__row dd {
+    min-width: 0;
+    overflow-wrap: normal;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .text-resize-layout .sh-summary__row .sh-badge {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
+
+  .text-resize-layout .sh-summary [id$="-leader"] {
+    font-size: clamp(1rem, 9vw, 2rem);
+    line-height: 1.15;
+    overflow-wrap: normal;
+    white-space: nowrap;
+  }
+
+  .text-resize-layout .house-stat-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .text-resize-layout .house-stat-grid > * > div {
+    padding-inline: 12px;
   }
 
   .text-resize-layout .delay-field-heading {
@@ -98,11 +169,17 @@
     white-space: normal;
   }
 
-  .text-resize-layout .retro-stat-label,
-  .text-resize-layout .retro-stat-value {
+  .text-resize-layout .retro-stat-label {
     overflow: visible;
     text-overflow: clip;
     white-space: normal;
+  }
+
+  .text-resize-layout .retro-stat-value {
+    overflow: visible;
+    overflow-wrap: normal;
+    text-overflow: clip;
+    white-space: nowrap;
   }
 
   .text-resize-layout .delay-result-note,

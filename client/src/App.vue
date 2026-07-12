@@ -8,7 +8,7 @@ import { getPageGroup } from "@/utils/pageTracking";
   <AppLayout>
     <RouterView v-slot="{ Component, route }">
       <Transition name="page-fade" mode="out-in">
-        <div :key="getPageGroup(route.path)">
+        <div :key="getPageGroup(route.path)" class="text-resize-layout">
           <component :is="Component" />
         </div>
       </Transition>

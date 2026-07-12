@@ -44,7 +44,7 @@ const statIconClasses = [
       현재는 아파트를 단독 명의로 보유한 1세대 1주택만 지원합니다. 단독주택·공동명의·다주택·법인·주택 수 제외 특례는 잘못된 세액을 피하기 위해 결과를 숨깁니다.
     </div>
 
-    <div v-if="result.isSupportedScenario" class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    <div v-if="result.isSupportedScenario" class="house-stat-grid grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
       <Card v-for="(stat, index) in statItems" :key="stat.label" class="border-border/50 bg-muted/30">
         <CardContent class="p-3.5">
           <div class="flex items-center gap-2">
