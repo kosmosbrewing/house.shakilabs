@@ -21,7 +21,7 @@ const navigationItems: readonly PrimaryNavigationItem[] = [
   { key: "rental-yield", label: "임대수익률", to: "/rental-yield" },
   { key: "first-home", label: "생애최초", to: "/first-home" },
   { key: "housing-subscription", label: "청약가점", to: "/housing-subscription" },
-  { key: "home", label: "전체", to: "/", href: "/house" },
+  { key: "home", label: "부동산 도구", to: "/", href: "/house" },
 ];
 
 const mobileDefaultKeys = [
