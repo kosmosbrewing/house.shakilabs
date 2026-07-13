@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { ShPresetGroup } from "@shakilabs/ui";
 import { Percent, Scale, AlertTriangle, CheckCircle2, ArrowDown } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
@@ -104,18 +105,12 @@ function setDepositPreset(price: number) {
           :value="form.jeonseDeposit.toLocaleString('ko-KR')"
           @input="form.jeonseDeposit = parseNumericInput(($event.target as HTMLInputElement).value)"
         />
-        <div class="flex flex-wrap gap-1.5">
-          <button
-            v-for="preset in JEONSE_DEPOSIT_PRESETS"
-            :key="preset.value"
-            :aria-pressed="form.jeonseDeposit === preset.value"
-            class="rounded-lg border border-border/60 bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
-            :class="{ '!bg-primary/15 !text-primary !border-primary/30': form.jeonseDeposit === preset.value }"
-            @click="setDepositPreset(preset.value)"
-          >
-            {{ preset.label }}
-          </button>
-        </div>
+        <ShPresetGroup
+          :model-value="form.jeonseDeposit"
+          :options="JEONSE_DEPOSIT_PRESETS"
+          label="전세 보증금 빠른 선택"
+          @update:model-value="setDepositPreset"
+        />
       </div>
 
       <div class="grid gap-3 md:grid-cols-2">

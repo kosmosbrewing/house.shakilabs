@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { ShSlider } from "@shakilabs/ui";
+import { ShPresetGroup, ShSlider } from "@shakilabs/ui";
 import {
   TrendingUp,
   TrendingDown,
@@ -15,6 +15,10 @@ import { formatWon, formatPercent, parseNumericInput } from "@/lib/utils";
 import type { CapitalGainsTaxInput } from "@/utils/housingCalculator";
 
 const form = defineModel<CapitalGainsTaxInput>({ required: true });
+const sellPricePresetOptions = SELL_PRICE_PRESETS.map((value) => ({
+  label: formatPresetPrice(value),
+  value,
+}));
 
 const props = defineProps<{
   result: ReturnType<typeof import("@/utils/housingCalculator").calculateCapitalGainsTax>;
@@ -63,18 +67,12 @@ function formatPresetPrice(price: number): string {
           :value="form.sellPrice.toLocaleString('ko-KR')"
           @input="form.sellPrice = parseNumericInput(($event.target as HTMLInputElement).value)"
         />
-        <div class="flex flex-wrap gap-1.5">
-          <button
-            v-for="preset in SELL_PRICE_PRESETS"
-            :key="preset"
-            :aria-pressed="form.sellPrice === preset"
-            class="rounded-lg border border-border/60 bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary whitespace-nowrap tabular-nums"
-            :class="{ '!bg-primary/15 !text-primary !border-primary/30': form.sellPrice === preset }"
-            @click="setPreset(preset)"
-          >
-            {{ formatPresetPrice(preset) }}
-          </button>
-        </div>
+        <ShPresetGroup
+          :model-value="form.sellPrice"
+          :options="sellPricePresetOptions"
+          label="양도가 빠른 선택"
+          @update:model-value="setPreset"
+        />
       </div>
 
       <!-- 취득가 -->

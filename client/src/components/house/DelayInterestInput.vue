@@ -24,6 +24,10 @@ const overdueDayPresets = OVERDUE_DAY_PRESETS.map((value) => ({
   label: `${value}일`,
   value,
 }));
+const depositPresets = DEPOSIT_PRESETS.map((value) => ({
+  label: `${formatNumber(value)}원`,
+  value,
+}));
 
 const interestStartDate = ref("");
 const calculationEndDate = ref("");
@@ -66,17 +70,11 @@ watch([interestStartDate, calculationEndDate], updateOverdueDaysFromDates);
         :value="model.depositAmount.toLocaleString('ko-KR')"
         @input="model.depositAmount = parseNumericInput(($event.target as HTMLInputElement).value)"
       />
-      <div class="flex flex-wrap gap-2">
-        <button
-          v-for="preset in DEPOSIT_PRESETS"
-          :key="preset"
-          type="button"
-          class="min-h-[44px] rounded-full border border-border bg-background px-3 py-1.5 text-caption font-semibold hover:border-primary hover:text-primary"
-          @click="model.depositAmount = preset"
-        >
-          {{ formatNumber(preset) }}원
-        </button>
-      </div>
+      <ShPresetGroup
+        v-model="model.depositAmount"
+        :options="depositPresets"
+        label="보증금 빠른 선택"
+      />
     </div>
 
     <div class="grid gap-3 md:grid-cols-2">

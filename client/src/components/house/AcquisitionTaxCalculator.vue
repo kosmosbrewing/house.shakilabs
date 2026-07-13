@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { ShPresetGroup } from "@shakilabs/ui";
 import {
   Receipt,
   Home,
@@ -14,6 +15,10 @@ import { formatWon, formatPercent, parseNumericInput } from "@/lib/utils";
 import type { AcquisitionTaxInput } from "@/utils/housingCalculator";
 
 const form = defineModel<AcquisitionTaxInput>({ required: true });
+const purchasePricePresetOptions = PURCHASE_PRICE_PRESETS.map((value) => ({
+  label: formatWon(value),
+  value,
+}));
 
 const props = defineProps<{
   result: ReturnType<typeof import("@/utils/housingCalculator").calculateAcquisitionTax>;
@@ -59,18 +64,12 @@ function setPreset(price: number) {
           :value="form.purchasePrice.toLocaleString('ko-KR')"
           @input="form.purchasePrice = parseNumericInput(($event.target as HTMLInputElement).value)"
         />
-        <div class="flex flex-wrap gap-1.5">
-          <button
-            v-for="preset in PURCHASE_PRICE_PRESETS"
-            :key="preset"
-            :aria-pressed="form.purchasePrice === preset"
-            class="rounded-lg border border-border/60 bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
-            :class="{ '!bg-primary/15 !text-primary !border-primary/30': form.purchasePrice === preset }"
-            @click="setPreset(preset)"
-          >
-            {{ formatWon(preset) }}
-          </button>
-        </div>
+        <ShPresetGroup
+          :model-value="form.purchasePrice"
+          :options="purchasePricePresetOptions"
+          label="매매가 빠른 선택"
+          @update:model-value="setPreset"
+        />
       </div>
 
       <div class="grid gap-3 md:grid-cols-2">
