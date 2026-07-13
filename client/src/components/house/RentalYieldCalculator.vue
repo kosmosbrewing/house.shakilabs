@@ -70,18 +70,12 @@ function setPricePreset(price: number) {
           :value="form.purchasePrice.toLocaleString('ko-KR')"
           @input="form.purchasePrice = parseNumericInput(($event.target as HTMLInputElement).value)"
         />
-        <div class="flex flex-wrap gap-1.5">
-          <button
-            v-for="preset in PURCHASE_PRICE_PRESETS"
-            :key="preset.value"
-            :aria-pressed="form.purchasePrice === preset.value"
-            class="rounded-lg border border-border/60 bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
-            :class="{ '!bg-primary/15 !text-primary !border-primary/30': form.purchasePrice === preset.value }"
-            @click="setPricePreset(preset.value)"
-          >
-            {{ preset.label }}
-          </button>
-        </div>
+        <ShPresetGroup
+          :model-value="form.purchasePrice"
+          :options="PURCHASE_PRICE_PRESETS"
+          label="매매가 빠른 선택"
+          @update:model-value="setPricePreset"
+        />
       </div>
 
       <div class="grid gap-3 md:grid-cols-2">
