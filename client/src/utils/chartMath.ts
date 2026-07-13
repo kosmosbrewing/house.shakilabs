@@ -14,9 +14,3 @@ export function signedBarGeometry(value: number, minimum: number, maximum: numbe
   const position = ((Math.min(domainMaximum, Math.max(domainMinimum, value)) - domainMinimum) / span) * 100;
   return { start: Math.min(zero, position), width: Math.abs(position - zero), zero };
 }
-
-export function normalizeSegments(values: readonly number[]): number[] {
-  const safe = values.map((value) => Number.isFinite(value) && value > 0 ? value : 0);
-  const total = safe.reduce((sum, value) => sum + value, 0);
-  return total > 0 ? safe.map((value) => value / total) : safe;
-}

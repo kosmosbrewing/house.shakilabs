@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { ShPresetGroup } from "@shakilabs/ui";
+import { ShBreakdownBar, ShPresetGroup } from "@shakilabs/ui";
 import {
   Receipt,
   Home,
@@ -9,7 +9,6 @@ import {
 } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
-import BreakdownStackedBar from "@/components/result-visualization/BreakdownStackedBar.vue";
 import { PURCHASE_PRICE_PRESETS, ACQUISITION_TAX_SOURCES, ACQUISITION_TAX_UPDATED } from "@/data/acquisitionTax";
 import { formatWon, formatPercent, parseNumericInput } from "@/lib/utils";
 import type { AcquisitionTaxInput } from "@/utils/housingCalculator";
@@ -39,7 +38,7 @@ const statIconClasses = [
   "bg-muted text-muted-foreground",
 ] as const;
 const taxSegments = computed(() => [
-  { key: "acquisition", label: "취득세", value: props.result.acquisitionTax, tone: "fee" as const },
+  { key: "acquisition", label: "취득세", value: props.result.acquisitionTax, tone: "danger" as const },
   { key: "education", label: "지방교육세", value: props.result.localEducationTax, tone: "primary" as const },
   { key: "rural", label: "농어촌특별세", value: props.result.ruralTax, tone: "muted" as const },
 ]);
@@ -121,11 +120,12 @@ function setPreset(price: number) {
       </Card>
     </div>
 
-    <BreakdownStackedBar
-      title="취득 단계 세금 구성"
+    <ShBreakdownBar
+      label="취득 단계 세금 구성"
       note="납부 세금 합계를 취득세·지방교육세·농어촌특별세로 나눴습니다."
       :segments="taxSegments"
       :format-value="formatWon"
+      surface="outlined"
     />
 
     <!-- 상세 내역 -->
