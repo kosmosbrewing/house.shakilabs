@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { ShPresetGroup, ShSlider } from "@shakilabs/ui";
+import { ShBreakdownBar, ShPresetGroup, ShSlider } from "@shakilabs/ui";
 import {
   TrendingUp,
   TrendingDown,
@@ -9,7 +9,6 @@ import {
 } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
-import BreakdownStackedBar from "@/components/result-visualization/BreakdownStackedBar.vue";
 import { SELL_PRICE_PRESETS, CAPITAL_GAINS_TAX_SOURCES, CAPITAL_GAINS_TAX_UPDATED } from "@/data/capitalGainsTax";
 import { formatWon, formatPercent, parseNumericInput } from "@/lib/utils";
 import type { CapitalGainsTaxInput } from "@/utils/housingCalculator";
@@ -39,8 +38,8 @@ const statIconClasses = [
   "bg-muted text-muted-foreground",
 ] as const;
 const gainSegments = computed(() => [
-  { key: "after-tax", label: "세후 양도차익", value: props.result.afterTaxProfit, tone: "profit" as const },
-  { key: "tax", label: "양도소득세·지방세", value: props.result.totalTax, tone: "fee" as const },
+  { key: "after-tax", label: "세후 양도차익", value: props.result.afterTaxProfit, tone: "success" as const },
+  { key: "tax", label: "양도소득세·지방세", value: props.result.totalTax, tone: "danger" as const },
 ]);
 
 function setPreset(price: number) {
@@ -158,11 +157,12 @@ function formatPresetPrice(price: number): string {
       </Card>
     </div>
 
-    <BreakdownStackedBar
-      title="양도차익의 세금·세후 이익 구성"
+    <ShBreakdownBar
+      label="양도차익의 세금·세후 이익 구성"
       note="전체 양도차익에서 세금이 차지하는 금액과 세후에 남는 금액을 표시합니다."
       :segments="gainSegments"
       :format-value="formatWon"
+      surface="outlined"
     />
 
     <!-- 상세 내역 -->
