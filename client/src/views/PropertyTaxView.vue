@@ -7,6 +7,7 @@ import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import PropertyTaxCalculator from "@/components/house/PropertyTaxCalculator.vue";
 import PopularCalculators from "@/components/house/PopularCalculators.vue";
+import SessionDraftControl from "@/components/house/SessionDraftControl.vue";
 import { PROPERTY_TAX_FAQS } from "@/data/propertyTax";
 import { usePropertyTax } from "@/composables/usePropertyTax";
 import { useResultShare } from "@/composables/useResultShare";
@@ -64,6 +65,8 @@ const faqJsonLd = {
   <div class="container space-y-5 py-5">
     <CalculatorPageHeader title="재산세·보유세 계산기" />
 
+    <SessionDraftControl />
+
     <section class="retro-panel overflow-hidden" aria-labelledby="property-tax-input-title">
       <div class="retro-titlebar rounded-t-2xl">
         <h2 id="property-tax-input-title" class="retro-title">보유세 조건 입력</h2>
@@ -92,6 +95,8 @@ const faqJsonLd = {
       @share="share.openShare"
     />
 
+    <PopularCalculators />
+
     <!-- FAQ -->
     <div class="retro-panel overflow-hidden">
       <div class="retro-titlebar rounded-t-2xl">
@@ -112,8 +117,6 @@ const faqJsonLd = {
         </details>
       </div>
     </div>
-
-    <PopularCalculators />
 
     <!-- 공유 모달 -->
     <ShareModal
