@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
+import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import RentalYieldCalculator from "@/components/house/RentalYieldCalculator.vue";
@@ -80,26 +81,7 @@ const faqJsonLd = {
       @share="share.openShare"
     />
 
-    <!-- FAQ -->
-    <div class="retro-panel overflow-hidden">
-      <div class="retro-titlebar rounded-t-2xl">
-        <h2 class="retro-title">자주 묻는 질문</h2>
-      </div>
-      <div class="retro-panel-content space-y-3">
-        <details
-          v-for="faq in RENTAL_YIELD_FAQS"
-          :key="faq.q"
-          class="retro-panel-muted p-4"
-        >
-          <summary class="cursor-pointer list-none text-body font-semibold text-foreground">
-            {{ faq.q }}
-          </summary>
-          <p class="mt-2 text-caption leading-relaxed text-muted-foreground">
-            {{ faq.a }}
-          </p>
-        </details>
-      </div>
-    </div>
+    <FaqAccordionPanel :items="RENTAL_YIELD_FAQS" />
 
     <!-- 공유 모달 -->
     <ShareModal
