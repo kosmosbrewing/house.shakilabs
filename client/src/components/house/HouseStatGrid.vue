@@ -23,7 +23,11 @@ const props = defineProps<{
       <CardContent class="house-stat-card-content">
         <div class="house-stat-heading">
           <span class="house-stat-icon" :class="props.iconClasses[index]">
-            <component :is="props.icons[index]" class="h-3.5 w-3.5" />
+            <component
+              :is="props.icons[index]"
+              aria-hidden="true"
+              class="h-3.5 w-3.5"
+            />
           </span>
           <p class="house-stat-label">{{ item.label }}</p>
         </div>
