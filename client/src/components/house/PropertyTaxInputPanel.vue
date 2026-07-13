@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ShPresetGroup } from "@shakilabs/ui";
 import { MARKET_PRICE_PRESETS } from "@/data/propertyTax";
 import { parseNumericInput } from "@/lib/utils";
 import {
@@ -7,6 +8,10 @@ import {
 } from "@/utils/propertyTaxCalculator";
 
 const form = defineModel<PropertyTaxInput>({ required: true });
+const marketPricePresetOptions = MARKET_PRICE_PRESETS.map((value) => ({
+  label: `${Math.round(value / 100_000_000)}억`,
+  value,
+}));
 
 type AmountField =
   | "marketPrice"
@@ -42,19 +47,12 @@ function setPreset(price: number) {
           :value="form.marketPrice.toLocaleString('ko-KR')"
           @input="setAmount('marketPrice', ($event.target as HTMLInputElement).value)"
         />
-        <div class="grid grid-cols-3 gap-1.5">
-          <button
-            v-for="preset in MARKET_PRICE_PRESETS"
-            :key="preset"
-            type="button"
-            :aria-pressed="form.marketPrice === preset && !form.officialPrice"
-            class="min-h-[44px] rounded-lg border border-border/60 bg-background px-2 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
-            :class="{ '!border-primary/30 !bg-primary/15 !text-primary': form.marketPrice === preset && !form.officialPrice }"
-            @click="setPreset(preset)"
-          >
-            {{ Math.round(preset / 100_000_000) }}억
-          </button>
-        </div>
+        <ShPresetGroup
+          :model-value="form.officialPrice ? -1 : form.marketPrice"
+          :options="marketPricePresetOptions"
+          label="시가 빠른 선택"
+          @update:model-value="setPreset"
+        />
       </div>
 
       <div class="space-y-1.5">

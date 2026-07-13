@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import { ShPresetGroup } from "@shakilabs/ui";
 import {
   MONTHLY_RENT_PRESETS,
   RENT_DEPOSIT_PRESETS,
@@ -8,6 +10,16 @@ import type { BrokerageFeeInput } from "@/utils/housingCalculator";
 import { formatNumber, parseNumericInput } from "@/lib/utils";
 
 const model = defineModel<BrokerageFeeInput>({ required: true });
+const amountPresetOptions = computed(() =>
+  (model.value.dealType === "sale" ? SALE_PRICE_PRESETS : RENT_DEPOSIT_PRESETS).map((value) => ({
+    label: `${formatNumber(value)}원`,
+    value,
+  })),
+);
+const monthlyRentPresetOptions = MONTHLY_RENT_PRESETS.map((value) => ({
+  label: `${formatNumber(value)}원`,
+  value,
+}));
 </script>
 
 <template>
@@ -32,33 +44,21 @@ const model = defineModel<BrokerageFeeInput>({ required: true });
         {{ model.dealType === "sale" ? "거래금액" : "보증금" }}
       </label>
       <input id="brokerage-amount" type="text" inputmode="numeric" class="retro-input" :value="model.amount.toLocaleString('ko-KR')" @input="model.amount = parseNumericInput(($event.target as HTMLInputElement).value)" />
-      <div class="flex flex-wrap gap-2">
-        <button
-          v-for="preset in model.dealType === 'sale' ? SALE_PRICE_PRESETS : RENT_DEPOSIT_PRESETS"
-          :key="preset"
-          type="button"
-          class="rounded-full border border-border bg-background px-3 py-1.5 text-caption font-semibold hover:border-primary hover:text-primary"
-          @click="model.amount = preset"
-        >
-          {{ formatNumber(preset) }}원
-        </button>
-      </div>
+      <ShPresetGroup
+        v-model="model.amount"
+        :options="amountPresetOptions"
+        :label="`${model.dealType === 'sale' ? '거래금액' : '보증금'} 빠른 선택`"
+      />
     </div>
 
     <div v-if="model.dealType === 'monthly'" class="space-y-2">
       <label for="brokerage-monthly-rent" class="text-caption font-semibold text-foreground">월세</label>
       <input id="brokerage-monthly-rent" type="text" inputmode="numeric" class="retro-input" :value="model.monthlyRent.toLocaleString('ko-KR')" @input="model.monthlyRent = parseNumericInput(($event.target as HTMLInputElement).value)" />
-      <div class="flex flex-wrap gap-2">
-        <button
-          v-for="preset in MONTHLY_RENT_PRESETS"
-          :key="preset"
-          type="button"
-          class="rounded-full border border-border bg-background px-3 py-1.5 text-caption font-semibold hover:border-primary hover:text-primary"
-          @click="model.monthlyRent = preset"
-        >
-          {{ formatNumber(preset) }}원
-        </button>
-      </div>
+      <ShPresetGroup
+        v-model="model.monthlyRent"
+        :options="monthlyRentPresetOptions"
+        label="월세 빠른 선택"
+      />
     </div>
   </div>
 </template>
