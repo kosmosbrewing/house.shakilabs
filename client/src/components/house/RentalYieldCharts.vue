@@ -18,7 +18,7 @@ const isFundingBalanced = computed(() => {
 });
 const incomeMetrics = computed(() => [{
   key: "income",
-  label: "연간 임대 현금흐름",
+  label: "수입·순수익 비교",
   values: [
     { key: "gross", label: "공실 전 임대수입", value: props.result.annualRentGross, tone: "muted" as const },
     { key: "net", label: "비용 반영 순수익", value: props.result.annualNetIncome, tone: "profit" as const },
@@ -30,7 +30,7 @@ const incomeMetrics = computed(() => [{
   <div class="grid gap-4 lg:grid-cols-2">
     <MetricComparisonBars
       title="연간 임대 현금흐름"
-      note="공실·대출이자·관리비 반영 전후를 비교하며 손실이면 0원 기준선 왼쪽에 표시합니다."
+      note="공실 전 수입과 비용 반영 순수익을 같은 손익 축에서 비교하며, 손실은 0원 기준선 왼쪽에 표시합니다."
       :metrics="incomeMetrics"
       :format-value="formatWon"
     />
