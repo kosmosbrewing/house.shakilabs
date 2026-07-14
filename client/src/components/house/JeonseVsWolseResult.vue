@@ -2,10 +2,10 @@
 import { computed } from "vue";
 import { Home, Banknote, Scale, PiggyBank } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
-import MetricComparisonBars from "@/components/result-visualization/MetricComparisonBars.vue";
+import PairComparisonMeters from "@/components/result-visualization/PairComparisonMeters.vue";
 import HouseStatGrid from "@/components/house/HouseStatGrid.vue";
 import type { JeonseVsWolseInput } from "@/utils/housingCalculator";
-import { formatPercent, formatWon } from "@/lib/utils";
+import { formatPercent, formatWon, formatWonShort } from "@/lib/utils";
 
 const props = defineProps<{
   form: JeonseVsWolseInput;
@@ -40,17 +40,17 @@ const costMetrics = computed(() => [
     key: "annual",
     label: "연간 부담",
     values: [
-      { key: "jeonse", label: "전세", value: props.result.jeonseAnnualCost, tone: props.result.cheaperOption === "jeonse" ? "profit" as const : "muted" as const },
-      { key: "wolse", label: "월세", value: props.result.wolseAnnualCost, tone: props.result.cheaperOption === "wolse" ? "profit" as const : "muted" as const },
-    ],
+      { key: "jeonse", label: "전세", value: props.result.jeonseAnnualCost },
+      { key: "wolse", label: "월세", value: props.result.wolseAnnualCost },
+    ] as const,
   },
   {
     key: "total",
     label: `${props.form.analysisYears}년 누적 부담`,
     values: [
-      { key: "jeonse", label: "전세", value: props.result.jeonseTotalCost, tone: props.result.cheaperOption === "jeonse" ? "profit" as const : "muted" as const },
-      { key: "wolse", label: "월세", value: props.result.wolseTotalCost, tone: props.result.cheaperOption === "wolse" ? "profit" as const : "muted" as const },
-    ],
+      { key: "jeonse", label: "전세", value: props.result.jeonseTotalCost },
+      { key: "wolse", label: "월세", value: props.result.wolseTotalCost },
+    ] as const,
   },
 ]);
 const statIcons = [Home, Banknote, Scale, PiggyBank] as const;
@@ -60,17 +60,22 @@ const statIconClasses = [
   "bg-primary/10 text-primary",
   "bg-primary/10 text-primary",
 ] as const;
+
+function formatWonScale(value: number): string {
+  return formatWonShort(value).replaceAll("원", "");
+}
 </script>
 
 <template>
   <div class="space-y-4">
     <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" />
 
-    <MetricComparisonBars
+    <PairComparisonMeters
       title="전세·월세 부담 비교"
-      note="연간 부담과 선택한 기간의 누적 부담은 각각 0원 기준으로 비교합니다."
+      note="각 기간에서 전세와 월세를 같은 0원 기준으로 비교하며, 더 늘어나는 부담만 경고색으로 표시합니다."
       :metrics="costMetrics"
       :format-value="formatWon"
+      :format-scale-value="formatWonScale"
     />
 
     <Card class="border-border/50 bg-muted/30">

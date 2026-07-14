@@ -2,6 +2,8 @@
 import { computed } from "vue";
 import { thresholdMeterGeometry } from "@/utils/meterMath";
 
+type MeterTone = "primary" | "fee" | "profit" | "muted";
+
 const props = withDefaults(defineProps<{
   label: string;
   value: number;
@@ -14,6 +16,8 @@ const props = withDefaults(defineProps<{
   minimum?: number;
   tolerance?: number;
   ariaValueText?: string;
+  baseTone?: MeterTone;
+  excessTone?: MeterTone;
 }>(), {
   valueLabel: "현재 값",
   thresholdLabel: "기준",
@@ -21,6 +25,8 @@ const props = withDefaults(defineProps<{
   tolerance: 0,
   formatScaleValue: undefined,
   ariaValueText: undefined,
+  baseTone: "primary",
+  excessTone: "fee",
 });
 
 const geometry = computed(() => thresholdMeterGeometry(
@@ -49,13 +55,30 @@ function scaleMarkerClass(percent: number): string {
   if (percent >= 82) return "-translate-x-full";
   return "-translate-x-1/2";
 }
+
+function backgroundToneClass(tone: MeterTone): string {
+  if (tone === "fee") return "bg-fee";
+  if (tone === "profit") return "bg-profit";
+  if (tone === "muted") return "bg-muted-foreground/45";
+  return "bg-primary";
+}
+
+function textToneClass(tone: MeterTone): string {
+  if (tone === "fee") return "text-fee";
+  if (tone === "profit") return "text-profit";
+  if (tone === "muted") return "text-foreground";
+  return "text-primary";
+}
 </script>
 
 <template>
   <div>
     <div class="flex items-baseline justify-between gap-3 text-caption">
       <span class="font-semibold text-muted-foreground">{{ valueLabel }}</span>
-      <strong class="tabular-nums" :class="geometry.state === 'above' ? 'text-fee' : 'text-primary'">
+      <strong
+        class="tabular-nums"
+        :class="textToneClass(geometry.state === 'above' ? excessTone : baseTone)"
+      >
         {{ formatValue(value) }}
       </strong>
     </div>
@@ -73,16 +96,22 @@ function scaleMarkerClass(percent: number): string {
       <span
         v-if="geometry.basePercent > 0"
         data-meter-base
-        class="meter-segment absolute inset-y-0 left-0 bg-primary"
-        :class="geometry.state === 'above' ? 'meter-segment--start' : 'meter-segment--both'"
+        class="meter-segment absolute inset-y-0 left-0"
+        :class="[
+          backgroundToneClass(baseTone),
+          geometry.state === 'above' ? 'meter-segment--start' : 'meter-segment--both',
+        ]"
         :style="baseStyle"
         aria-hidden="true"
       />
       <span
         v-if="geometry.excessPercent > 0"
         data-meter-excess
-        class="meter-segment absolute inset-y-0 bg-fee"
-        :class="geometry.excessStartPercent <= 0 ? 'meter-segment--both' : 'meter-segment--end'"
+        class="meter-segment absolute inset-y-0"
+        :class="[
+          backgroundToneClass(excessTone),
+          geometry.excessStartPercent <= 0 ? 'meter-segment--both' : 'meter-segment--end',
+        ]"
         :style="excessStyle"
         aria-hidden="true"
       />
