@@ -4,7 +4,7 @@ import { ShPresetGroup } from "@shakilabs/ui";
 import { Percent, Scale, AlertTriangle, CheckCircle2, ArrowDown } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
-import MetricComparisonBars from "@/components/result-visualization/MetricComparisonBars.vue";
+import ThresholdComparison from "@/components/result-visualization/ThresholdComparison.vue";
 import HouseStatGrid from "@/components/house/HouseStatGrid.vue";
 import {
   JEONSE_DEPOSIT_PRESETS,
@@ -69,14 +69,11 @@ const statItems = computed(() => [
     cls: "",
   },
 ]);
-const rateMetrics = computed(() => [{
-  key: "rate",
-  label: "연 전환율",
-  values: [
-    { key: "actual", label: "실제 전환율", value: props.result.actualConversionRate, tone: props.result.judgment === "excessive" ? "fee" as const : "primary" as const },
-    { key: "cap", label: "법정 상한", value: props.result.legalRateCap, tone: "muted" as const },
-  ],
-}]);
+const rateComparisonMessages = {
+  above: "법정 상한을 초과했습니다. 적용 대상 계약인지와 계약 조건을 함께 확인하세요.",
+  equal: "법정 상한과 같은 수준입니다. 월세와 보증금 조건을 함께 확인하세요.",
+  below: "법정 상한 이내입니다. 계약 조건과 실제 적용 여부를 함께 확인하세요.",
+} as const;
 const statIcons = computed(() => [
   Percent,
   Scale,
@@ -92,6 +89,18 @@ const statIconClasses = computed(() => [
 
 function setDepositPreset(price: number) {
   form.value = { ...form.value, jeonseDeposit: price };
+}
+
+function formatRate(value: number): string {
+  return formatPercent(value, 2);
+}
+
+function formatRateScale(value: number): string {
+  return formatPercent(value, 1);
+}
+
+function formatPercentagePoint(value: number): string {
+  return `${(value * 100).toFixed(1)}%p`;
 }
 </script>
 
@@ -170,12 +179,19 @@ function setDepositPreset(price: number) {
       :icon-classes="statIconClasses"
     />
 
-    <MetricComparisonBars
+    <ThresholdComparison
       v-if="!isDepositInvalid"
       title="실제·법정 전환율 비교"
-      note="같은 0% 기준에서 실제 전환율과 법정 상한을 비교하며, 상한 초과 시 실제 전환율을 경고색으로 표시합니다."
-      :metrics="rateMetrics"
-      :format-value="formatPercent"
+      note="하나의 0% 기준 track에서 실제 전환율과 법정 상한을 비교합니다."
+      actual-label="실제 전환율"
+      threshold-label="법정 상한"
+      :actual-value="result.actualConversionRate"
+      :threshold-value="result.legalRateCap"
+      :scale-step="0.01"
+      :format-value="formatRate"
+      :format-scale-value="formatRateScale"
+      :format-difference="formatPercentagePoint"
+      :messages="rateComparisonMessages"
     />
 
     <!-- 분석 상세 -->
