@@ -3,6 +3,8 @@ import { computed } from "vue";
 import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
+import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
+import { HOUSE_RENTAL_YIELD_GUIDE } from "@/data/seoGuides";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import RentalYieldCalculator from "@/components/house/RentalYieldCalculator.vue";
@@ -82,6 +84,14 @@ const faqJsonLd = {
     />
 
     <FaqAccordionPanel :items="RENTAL_YIELD_FAQS" />
+
+    <SeoRichGuide
+      :title="HOUSE_RENTAL_YIELD_GUIDE.title"
+      :intro="HOUSE_RENTAL_YIELD_GUIDE.intro"
+      :sections="HOUSE_RENTAL_YIELD_GUIDE.sections"
+      :faqs="HOUSE_RENTAL_YIELD_GUIDE.faqs"
+      :disclaimer="HOUSE_RENTAL_YIELD_GUIDE.disclaimer"
+    />
 
     <!-- 공유 모달 -->
     <ShareModal

@@ -3,6 +3,8 @@ import { computed } from "vue";
 import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
+import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
+import { HOUSE_CAPITAL_GAINS_TAX_GUIDE } from "@/data/seoGuides";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import CapitalGainsTaxCalculator from "@/components/house/CapitalGainsTaxCalculator.vue";
@@ -82,6 +84,14 @@ const faqJsonLd = {
     />
 
     <FaqAccordionPanel :items="CAPITAL_GAINS_TAX_FAQS" />
+
+    <SeoRichGuide
+      :title="HOUSE_CAPITAL_GAINS_TAX_GUIDE.title"
+      :intro="HOUSE_CAPITAL_GAINS_TAX_GUIDE.intro"
+      :sections="HOUSE_CAPITAL_GAINS_TAX_GUIDE.sections"
+      :faqs="HOUSE_CAPITAL_GAINS_TAX_GUIDE.faqs"
+      :disclaimer="HOUSE_CAPITAL_GAINS_TAX_GUIDE.disclaimer"
+    />
 
     <!-- 공유 모달 -->
     <ShareModal

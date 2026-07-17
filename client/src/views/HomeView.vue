@@ -7,6 +7,8 @@ import { ActionCard } from "@/components/ui/action-card";
 import RelatedServices from "@/components/common/RelatedServices.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
+import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
+import { HOUSE_HOME_GUIDE } from "@/data/seoGuides";
 
 type ToolItem = {
   title: string;
@@ -151,6 +153,14 @@ const faqJsonLd = {
     </ShSurface>
 
     <FaqAccordionPanel :items="faqItems" />
+
+    <SeoRichGuide
+      :title="HOUSE_HOME_GUIDE.title"
+      :intro="HOUSE_HOME_GUIDE.intro"
+      :sections="HOUSE_HOME_GUIDE.sections"
+      :faqs="HOUSE_HOME_GUIDE.faqs"
+      :disclaimer="HOUSE_HOME_GUIDE.disclaimer"
+    />
 
     <RelatedServices />
   </div>

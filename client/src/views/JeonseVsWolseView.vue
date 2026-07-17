@@ -4,6 +4,8 @@ import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.v
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import ShareModal from "@/components/share/ShareModal.vue";
+import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
+import { HOUSE_JEONSE_VS_WOLSE_GUIDE } from "@/data/seoGuides";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import JeonseVsWolseFAQ from "@/components/house/JeonseVsWolseFAQ.vue";
 import JeonseVsWolseInput from "@/components/house/JeonseVsWolseInput.vue";
@@ -72,6 +74,14 @@ const facts = computed(() => [
     <JeonseVsWolseResult :form="form" :result="result" />
     <CompareSourceFooter :sources="[...JEONSE_WOLSE_SOURCES]" :updated-at="JEONSE_WOLSE_DATA_UPDATED" />
     <JeonseVsWolseFAQ :faqs="JEONSE_WOLSE_FAQS" />
+
+    <SeoRichGuide
+      :title="HOUSE_JEONSE_VS_WOLSE_GUIDE.title"
+      :intro="HOUSE_JEONSE_VS_WOLSE_GUIDE.intro"
+      :sections="HOUSE_JEONSE_VS_WOLSE_GUIDE.sections"
+      :faqs="HOUSE_JEONSE_VS_WOLSE_GUIDE.faqs"
+      :disclaimer="HOUSE_JEONSE_VS_WOLSE_GUIDE.disclaimer"
+    />
 
     <ShareModal
       :show="share.showShareModal.value"

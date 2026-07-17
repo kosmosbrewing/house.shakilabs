@@ -4,6 +4,8 @@ import CalculatorInteractionTracker from "@/components/analytics/CalculatorInter
 import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
+import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
+import { HOUSE_PROPERTY_TAX_GUIDE } from "@/data/seoGuides";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import PropertyTaxCalculator from "@/components/house/PropertyTaxCalculator.vue";
@@ -99,6 +101,14 @@ const faqJsonLd = {
     <PopularCalculators />
 
     <FaqAccordionPanel :items="PROPERTY_TAX_FAQS" />
+
+    <SeoRichGuide
+      :title="HOUSE_PROPERTY_TAX_GUIDE.title"
+      :intro="HOUSE_PROPERTY_TAX_GUIDE.intro"
+      :sections="HOUSE_PROPERTY_TAX_GUIDE.sections"
+      :faqs="HOUSE_PROPERTY_TAX_GUIDE.faqs"
+      :disclaimer="HOUSE_PROPERTY_TAX_GUIDE.disclaimer"
+    />
 
     <!-- 공유 모달 -->
     <ShareModal

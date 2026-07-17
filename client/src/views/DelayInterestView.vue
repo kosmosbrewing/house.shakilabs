@@ -10,6 +10,8 @@ import DelayInterestFAQ from "@/components/house/DelayInterestFAQ.vue";
 import DelayInterestInput from "@/components/house/DelayInterestInput.vue";
 import DelayInterestResult from "@/components/house/DelayInterestResult.vue";
 import PopularCalculators from "@/components/house/PopularCalculators.vue";
+import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
+import { HOUSE_DELAY_INTEREST_GUIDE } from "@/data/seoGuides";
 import {
   CIVIL_DELAY_INTEREST_RATE,
   DELAY_INTEREST_DATA_UPDATED,
@@ -107,6 +109,14 @@ const rateBasis = computed(() => {
     <CompareSourceFooter :sources="[...DELAY_INTEREST_SOURCES]" :updated-at="DELAY_INTEREST_DATA_UPDATED" />
     <DelayInterestFAQ :faqs="DELAY_INTEREST_FAQS" />
     <PopularCalculators />
+
+    <SeoRichGuide
+      :title="HOUSE_DELAY_INTEREST_GUIDE.title"
+      :intro="HOUSE_DELAY_INTEREST_GUIDE.intro"
+      :sections="HOUSE_DELAY_INTEREST_GUIDE.sections"
+      :faqs="HOUSE_DELAY_INTEREST_GUIDE.faqs"
+      :disclaimer="HOUSE_DELAY_INTEREST_GUIDE.disclaimer"
+    />
 
     <ShareModal
       :show="share.showShareModal.value"
