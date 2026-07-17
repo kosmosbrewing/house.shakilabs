@@ -2,6 +2,8 @@
 import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
+import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
+import { HOUSE_FIRST_HOME_GUIDE } from "@/data/seoGuides";
 import FirstHomeCalculator from "@/components/house/FirstHomeCalculator.vue";
 import { FIRST_HOME_FAQS } from "@/data/firstHome";
 
@@ -38,5 +40,13 @@ const faqJsonLd = {
     </section>
 
     <FaqAccordionPanel :items="FIRST_HOME_FAQS" />
+
+    <SeoRichGuide
+      :title="HOUSE_FIRST_HOME_GUIDE.title"
+      :intro="HOUSE_FIRST_HOME_GUIDE.intro"
+      :sections="HOUSE_FIRST_HOME_GUIDE.sections"
+      :faqs="HOUSE_FIRST_HOME_GUIDE.faqs"
+      :disclaimer="HOUSE_FIRST_HOME_GUIDE.disclaimer"
+    />
   </div>
 </template>

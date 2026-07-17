@@ -3,6 +3,8 @@ import { computed } from "vue";
 import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
+import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
+import { HOUSE_JEONSE_WOLSE_RATE_GUIDE } from "@/data/seoGuides";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import JeonseWolseRateCalculator from "@/components/house/JeonseWolseRateCalculator.vue";
@@ -97,6 +99,14 @@ const faqJsonLd = {
     <FaqAccordionPanel :items="JEONSE_WOLSE_RATE_FAQS" />
 
     <PopularCalculators />
+
+    <SeoRichGuide
+      :title="HOUSE_JEONSE_WOLSE_RATE_GUIDE.title"
+      :intro="HOUSE_JEONSE_WOLSE_RATE_GUIDE.intro"
+      :sections="HOUSE_JEONSE_WOLSE_RATE_GUIDE.sections"
+      :faqs="HOUSE_JEONSE_WOLSE_RATE_GUIDE.faqs"
+      :disclaimer="HOUSE_JEONSE_WOLSE_RATE_GUIDE.disclaimer"
+    />
 
     <!-- 공유 모달 -->
     <ShareModal

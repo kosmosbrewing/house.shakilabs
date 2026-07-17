@@ -4,6 +4,8 @@ import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.v
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import ShareModal from "@/components/share/ShareModal.vue";
+import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
+import { HOUSE_BROKERAGE_FEE_GUIDE } from "@/data/seoGuides";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import BrokerageFeeFAQ from "@/components/house/BrokerageFeeFAQ.vue";
 import BrokerageFeeInput from "@/components/house/BrokerageFeeInput.vue";
@@ -72,6 +74,14 @@ const facts = computed(() => [
     <BrokerageFeeResult :result="result" />
     <CompareSourceFooter :sources="[...BROKERAGE_SOURCES]" :updated-at="BROKERAGE_DATA_UPDATED" />
     <BrokerageFeeFAQ :faqs="BROKERAGE_FAQS" />
+
+    <SeoRichGuide
+      :title="HOUSE_BROKERAGE_FEE_GUIDE.title"
+      :intro="HOUSE_BROKERAGE_FEE_GUIDE.intro"
+      :sections="HOUSE_BROKERAGE_FEE_GUIDE.sections"
+      :faqs="HOUSE_BROKERAGE_FEE_GUIDE.faqs"
+      :disclaimer="HOUSE_BROKERAGE_FEE_GUIDE.disclaimer"
+    />
 
     <ShareModal
       :show="share.showShareModal.value"
