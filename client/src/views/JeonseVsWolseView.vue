@@ -44,10 +44,21 @@ const facts = computed(() => [
   { label: "월세 연간", value: formatWon(result.value.wolseAnnualCost) },
   { label: "손익분기 월세", value: formatWon(result.value.breakEvenMonthlyRent) },
 ]);
+
+// 화면 FAQ(JeonseVsWolseFAQ)와 동일 텍스트로 FAQPage 스키마 1개만 노출 (AcquisitionTaxView 패턴)
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: JEONSE_WOLSE_FAQS.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
 </script>
 
 <template>
-  <SEOHead :title="seoTitle" :description="seoDescription" />
+  <SEOHead :title="seoTitle" :description="seoDescription" :json-ld="faqJsonLd" />
   <div class="container space-y-5 py-5">
     <CalculatorPageHeader title="전세 vs 월세 비교 계산기" />
 
