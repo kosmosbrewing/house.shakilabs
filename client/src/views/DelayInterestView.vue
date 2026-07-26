@@ -62,10 +62,21 @@ const rateBasis = computed(() => {
   }
   return `사용자가 입력한 약정·참고 이율 ${(form.value.annualRate * 100).toFixed(1)}% 가정`;
 });
+
+// 화면 FAQ(DelayInterestFAQ)와 동일 텍스트로 FAQPage 스키마 1개만 노출 (AcquisitionTaxView 패턴)
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: DELAY_INTEREST_FAQS.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
 </script>
 
 <template>
-  <SEOHead :title="seoTitle" :description="seoDescription" />
+  <SEOHead :title="seoTitle" :description="seoDescription" :json-ld="faqJsonLd" />
   <div class="text-resize-layout container space-y-5 py-5">
     <CalculatorPageHeader title="보증금 반환 지연이자 계산기" />
 

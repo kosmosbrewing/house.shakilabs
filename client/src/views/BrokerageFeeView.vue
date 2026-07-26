@@ -44,10 +44,21 @@ const facts = computed(() => [
   { label: "상한요율", value: formatPercent(result.value.tier.rate, 1) },
   { label: "의뢰인 1인 최대", value: formatWon(result.value.maxFee) },
 ]);
+
+// 화면 FAQ(BrokerageFeeFAQ)와 동일 텍스트로 FAQPage 스키마 1개만 노출 (AcquisitionTaxView 패턴)
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: BROKERAGE_FAQS.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
 </script>
 
 <template>
-  <SEOHead :title="seoTitle" :description="seoDescription" />
+  <SEOHead :title="seoTitle" :description="seoDescription" :json-ld="faqJsonLd" />
   <div class="container space-y-5 py-5">
     <CalculatorPageHeader title="주택 중개보수 계산기" />
 
