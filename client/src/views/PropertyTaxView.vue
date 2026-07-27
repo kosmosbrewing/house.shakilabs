@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import CalculatorInteractionTracker from "@/components/analytics/CalculatorInteractionTracker.vue";
 import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
+import AdSlot from "@/components/common/AdSlot.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
@@ -98,7 +99,11 @@ const faqJsonLd = {
       @share="share.openShare"
     />
 
+    <AdSlot slot="120004" label="광고 · top" />
+
     <PopularCalculators />
+
+    <AdSlot slot="120005" label="광고 · bottom" />
 
     <FaqAccordionPanel :items="PROPERTY_TAX_FAQS" />
 
