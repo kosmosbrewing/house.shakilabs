@@ -13,6 +13,7 @@ import DelayInterestResult from "@/components/house/DelayInterestResult.vue";
 import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import { HOUSE_DELAY_INTEREST_GUIDE } from "@/data/seoGuides";
+import { buildDelayDepositGuide } from "@/data/seoParamGuides";
 import {
   CIVIL_DELAY_INTEREST_RATE,
   DELAY_INTEREST_DATA_UPDATED,
@@ -64,16 +65,22 @@ const rateBasis = computed(() => {
   return `사용자가 입력한 약정·참고 이율 ${(form.value.annualRate * 100).toFixed(1)}% 가정`;
 });
 
-// 화면 FAQ(DelayInterestFAQ)와 동일 텍스트로 FAQPage 스키마 1개만 노출 (AcquisitionTaxView 패턴)
-const faqJsonLd = {
+// 프리셋 페이지는 보증금별 고유 가이드, 랜딩은 공통 가이드
+const guide = computed(() =>
+  props.initialDeposit ? buildDelayDepositGuide(props.initialDeposit) : HOUSE_DELAY_INTEREST_GUIDE,
+);
+
+// 페이지당 FAQPage 스키마 1개 원칙 — 프리셋 페이지는 랜딩과 동일 스키마 중복 대신
+// 화면(SeoRichGuide)에 실제 노출되는 파라미터 고유 FAQ로 대체
+const faqJsonLd = computed(() => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: DELAY_INTEREST_FAQS.map((faq) => ({
+  mainEntity: (props.initialDeposit ? guide.value.faqs ?? [] : [...DELAY_INTEREST_FAQS]).map((faq) => ({
     "@type": "Question",
     name: faq.q,
     acceptedAnswer: { "@type": "Answer", text: faq.a },
   })),
-};
+}));
 </script>
 
 <template>
@@ -125,11 +132,11 @@ const faqJsonLd = {
     <PopularCalculators />
 
     <SeoRichGuide
-      :title="HOUSE_DELAY_INTEREST_GUIDE.title"
-      :intro="HOUSE_DELAY_INTEREST_GUIDE.intro"
-      :sections="HOUSE_DELAY_INTEREST_GUIDE.sections"
-      :faqs="HOUSE_DELAY_INTEREST_GUIDE.faqs"
-      :disclaimer="HOUSE_DELAY_INTEREST_GUIDE.disclaimer"
+      :title="guide.title"
+      :intro="guide.intro"
+      :sections="guide.sections"
+      :faqs="guide.faqs"
+      :disclaimer="guide.disclaimer"
     />
 
     <AdSlot slot="120003" label="광고 · bottom" />
