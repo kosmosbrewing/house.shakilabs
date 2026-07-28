@@ -7,6 +7,7 @@ import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import { HOUSE_PROPERTY_TAX_GUIDE } from "@/data/seoGuides";
+import { buildPropertyTaxGuide } from "@/data/seoParamGuides";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import PropertyTaxCalculator from "@/components/house/PropertyTaxCalculator.vue";
@@ -53,15 +54,21 @@ const resultBasisTitle = computed(() => result.value.isOfficialPriceEstimated
   ? "시가로 공시가격을 추정한 결과입니다. 실제 공시가격을 입력하면 정확도가 높아집니다."
   : "입력한 공시가격과 2026년 세율을 적용한 단순 추정 결과입니다.");
 
-const faqJsonLd = {
+// 프리셋 페이지는 가액별 고유 가이드, 랜딩은 공통 가이드
+const guide = computed(() =>
+  props.initialPrice ? buildPropertyTaxGuide(props.initialPrice) : HOUSE_PROPERTY_TAX_GUIDE,
+);
+
+// 페이지당 FAQPage 스키마 1개 원칙 — 프리셋 페이지는 화면에 노출되는 파라미터 고유 FAQ로 대체
+const faqJsonLd = computed(() => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: PROPERTY_TAX_FAQS.map((faq) => ({
+  mainEntity: (props.initialPrice ? guide.value.faqs ?? [] : [...PROPERTY_TAX_FAQS]).map((faq) => ({
     "@type": "Question",
     name: faq.q,
     acceptedAnswer: { "@type": "Answer", text: faq.a },
   })),
-};
+}));
 </script>
 
 <template>
@@ -108,11 +115,11 @@ const faqJsonLd = {
     <FaqAccordionPanel :items="PROPERTY_TAX_FAQS" />
 
     <SeoRichGuide
-      :title="HOUSE_PROPERTY_TAX_GUIDE.title"
-      :intro="HOUSE_PROPERTY_TAX_GUIDE.intro"
-      :sections="HOUSE_PROPERTY_TAX_GUIDE.sections"
-      :faqs="HOUSE_PROPERTY_TAX_GUIDE.faqs"
-      :disclaimer="HOUSE_PROPERTY_TAX_GUIDE.disclaimer"
+      :title="guide.title"
+      :intro="guide.intro"
+      :sections="guide.sections"
+      :faqs="guide.faqs"
+      :disclaimer="guide.disclaimer"
     />
 
     <!-- 공유 모달 -->
