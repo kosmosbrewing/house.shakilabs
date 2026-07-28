@@ -13,6 +13,7 @@ export const SEO_ROUTES = [
   "/",
   "/delay-interest",
   "/jeonse-vs-wolse",
+  "/jeonse-risk",
   "/jeonse-wolse-rate",
   "/brokerage-fee",
   "/first-home",

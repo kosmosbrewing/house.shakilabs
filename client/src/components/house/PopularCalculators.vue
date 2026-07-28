@@ -34,6 +34,12 @@ const items: CalculatorItem[] = [
     to: "/jeonse-wolse-rate",
   },
   {
+    key: "jeonse-risk",
+    title: "깡통전세 진단",
+    description: "전세가율·HUG 가입 가능 여부로 위험을 진단합니다.",
+    to: "/jeonse-risk",
+  },
+  {
     key: "jeonse-vs-wolse",
     title: "전세 vs 월세",
     description: "기회비용까지 반영해 유리한 쪽을 판정합니다.",
@@ -81,10 +87,11 @@ const itemByKey = new Map(items.map((item) => [item.key, item]));
 
 // 계산기별 관련 4개 맵 — 임차(전월세) → 매수 → 보유 → 매도 사용자 여정 기준 (finance InternalLink 패턴)
 const RELATED_MAP: Record<string, readonly string[]> = {
-  "delay-interest": ["jeonse-wolse-rate", "jeonse-vs-wolse", "brokerage-fee", "rental-yield"],
+  "delay-interest": ["jeonse-risk", "jeonse-wolse-rate", "jeonse-vs-wolse", "brokerage-fee"],
   "property-tax": ["acquisition-tax", "capital-gains-tax", "first-home", "rental-yield"],
-  "jeonse-wolse-rate": ["jeonse-vs-wolse", "delay-interest", "brokerage-fee", "rental-yield"],
-  "jeonse-vs-wolse": ["jeonse-wolse-rate", "delay-interest", "brokerage-fee", "first-home"],
+  "jeonse-wolse-rate": ["jeonse-vs-wolse", "jeonse-risk", "delay-interest", "brokerage-fee"],
+  "jeonse-vs-wolse": ["jeonse-wolse-rate", "jeonse-risk", "delay-interest", "first-home"],
+  "jeonse-risk": ["delay-interest", "jeonse-wolse-rate", "jeonse-vs-wolse", "brokerage-fee"],
   "brokerage-fee": ["jeonse-vs-wolse", "acquisition-tax", "delay-interest", "jeonse-wolse-rate"],
   "first-home": ["acquisition-tax", "housing-subscription", "property-tax", "jeonse-vs-wolse"],
   "housing-subscription": ["first-home", "acquisition-tax", "jeonse-vs-wolse", "property-tax"],
