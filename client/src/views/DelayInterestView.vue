@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import CalculatorInteractionTracker from "@/components/analytics/CalculatorInteractionTracker.vue";
 import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
+import AdSlot from "@/components/common/AdSlot.vue";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import ShareModal from "@/components/share/ShareModal.vue";
@@ -106,6 +107,7 @@ const faqJsonLd = {
     />
 
     <DelayInterestResult :form="form" :result="result" />
+    <AdSlot slot="120001" label="광고 · top" />
     <section class="retro-panel overflow-hidden">
       <div class="retro-titlebar rounded-t-2xl">
         <h2 class="retro-title">적용 순서와 계산 한계</h2>
@@ -119,6 +121,7 @@ const faqJsonLd = {
     </section>
     <CompareSourceFooter :sources="[...DELAY_INTEREST_SOURCES]" :updated-at="DELAY_INTEREST_DATA_UPDATED" />
     <DelayInterestFAQ :faqs="DELAY_INTEREST_FAQS" />
+    <AdSlot slot="120002" label="광고 · middle" />
     <PopularCalculators />
 
     <SeoRichGuide
@@ -128,6 +131,8 @@ const faqJsonLd = {
       :faqs="HOUSE_DELAY_INTEREST_GUIDE.faqs"
       :disclaimer="HOUSE_DELAY_INTEREST_GUIDE.disclaimer"
     />
+
+    <AdSlot slot="120003" label="광고 · bottom" />
 
     <ShareModal
       :show="share.showShareModal.value"
