@@ -39,13 +39,12 @@ const faqJsonLd = {
       </div>
     </section>
 
-    <FaqAccordionPanel :items="FIRST_HOME_FAQS" />
+    <FaqAccordionPanel :items="FIRST_HOME_FAQS" :extra="HOUSE_FIRST_HOME_GUIDE.faqs" />
 
     <SeoRichGuide
       :title="HOUSE_FIRST_HOME_GUIDE.title"
       :intro="HOUSE_FIRST_HOME_GUIDE.intro"
       :sections="HOUSE_FIRST_HOME_GUIDE.sections"
-      :faqs="HOUSE_FIRST_HOME_GUIDE.faqs"
       :disclaimer="HOUSE_FIRST_HOME_GUIDE.disclaimer"
     />
   </div>

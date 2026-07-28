@@ -127,7 +127,7 @@ const faqJsonLd = computed(() => ({
       </div>
     </section>
     <CompareSourceFooter :sources="[...DELAY_INTEREST_SOURCES]" :updated-at="DELAY_INTEREST_DATA_UPDATED" />
-    <DelayInterestFAQ :faqs="DELAY_INTEREST_FAQS" />
+    <DelayInterestFAQ :faqs="DELAY_INTEREST_FAQS" :extra="guide.faqs" />
     <AdSlot slot="120002" label="광고 · middle" />
     <PopularCalculators />
 
@@ -135,7 +135,6 @@ const faqJsonLd = computed(() => ({
       :title="guide.title"
       :intro="guide.intro"
       :sections="guide.sections"
-      :faqs="guide.faqs"
       :disclaimer="guide.disclaimer"
     />
 

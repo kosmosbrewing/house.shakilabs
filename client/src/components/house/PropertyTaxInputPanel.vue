@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ShPresetGroup } from "@shakilabs/ui";
+import { ChevronDown } from "lucide-vue-next";
 import { MARKET_PRICE_PRESETS } from "@/data/propertyTax";
 import { parseNumericInput } from "@/lib/utils";
 import {
@@ -82,14 +83,6 @@ function setPreset(price: number) {
           <option value="detached">단독주택 (현재 미지원)</option>
         </select>
       </label>
-      <label class="space-y-1.5">
-        <span class="text-caption font-semibold text-foreground">소유자 나이</span>
-        <input v-model.number="form.ownerAge" class="retro-input" min="20" max="100" step="1" type="number" />
-      </label>
-      <label class="space-y-1.5">
-        <span class="text-caption font-semibold text-foreground">보유 기간 (년)</span>
-        <input v-model.number="form.holdingYears" class="retro-input" min="0" max="50" step="1" type="number" />
-      </label>
       <label class="retro-panel flex min-h-[44px] items-center gap-2 px-3 py-3">
         <input v-model="form.isUrbanArea" class="retro-checkbox" type="checkbox" />
         <span class="text-caption font-semibold">도시지역 (대부분의 아파트)</span>
@@ -101,41 +94,63 @@ function setPreset(price: number) {
       <span class="text-caption font-semibold">단독 명의 1세대 1주택임을 확인합니다</span>
     </label>
 
-    <div class="grid gap-3 md:grid-cols-3">
-      <label class="space-y-1.5">
-        <span class="text-caption font-semibold text-foreground">2025년 공시가격 (선택)</span>
-        <input
-          type="text"
-          inputmode="numeric"
-          class="retro-input"
-          :value="(form.previousYearOfficialPrice ?? 0) || ''"
-          @input="setAmount('previousYearOfficialPrice', ($event.target as HTMLInputElement).value)"
-        />
-      </label>
-      <label class="space-y-1.5">
-        <span class="text-caption font-semibold text-foreground">2025년 재산세 본세 (선택)</span>
-        <input
-          type="text"
-          inputmode="numeric"
-          class="retro-input"
-          :value="form.previousYearPropertyTax || ''"
-          @input="setAmount('previousYearPropertyTax', ($event.target as HTMLInputElement).value)"
-        />
-      </label>
-      <label class="space-y-1.5">
-        <span class="text-caption font-semibold text-foreground">2025년 종부세 본세 (선택)</span>
-        <input
-          type="text"
-          inputmode="numeric"
-          class="retro-input"
-          :value="(form.previousYearComprehensiveTax ?? 0) || ''"
-          @input="setAmount('previousYearComprehensiveTax', ($event.target as HTMLInputElement).value)"
-        />
-      </label>
-    </div>
+    <!-- 종부세 공제·상한에만 쓰이는 선택 입력은 접어 둔다 (기본 입력만으로도 추정 가능) -->
+    <details class="group retro-panel p-4">
+      <summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-caption font-semibold text-foreground">
+        <span>세부 조건 입력 (선택) · 나이·보유 기간·전년도 자료</span>
+        <ChevronDown aria-hidden="true" class="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
+      </summary>
 
-    <p class="text-caption leading-relaxed text-muted-foreground">
-      전년도 공시가격은 재산세 5% 과세표준상한에, 전년도 재산세·종부세 본세는 종부세 150% 세부담상한에 사용합니다.
-    </p>
+      <div class="mt-4 space-y-4">
+        <div class="grid gap-3 md:grid-cols-2">
+          <label class="space-y-1.5">
+            <span class="text-caption font-semibold text-foreground">소유자 나이</span>
+            <input v-model.number="form.ownerAge" class="retro-input" min="20" max="100" step="1" type="number" />
+          </label>
+          <label class="space-y-1.5">
+            <span class="text-caption font-semibold text-foreground">보유 기간 (년)</span>
+            <input v-model.number="form.holdingYears" class="retro-input" min="0" max="50" step="1" type="number" />
+          </label>
+        </div>
+
+        <div class="grid gap-3 md:grid-cols-3">
+          <label class="space-y-1.5">
+            <span class="text-caption font-semibold text-foreground">2025년 공시가격 (선택)</span>
+            <input
+              type="text"
+              inputmode="numeric"
+              class="retro-input"
+              :value="(form.previousYearOfficialPrice ?? 0) || ''"
+              @input="setAmount('previousYearOfficialPrice', ($event.target as HTMLInputElement).value)"
+            />
+          </label>
+          <label class="space-y-1.5">
+            <span class="text-caption font-semibold text-foreground">2025년 재산세 본세 (선택)</span>
+            <input
+              type="text"
+              inputmode="numeric"
+              class="retro-input"
+              :value="form.previousYearPropertyTax || ''"
+              @input="setAmount('previousYearPropertyTax', ($event.target as HTMLInputElement).value)"
+            />
+          </label>
+          <label class="space-y-1.5">
+            <span class="text-caption font-semibold text-foreground">2025년 종부세 본세 (선택)</span>
+            <input
+              type="text"
+              inputmode="numeric"
+              class="retro-input"
+              :value="(form.previousYearComprehensiveTax ?? 0) || ''"
+              @input="setAmount('previousYearComprehensiveTax', ($event.target as HTMLInputElement).value)"
+            />
+          </label>
+        </div>
+
+        <p class="text-caption leading-relaxed text-muted-foreground">
+          나이와 보유 기간은 종부세 고령자·장기보유 세액공제에, 전년도 공시가격은 재산세 5% 과세표준상한에,
+          전년도 재산세·종부세 본세는 종부세 150% 세부담상한에 사용합니다.
+        </p>
+      </div>
+    </details>
   </section>
 </template>

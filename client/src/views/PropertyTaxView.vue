@@ -10,7 +10,8 @@ import { HOUSE_PROPERTY_TAX_GUIDE } from "@/data/seoGuides";
 import { buildPropertyTaxGuide } from "@/data/seoParamGuides";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
-import PropertyTaxCalculator from "@/components/house/PropertyTaxCalculator.vue";
+import PropertyTaxInputPanel from "@/components/house/PropertyTaxInputPanel.vue";
+import PropertyTaxDetails from "@/components/house/PropertyTaxDetails.vue";
 import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import SessionDraftControl from "@/components/house/SessionDraftControl.vue";
 import { PROPERTY_TAX_FAQS } from "@/data/propertyTax";
@@ -88,12 +89,19 @@ const faqJsonLd = computed(() => ({
           page-path="/house/property-tax"
           :can-view-result="result.isSupportedScenario"
         >
-          <PropertyTaxCalculator v-model="form" :result="result" />
+          <PropertyTaxInputPanel v-model="form" />
         </CalculatorInteractionTracker>
       </div>
     </section>
 
-    <!-- 요약 배너 -->
+    <div
+      v-if="!result.isSupportedScenario"
+      class="rounded-xl border border-status-warning/40 bg-status-warning/10 p-4 text-caption leading-relaxed text-foreground"
+    >
+      현재는 아파트를 단독 명의로 보유한 1세대 1주택만 지원합니다. 단독주택·공동명의·다주택·법인·주택 수 제외 특례는 잘못된 세액을 피하기 위해 결과를 숨깁니다.
+    </div>
+
+    <!-- 요약 배너 — 입력 직후에 결과를 먼저 보여주고, 분해는 그 뒤로 -->
     <SummaryBanner
       v-if="result.isSupportedScenario"
       :title="resultBasisTitle"
@@ -108,17 +116,25 @@ const faqJsonLd = computed(() => ({
 
     <AdSlot slot="120004" label="광고 · top" />
 
+    <section v-if="result.isSupportedScenario" class="retro-panel overflow-hidden">
+      <div class="retro-titlebar rounded-t-2xl">
+        <h2 class="retro-title">보유세 상세 내역</h2>
+      </div>
+      <div class="retro-panel-content">
+        <PropertyTaxDetails :form="form" :result="result" />
+      </div>
+    </section>
+
     <PopularCalculators />
 
     <AdSlot slot="120005" label="광고 · bottom" />
 
-    <FaqAccordionPanel :items="PROPERTY_TAX_FAQS" />
+    <FaqAccordionPanel :items="PROPERTY_TAX_FAQS" :extra="guide.faqs" />
 
     <SeoRichGuide
       :title="guide.title"
       :intro="guide.intro"
       :sections="guide.sections"
-      :faqs="guide.faqs"
       :disclaimer="guide.disclaimer"
     />
 

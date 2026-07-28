@@ -202,14 +202,13 @@ const faqJsonLd = {
     </section>
 
     <CompareSourceFooter :sources="[...JEONSE_RISK_SOURCES]" :updated-at="JEONSE_RISK_DATA_UPDATED" />
-    <FaqAccordionPanel :items="[...JEONSE_RISK_FAQS]" />
+    <FaqAccordionPanel :items="[...JEONSE_RISK_FAQS]" :extra="HOUSE_JEONSE_RISK_GUIDE.faqs" />
     <PopularCalculators />
 
     <SeoRichGuide
       :title="HOUSE_JEONSE_RISK_GUIDE.title"
       :intro="HOUSE_JEONSE_RISK_GUIDE.intro"
       :sections="HOUSE_JEONSE_RISK_GUIDE.sections"
-      :faqs="HOUSE_JEONSE_RISK_GUIDE.faqs"
       :disclaimer="HOUSE_JEONSE_RISK_GUIDE.disclaimer"
     />
   </div>

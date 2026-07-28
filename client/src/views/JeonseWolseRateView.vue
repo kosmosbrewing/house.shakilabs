@@ -96,7 +96,7 @@ const faqJsonLd = {
       @share="share.openShare"
     />
 
-    <FaqAccordionPanel :items="JEONSE_WOLSE_RATE_FAQS" />
+    <FaqAccordionPanel :items="JEONSE_WOLSE_RATE_FAQS" :extra="HOUSE_JEONSE_WOLSE_RATE_GUIDE.faqs" />
 
     <PopularCalculators />
 
@@ -104,7 +104,6 @@ const faqJsonLd = {
       :title="HOUSE_JEONSE_WOLSE_RATE_GUIDE.title"
       :intro="HOUSE_JEONSE_WOLSE_RATE_GUIDE.intro"
       :sections="HOUSE_JEONSE_WOLSE_RATE_GUIDE.sections"
-      :faqs="HOUSE_JEONSE_WOLSE_RATE_GUIDE.faqs"
       :disclaimer="HOUSE_JEONSE_WOLSE_RATE_GUIDE.disclaimer"
     />
 

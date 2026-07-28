@@ -83,13 +83,12 @@ const faqJsonLd = {
       @share="share.openShare"
     />
 
-    <FaqAccordionPanel :items="RENTAL_YIELD_FAQS" />
+    <FaqAccordionPanel :items="RENTAL_YIELD_FAQS" :extra="HOUSE_RENTAL_YIELD_GUIDE.faqs" />
 
     <SeoRichGuide
       :title="HOUSE_RENTAL_YIELD_GUIDE.title"
       :intro="HOUSE_RENTAL_YIELD_GUIDE.intro"
       :sections="HOUSE_RENTAL_YIELD_GUIDE.sections"
-      :faqs="HOUSE_RENTAL_YIELD_GUIDE.faqs"
       :disclaimer="HOUSE_RENTAL_YIELD_GUIDE.disclaimer"
     />
 
