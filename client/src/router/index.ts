@@ -86,6 +86,11 @@ export const routes: RouteRecordRaw[] = [
       initialPrice: Number(route.params.price) * 10000,
     }),
   },
+  {
+    path: "/jeonse-risk",
+    name: "JeonseRisk",
+    component: () => import("@/views/JeonseRiskView.vue"),
+  },
   { path: "/conversion-rate", redirect: "/jeonse-wolse-rate" },
   { path: "/interest", redirect: "/delay-interest" },
   { path: "/jeonse", redirect: "/jeonse-vs-wolse" },
