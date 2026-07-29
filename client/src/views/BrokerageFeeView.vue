@@ -84,13 +84,12 @@ const faqJsonLd = {
 
     <BrokerageFeeResult :result="result" />
     <CompareSourceFooter :sources="[...BROKERAGE_SOURCES]" :updated-at="BROKERAGE_DATA_UPDATED" />
-    <BrokerageFeeFAQ :faqs="BROKERAGE_FAQS" />
+    <BrokerageFeeFAQ :faqs="BROKERAGE_FAQS" :extra="HOUSE_BROKERAGE_FEE_GUIDE.faqs" />
 
     <SeoRichGuide
       :title="HOUSE_BROKERAGE_FEE_GUIDE.title"
       :intro="HOUSE_BROKERAGE_FEE_GUIDE.intro"
       :sections="HOUSE_BROKERAGE_FEE_GUIDE.sections"
-      :faqs="HOUSE_BROKERAGE_FEE_GUIDE.faqs"
       :disclaimer="HOUSE_BROKERAGE_FEE_GUIDE.disclaimer"
     />
 

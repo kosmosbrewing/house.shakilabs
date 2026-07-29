@@ -152,13 +152,12 @@ const faqJsonLd = {
       </div>
     </ShSurface>
 
-    <FaqAccordionPanel :items="faqItems" />
+    <FaqAccordionPanel :items="faqItems" :extra="HOUSE_HOME_GUIDE.faqs" />
 
     <SeoRichGuide
       :title="HOUSE_HOME_GUIDE.title"
       :intro="HOUSE_HOME_GUIDE.intro"
       :sections="HOUSE_HOME_GUIDE.sections"
-      :faqs="HOUSE_HOME_GUIDE.faqs"
       :disclaimer="HOUSE_HOME_GUIDE.disclaimer"
     />
 

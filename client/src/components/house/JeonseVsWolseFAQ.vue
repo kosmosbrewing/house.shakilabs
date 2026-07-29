@@ -3,9 +3,10 @@ import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 
 defineProps<{
   faqs: ReadonlyArray<{ q: string; a: string }>;
+  extra?: ReadonlyArray<{ q: string; a: string }>;
 }>();
 </script>
 
 <template>
-  <FaqAccordionPanel title="비교 팁" :items="faqs" />
+  <FaqAccordionPanel title="비교 팁" :items="faqs" :extra="extra" />
 </template>

@@ -83,13 +83,12 @@ const faqJsonLd = {
       @share="share.openShare"
     />
 
-    <FaqAccordionPanel :items="CAPITAL_GAINS_TAX_FAQS" />
+    <FaqAccordionPanel :items="CAPITAL_GAINS_TAX_FAQS" :extra="HOUSE_CAPITAL_GAINS_TAX_GUIDE.faqs" />
 
     <SeoRichGuide
       :title="HOUSE_CAPITAL_GAINS_TAX_GUIDE.title"
       :intro="HOUSE_CAPITAL_GAINS_TAX_GUIDE.intro"
       :sections="HOUSE_CAPITAL_GAINS_TAX_GUIDE.sections"
-      :faqs="HOUSE_CAPITAL_GAINS_TAX_GUIDE.faqs"
       :disclaimer="HOUSE_CAPITAL_GAINS_TAX_GUIDE.disclaimer"
     />
 

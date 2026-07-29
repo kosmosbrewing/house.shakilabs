@@ -84,13 +84,12 @@ const faqJsonLd = {
 
     <JeonseVsWolseResult :form="form" :result="result" />
     <CompareSourceFooter :sources="[...JEONSE_WOLSE_SOURCES]" :updated-at="JEONSE_WOLSE_DATA_UPDATED" />
-    <JeonseVsWolseFAQ :faqs="JEONSE_WOLSE_FAQS" />
+    <JeonseVsWolseFAQ :faqs="JEONSE_WOLSE_FAQS" :extra="HOUSE_JEONSE_VS_WOLSE_GUIDE.faqs" />
 
     <SeoRichGuide
       :title="HOUSE_JEONSE_VS_WOLSE_GUIDE.title"
       :intro="HOUSE_JEONSE_VS_WOLSE_GUIDE.intro"
       :sections="HOUSE_JEONSE_VS_WOLSE_GUIDE.sections"
-      :faqs="HOUSE_JEONSE_VS_WOLSE_GUIDE.faqs"
       :disclaimer="HOUSE_JEONSE_VS_WOLSE_GUIDE.disclaimer"
     />
 
