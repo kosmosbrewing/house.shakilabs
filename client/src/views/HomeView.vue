@@ -9,6 +9,7 @@ import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import { HOUSE_HOME_GUIDE } from "@/data/seoGuides";
+import { mergeFaqs } from "@/lib/faqMerge";
 
 type ToolItem = {
   title: string;
@@ -95,10 +96,13 @@ const faqItems = [
   },
 ] as const;
 
+// 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
+const mergedFaqs = mergeFaqs(faqItems, HOUSE_HOME_GUIDE.faqs);
+
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: faqItems.map((faq) => ({
+  mainEntity: mergedFaqs.map((faq) => ({
     "@type": "Question",
     name: faq.q,
     acceptedAnswer: {
@@ -152,7 +156,7 @@ const faqJsonLd = {
       </div>
     </ShSurface>
 
-    <FaqAccordionPanel :items="faqItems" :extra="HOUSE_HOME_GUIDE.faqs" />
+    <FaqAccordionPanel :items="mergedFaqs" />
 
     <SeoRichGuide
       :title="HOUSE_HOME_GUIDE.title"

@@ -18,6 +18,7 @@ import { PROPERTY_TAX_FAQS } from "@/data/propertyTax";
 import { usePropertyTax } from "@/composables/usePropertyTax";
 import { useResultShare } from "@/composables/useResultShare";
 import { formatManWon, formatWon } from "@/lib/utils";
+import { mergeFaqs } from "@/lib/faqMerge";
 
 const props = defineProps<{ initialPrice?: number }>();
 const priceLabel = computed(() => props.initialPrice ? formatManWon(props.initialPrice / 10000) : null);
@@ -60,11 +61,13 @@ const guide = computed(() =>
   props.initialPrice ? buildPropertyTaxGuide(props.initialPrice) : HOUSE_PROPERTY_TAX_GUIDE,
 );
 
-// 페이지당 FAQPage 스키마 1개 원칙 — 프리셋 페이지는 화면에 노출되는 파라미터 고유 FAQ로 대체
+// 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙, DelayInterestView와 동일 설계 변경)
+const mergedFaqs = computed(() => mergeFaqs(PROPERTY_TAX_FAQS, guide.value.faqs));
+
 const faqJsonLd = computed(() => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: (props.initialPrice ? guide.value.faqs ?? [] : [...PROPERTY_TAX_FAQS]).map((faq) => ({
+  mainEntity: mergedFaqs.value.map((faq) => ({
     "@type": "Question",
     name: faq.q,
     acceptedAnswer: { "@type": "Answer", text: faq.a },
@@ -129,7 +132,7 @@ const faqJsonLd = computed(() => ({
 
     <AdSlot slot="120005" label="광고 · bottom" />
 
-    <FaqAccordionPanel :items="PROPERTY_TAX_FAQS" :extra="guide.faqs" />
+    <FaqAccordionPanel :items="mergedFaqs" />
 
     <SeoRichGuide
       :title="guide.title"

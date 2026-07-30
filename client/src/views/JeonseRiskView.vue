@@ -17,6 +17,7 @@ import {
 } from "@/data/jeonseRisk";
 import { calculateJeonseRisk, type JeonseRiskLevel } from "@/utils/jeonseRiskCalculator";
 import { formatNumber, formatPercent, formatWon, parseNumericInput } from "@/lib/utils";
+import { mergeFaqs } from "@/lib/faqMerge";
 
 const seoTitle = "깡통전세 위험 진단 계산기 — 전세가율·HUG 가입 판정";
 const seoDescription =
@@ -70,10 +71,13 @@ const facts = computed(() => [
   { label: "HUG 가입", value: result.value.isHugEligible ? "가능" : "불가" },
 ]);
 
+// 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
+const mergedFaqs = mergeFaqs(JEONSE_RISK_FAQS, HOUSE_JEONSE_RISK_GUIDE.faqs);
+
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: JEONSE_RISK_FAQS.map((faq) => ({
+  mainEntity: mergedFaqs.map((faq) => ({
     "@type": "Question",
     name: faq.q,
     acceptedAnswer: { "@type": "Answer", text: faq.a },
@@ -202,7 +206,7 @@ const faqJsonLd = {
     </section>
 
     <CompareSourceFooter :sources="[...JEONSE_RISK_SOURCES]" :updated-at="JEONSE_RISK_DATA_UPDATED" />
-    <FaqAccordionPanel :items="[...JEONSE_RISK_FAQS]" :extra="HOUSE_JEONSE_RISK_GUIDE.faqs" />
+    <FaqAccordionPanel :items="mergedFaqs" />
     <PopularCalculators />
 
     <SeoRichGuide

@@ -6,11 +6,15 @@ import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import { HOUSE_HOUSING_SUBSCRIPTION_GUIDE } from "@/data/seoGuides";
 import HousingSubscriptionCalculator from "@/components/house/HousingSubscriptionCalculator.vue";
 import { HOUSING_SUBSCRIPTION_FAQS } from "@/data/housingSubscription";
+import { mergeFaqs } from "@/lib/faqMerge";
+
+// 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
+const mergedFaqs = mergeFaqs(HOUSING_SUBSCRIPTION_FAQS, HOUSE_HOUSING_SUBSCRIPTION_GUIDE.faqs);
 
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: HOUSING_SUBSCRIPTION_FAQS.map((faq) => ({
+  mainEntity: mergedFaqs.map((faq) => ({
     "@type": "Question",
     name: faq.q,
     acceptedAnswer: { "@type": "Answer", text: faq.a },
@@ -39,7 +43,7 @@ const faqJsonLd = {
       </div>
     </section>
 
-    <FaqAccordionPanel :items="HOUSING_SUBSCRIPTION_FAQS" :extra="HOUSE_HOUSING_SUBSCRIPTION_GUIDE.faqs" />
+    <FaqAccordionPanel :items="mergedFaqs" />
 
     <SeoRichGuide
       :title="HOUSE_HOUSING_SUBSCRIPTION_GUIDE.title"

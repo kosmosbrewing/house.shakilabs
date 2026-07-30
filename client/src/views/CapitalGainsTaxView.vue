@@ -12,6 +12,7 @@ import { CAPITAL_GAINS_TAX_FAQS } from "@/data/capitalGainsTax";
 import { useCapitalGainsTax } from "@/composables/useCapitalGainsTax";
 import { useResultShare } from "@/composables/useResultShare";
 import { formatManWon, formatWon } from "@/lib/utils";
+import { mergeFaqs } from "@/lib/faqMerge";
 
 const props = defineProps<{ initialSellPrice?: number }>();
 const priceLabel = computed(() => props.initialSellPrice ? formatManWon(props.initialSellPrice / 10000) : null);
@@ -46,10 +47,13 @@ const facts = computed(() => [
   { label: "실효세율", value: `${(result.value.effectiveRate * 100).toFixed(1)}%` },
 ]);
 
+// 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
+const mergedFaqs = mergeFaqs(CAPITAL_GAINS_TAX_FAQS, HOUSE_CAPITAL_GAINS_TAX_GUIDE.faqs);
+
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: CAPITAL_GAINS_TAX_FAQS.map((faq) => ({
+  mainEntity: mergedFaqs.map((faq) => ({
     "@type": "Question",
     name: faq.q,
     acceptedAnswer: { "@type": "Answer", text: faq.a },
@@ -83,7 +87,7 @@ const faqJsonLd = {
       @share="share.openShare"
     />
 
-    <FaqAccordionPanel :items="CAPITAL_GAINS_TAX_FAQS" :extra="HOUSE_CAPITAL_GAINS_TAX_GUIDE.faqs" />
+    <FaqAccordionPanel :items="mergedFaqs" />
 
     <SeoRichGuide
       :title="HOUSE_CAPITAL_GAINS_TAX_GUIDE.title"
