@@ -14,6 +14,7 @@ import { JEONSE_WOLSE_DATA_UPDATED, JEONSE_WOLSE_FAQS, JEONSE_WOLSE_SOURCES } fr
 import { useJeonseVsWolse } from "@/composables/useJeonseVsWolse";
 import { useResultShare } from "@/composables/useResultShare";
 import { formatManWon, formatWon } from "@/lib/utils";
+import { mergeFaqs } from "@/lib/faqMerge";
 
 const props = defineProps<{ initialDeposit?: number }>();
 const depositLabel = computed(() => props.initialDeposit ? formatManWon(props.initialDeposit / 10000) : null);
@@ -45,11 +46,14 @@ const facts = computed(() => [
   { label: "손익분기 월세", value: formatWon(result.value.breakEvenMonthlyRent) },
 ]);
 
-// 화면 FAQ(JeonseVsWolseFAQ)와 동일 텍스트로 FAQPage 스키마 1개만 노출 (AcquisitionTaxView 패턴)
+// 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
+// JeonseVsWolseFAQ는 내부적으로 FaqAccordionPanel에 extra를 넘겨 병합 렌더링하므로 스키마도 동일하게 병합해야 한다
+const mergedFaqs = mergeFaqs(JEONSE_WOLSE_FAQS, HOUSE_JEONSE_VS_WOLSE_GUIDE.faqs);
+
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: JEONSE_WOLSE_FAQS.map((faq) => ({
+  mainEntity: mergedFaqs.map((faq) => ({
     "@type": "Question",
     name: faq.q,
     acceptedAnswer: { "@type": "Answer", text: faq.a },
@@ -84,7 +88,7 @@ const faqJsonLd = {
 
     <JeonseVsWolseResult :form="form" :result="result" />
     <CompareSourceFooter :sources="[...JEONSE_WOLSE_SOURCES]" :updated-at="JEONSE_WOLSE_DATA_UPDATED" />
-    <JeonseVsWolseFAQ :faqs="JEONSE_WOLSE_FAQS" :extra="HOUSE_JEONSE_VS_WOLSE_GUIDE.faqs" />
+    <JeonseVsWolseFAQ :faqs="mergedFaqs" />
 
     <SeoRichGuide
       :title="HOUSE_JEONSE_VS_WOLSE_GUIDE.title"

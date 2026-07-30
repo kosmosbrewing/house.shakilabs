@@ -24,6 +24,7 @@ import {
 import { useDelayInterest } from "@/composables/useDelayInterest";
 import { useResultShare } from "@/composables/useResultShare";
 import { formatManWon, formatWon } from "@/lib/utils";
+import { mergeFaqs } from "@/lib/faqMerge";
 
 const props = defineProps<{ initialDeposit?: number }>();
 const depositLabel = computed(() => props.initialDeposit ? formatManWon(props.initialDeposit / 10000) : null);
@@ -70,12 +71,15 @@ const guide = computed(() =>
   props.initialDeposit ? buildDelayDepositGuide(props.initialDeposit) : HOUSE_DELAY_INTEREST_GUIDE,
 );
 
-// 페이지당 FAQPage 스키마 1개 원칙 — 프리셋 페이지는 랜딩과 동일 스키마 중복 대신
-// 화면(SeoRichGuide)에 실제 노출되는 파라미터 고유 FAQ로 대체
+// 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
+// 이전에는 프리셋/랜딩에 따라 한쪽 FAQ만 스키마에 넣어 "중복 스키마 방지"를 노렸으나,
+// 아코디언은 항상 두 배열을 병합해 보여주므로 스키마도 동일한 병합 결과를 써야 화면=스키마가 성립한다
+const mergedFaqs = computed(() => mergeFaqs(DELAY_INTEREST_FAQS, guide.value.faqs));
+
 const faqJsonLd = computed(() => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: (props.initialDeposit ? guide.value.faqs ?? [] : [...DELAY_INTEREST_FAQS]).map((faq) => ({
+  mainEntity: mergedFaqs.value.map((faq) => ({
     "@type": "Question",
     name: faq.q,
     acceptedAnswer: { "@type": "Answer", text: faq.a },
@@ -127,7 +131,7 @@ const faqJsonLd = computed(() => ({
       </div>
     </section>
     <CompareSourceFooter :sources="[...DELAY_INTEREST_SOURCES]" :updated-at="DELAY_INTEREST_DATA_UPDATED" />
-    <DelayInterestFAQ :faqs="DELAY_INTEREST_FAQS" :extra="guide.faqs" />
+    <DelayInterestFAQ :faqs="mergedFaqs" />
     <AdSlot slot="120002" label="광고 · middle" />
     <PopularCalculators />
 

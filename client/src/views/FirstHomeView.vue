@@ -6,11 +6,15 @@ import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import { HOUSE_FIRST_HOME_GUIDE } from "@/data/seoGuides";
 import FirstHomeCalculator from "@/components/house/FirstHomeCalculator.vue";
 import { FIRST_HOME_FAQS } from "@/data/firstHome";
+import { mergeFaqs } from "@/lib/faqMerge";
+
+// 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
+const mergedFaqs = mergeFaqs(FIRST_HOME_FAQS, HOUSE_FIRST_HOME_GUIDE.faqs);
 
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: FIRST_HOME_FAQS.map((faq) => ({
+  mainEntity: mergedFaqs.map((faq) => ({
     "@type": "Question",
     name: faq.q,
     acceptedAnswer: { "@type": "Answer", text: faq.a },
@@ -39,7 +43,7 @@ const faqJsonLd = {
       </div>
     </section>
 
-    <FaqAccordionPanel :items="FIRST_HOME_FAQS" :extra="HOUSE_FIRST_HOME_GUIDE.faqs" />
+    <FaqAccordionPanel :items="mergedFaqs" />
 
     <SeoRichGuide
       :title="HOUSE_FIRST_HOME_GUIDE.title"

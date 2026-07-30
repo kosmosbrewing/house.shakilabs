@@ -14,6 +14,7 @@ import { BROKERAGE_DATA_UPDATED, BROKERAGE_FAQS, BROKERAGE_SOURCES } from "@/dat
 import { useBrokerageFee } from "@/composables/useBrokerageFee";
 import { useResultShare } from "@/composables/useResultShare";
 import { formatManWon, formatPercent, formatWon } from "@/lib/utils";
+import { mergeFaqs } from "@/lib/faqMerge";
 
 const props = defineProps<{ initialAmount?: number }>();
 const amountLabel = computed(() => props.initialAmount ? formatManWon(props.initialAmount / 10000) : null);
@@ -45,11 +46,14 @@ const facts = computed(() => [
   { label: "의뢰인 1인 최대", value: formatWon(result.value.maxFee) },
 ]);
 
-// 화면 FAQ(BrokerageFeeFAQ)와 동일 텍스트로 FAQPage 스키마 1개만 노출 (AcquisitionTaxView 패턴)
+// 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
+// BrokerageFeeFAQ는 내부적으로 FaqAccordionPanel에 extra를 넘겨 병합 렌더링하므로 스키마도 동일하게 병합해야 한다
+const mergedFaqs = mergeFaqs(BROKERAGE_FAQS, HOUSE_BROKERAGE_FEE_GUIDE.faqs);
+
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: BROKERAGE_FAQS.map((faq) => ({
+  mainEntity: mergedFaqs.map((faq) => ({
     "@type": "Question",
     name: faq.q,
     acceptedAnswer: { "@type": "Answer", text: faq.a },
@@ -84,7 +88,7 @@ const faqJsonLd = {
 
     <BrokerageFeeResult :result="result" />
     <CompareSourceFooter :sources="[...BROKERAGE_SOURCES]" :updated-at="BROKERAGE_DATA_UPDATED" />
-    <BrokerageFeeFAQ :faqs="BROKERAGE_FAQS" :extra="HOUSE_BROKERAGE_FEE_GUIDE.faqs" />
+    <BrokerageFeeFAQ :faqs="mergedFaqs" />
 
     <SeoRichGuide
       :title="HOUSE_BROKERAGE_FEE_GUIDE.title"

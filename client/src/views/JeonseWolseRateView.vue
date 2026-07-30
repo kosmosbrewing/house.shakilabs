@@ -13,6 +13,7 @@ import { JEONSE_WOLSE_RATE_FAQS } from "@/data/jeonseWolseRate";
 import { useJeonseWolseRate } from "@/composables/useJeonseWolseRate";
 import { useResultShare } from "@/composables/useResultShare";
 import { formatManWon, formatPercent, formatWon } from "@/lib/utils";
+import { mergeFaqs } from "@/lib/faqMerge";
 
 const props = defineProps<{ initialDeposit?: number }>();
 const depositLabel = computed(() => props.initialDeposit ? formatManWon(props.initialDeposit / 10000) : null);
@@ -59,10 +60,13 @@ const facts = computed(() => [
   { label: "월세 차이", value: formatWon(result.value.monthlyRentGap) },
 ]);
 
+// 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
+const mergedFaqs = mergeFaqs(JEONSE_WOLSE_RATE_FAQS, HOUSE_JEONSE_WOLSE_RATE_GUIDE.faqs);
+
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: JEONSE_WOLSE_RATE_FAQS.map((faq) => ({
+  mainEntity: mergedFaqs.map((faq) => ({
     "@type": "Question",
     name: faq.q,
     acceptedAnswer: { "@type": "Answer", text: faq.a },
@@ -96,7 +100,7 @@ const faqJsonLd = {
       @share="share.openShare"
     />
 
-    <FaqAccordionPanel :items="JEONSE_WOLSE_RATE_FAQS" :extra="HOUSE_JEONSE_WOLSE_RATE_GUIDE.faqs" />
+    <FaqAccordionPanel :items="mergedFaqs" />
 
     <PopularCalculators />
 
