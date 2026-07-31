@@ -8,6 +8,7 @@ import { HOUSE_RENTAL_YIELD_GUIDE } from "@/data/seoGuides";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import RentalYieldCalculator from "@/components/house/RentalYieldCalculator.vue";
+import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import { RENTAL_YIELD_FAQS } from "@/data/rentalYield";
 import { useRentalYield } from "@/composables/useRentalYield";
 import { useResultShare } from "@/composables/useResultShare";
@@ -86,6 +87,9 @@ const faqJsonLd = {
       show-share
       @share="share.openShare"
     />
+
+    <PopularCalculators />
+
 
     <FaqAccordionPanel :items="mergedFaqs" />
 
