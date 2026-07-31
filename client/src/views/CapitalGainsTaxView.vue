@@ -8,6 +8,7 @@ import { HOUSE_CAPITAL_GAINS_TAX_GUIDE } from "@/data/seoGuides";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import CapitalGainsTaxCalculator from "@/components/house/CapitalGainsTaxCalculator.vue";
+import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import { CAPITAL_GAINS_TAX_FAQS } from "@/data/capitalGainsTax";
 import { useCapitalGainsTax } from "@/composables/useCapitalGainsTax";
 import { useResultShare } from "@/composables/useResultShare";
@@ -86,6 +87,9 @@ const faqJsonLd = {
       show-share
       @share="share.openShare"
     />
+
+    <PopularCalculators />
+
 
     <FaqAccordionPanel :items="mergedFaqs" />
 

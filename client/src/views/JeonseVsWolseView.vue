@@ -10,6 +10,7 @@ import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import JeonseVsWolseFAQ from "@/components/house/JeonseVsWolseFAQ.vue";
 import JeonseVsWolseInput from "@/components/house/JeonseVsWolseInput.vue";
 import JeonseVsWolseResult from "@/components/house/JeonseVsWolseResult.vue";
+import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import { JEONSE_WOLSE_DATA_UPDATED, JEONSE_WOLSE_FAQS, JEONSE_WOLSE_SOURCES } from "@/data/jeonseWolse";
 import { useJeonseVsWolse } from "@/composables/useJeonseVsWolse";
 import { useResultShare } from "@/composables/useResultShare";
@@ -89,6 +90,9 @@ const faqJsonLd = {
     <JeonseVsWolseResult :form="form" :result="result" />
     <CompareSourceFooter :sources="[...JEONSE_WOLSE_SOURCES]" :updated-at="JEONSE_WOLSE_DATA_UPDATED" />
     <JeonseVsWolseFAQ :faqs="mergedFaqs" />
+
+    <PopularCalculators />
+
 
     <SeoRichGuide
       :title="HOUSE_JEONSE_VS_WOLSE_GUIDE.title"

@@ -8,6 +8,7 @@ import { HOUSE_ACQUISITION_TAX_GUIDE } from "@/data/seoGuides";
 import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import AcquisitionTaxCalculator from "@/components/house/AcquisitionTaxCalculator.vue";
+import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import { ACQUISITION_TAX_FAQS } from "@/data/acquisitionTax";
 import { useAcquisitionTax } from "@/composables/useAcquisitionTax";
 import { useResultShare } from "@/composables/useResultShare";
@@ -85,6 +86,9 @@ const faqJsonLd = {
       show-share
       @share="share.openShare"
     />
+
+    <PopularCalculators />
+
 
     <FaqAccordionPanel :items="mergedFaqs" />
 

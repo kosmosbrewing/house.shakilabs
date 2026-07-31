@@ -10,6 +10,7 @@ import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import BrokerageFeeFAQ from "@/components/house/BrokerageFeeFAQ.vue";
 import BrokerageFeeInput from "@/components/house/BrokerageFeeInput.vue";
 import BrokerageFeeResult from "@/components/house/BrokerageFeeResult.vue";
+import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import { BROKERAGE_DATA_UPDATED, BROKERAGE_FAQS, BROKERAGE_SOURCES } from "@/data/brokerageRates";
 import { useBrokerageFee } from "@/composables/useBrokerageFee";
 import { useResultShare } from "@/composables/useResultShare";
@@ -89,6 +90,9 @@ const faqJsonLd = {
     <BrokerageFeeResult :result="result" />
     <CompareSourceFooter :sources="[...BROKERAGE_SOURCES]" :updated-at="BROKERAGE_DATA_UPDATED" />
     <BrokerageFeeFAQ :faqs="mergedFaqs" />
+
+    <PopularCalculators />
+
 
     <SeoRichGuide
       :title="HOUSE_BROKERAGE_FEE_GUIDE.title"

@@ -5,6 +5,7 @@ import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import { HOUSE_HOUSING_SUBSCRIPTION_GUIDE } from "@/data/seoGuides";
 import HousingSubscriptionCalculator from "@/components/house/HousingSubscriptionCalculator.vue";
+import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import { HOUSING_SUBSCRIPTION_FAQS } from "@/data/housingSubscription";
 import { mergeFaqs } from "@/lib/faqMerge";
 
@@ -42,6 +43,9 @@ const faqJsonLd = {
         <HousingSubscriptionCalculator />
       </div>
     </section>
+
+    <PopularCalculators />
+
 
     <FaqAccordionPanel :items="mergedFaqs" />
 
