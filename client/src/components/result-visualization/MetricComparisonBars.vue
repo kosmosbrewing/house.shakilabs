@@ -1,56 +1,55 @@
 <script setup lang="ts">
-import { computed, useId } from "vue";
-import BaseComparisonBar from "./BaseComparisonBar.vue";
+// 차트 본체는 @shakilabs/ui ShMetricBars — 이 파일은 house 카드 크롬만 입힌다.
+// 호출부(RentalYieldCharts.vue)의 props와 tone 값("fee"/"profit")은 그대로 두고 여기서 변환한다.
+import { computed } from "vue";
+import { ShMetricBars } from "@shakilabs/ui";
+import type { ChartTone, MetricBarGroup } from "@shakilabs/ui";
 
 type Tone = "primary" | "fee" | "profit" | "muted";
 type ValueItem = { key: string; label: string; value: number; tone?: Tone; detail?: string };
 type Metric = { key: string; label: string; values: readonly ValueItem[] };
+
 const props = defineProps<{
   title: string;
   note: string;
   metrics: readonly Metric[];
   formatValue: (value: number) => string;
 }>();
-const titleId = `house-metrics-${useId()}`;
-const domains = computed(() => new Map(props.metrics.map((metric) => {
-  const values = metric.values.map((item) => item.value).filter(Number.isFinite);
-  const minimum = Math.min(0, ...values);
-  const maximum = Math.max(0, ...values);
-  return [metric.key, {
-    minimum,
-    maximum: maximum > minimum ? maximum : minimum + 1,
-  }];
-})));
 
-function domain(metricKey: string): { minimum: number; maximum: number } {
-  return domains.value.get(metricKey) ?? { minimum: 0, maximum: 1 };
-}
+// 앱 의미색 톤 → 패키지 ChartTone. 실제 색은 main.css 오버라이드로 승격 전과 동일하게 고정된다.
+const TONE_MAP: Record<Tone, ChartTone> = {
+  primary: "primary",
+  fee: "danger",
+  profit: "success",
+  muted: "muted",
+};
+
+const mappedMetrics = computed<MetricBarGroup[]>(() => props.metrics.map((metric) => ({
+  key: metric.key,
+  label: metric.label,
+  values: metric.values.map((item) => ({
+    key: item.key,
+    label: item.label,
+    value: item.value,
+    // tone 미지정 항목은 패키지 기본(baseTone=muted)에 맡긴다 — 승격 전 BaseComparisonBar 기본값과 같다.
+    ...(item.tone ? { tone: TONE_MAP[item.tone] } : {}),
+    ...(item.detail ? { detail: item.detail } : {}),
+  })),
+})));
 </script>
 
 <template>
-  <section
-    data-metric-comparison
-    class="rounded-xl border border-border/60 bg-card p-4"
-    :aria-labelledby="titleId"
-  >
-    <h3 :id="titleId" class="text-caption font-semibold text-foreground">{{ title }}</h3>
-    <p class="mt-1 text-tiny leading-relaxed text-muted-foreground">{{ note }}</p>
-    <div class="mt-4 space-y-5">
-      <div v-for="metric in metrics" :key="metric.key" class="space-y-3">
-        <h4 class="border-b border-border/50 pb-1.5 text-tiny font-semibold text-muted-foreground">{{ metric.label }}</h4>
-        <BaseComparisonBar
-          v-for="(item, itemIndex) in metric.values"
-          :key="item.key"
-          :label="item.label"
-          :value="item.value"
-          :minimum="domain(metric.key).minimum"
-          :maximum="domain(metric.key).maximum"
-          :tone="item.tone"
-          :detail="item.detail"
-          :show-scale="itemIndex === metric.values.length - 1"
-          :format-value="formatValue"
-        />
-      </div>
-    </div>
+  <section data-metric-comparison class="rounded-xl border border-border/60 bg-card p-4">
+    <ShMetricBars
+      :metrics="mappedMetrics"
+      :note="note"
+      :format-value="formatValue"
+      domain="signed"
+      show-scale
+    >
+      <template #header="{ titleId }">
+        <h3 :id="titleId" class="text-caption font-semibold text-foreground">{{ title }}</h3>
+      </template>
+    </ShMetricBars>
   </section>
 </template>

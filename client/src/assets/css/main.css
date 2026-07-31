@@ -518,3 +518,14 @@ nav[aria-label="주요 메뉴"] .tab-scroll > a[aria-current="page"] {
   border-radius: 1px;
   background: currentColor;
 }
+
+/* ui 0.3.10 차트 승격: MetricComparisonBars가 쓰는 패키지 톤을 앱 의미색으로 고정해
+   승격 전(BaseComparisonBar의 bg-profit/bg-fee) 색을 그대로 재현한다.
+   - [data-metric-comparison]으로 범위를 좁힌 이유: 같은 페이지의 ShBreakdownBar가 쓰는
+     danger는 원래 --destructive 색이라 전역 오버라이드하면 그쪽 색까지 바뀐다.
+   - :root를 겸한 이유: main.css가 @shakilabs/ui/styles.css보다 먼저 로드되므로
+     동일 특이도면 패키지 규칙이 이긴다. */
+:root [data-metric-comparison] .sh-chart-fill--success { fill: hsl(var(--profit)); }
+:root [data-metric-comparison] .sh-chart-fill--danger { fill: hsl(var(--fee)); }
+:root [data-metric-comparison] .sh-metric-bars__label--success { color: hsl(var(--profit)); }
+:root [data-metric-comparison] .sh-metric-bars__label--danger { color: hsl(var(--fee)); }
