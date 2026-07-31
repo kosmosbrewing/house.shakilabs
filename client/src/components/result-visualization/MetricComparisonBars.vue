@@ -1,11 +1,12 @@
 <script setup lang="ts">
 // 차트 본체는 @shakilabs/ui ShMetricBars — 이 파일은 house 카드 크롬만 입힌다.
 // 호출부(RentalYieldCharts.vue)의 props와 tone 값("fee"/"profit")은 그대로 두고 여기서 변환한다.
+// 주의: tone을 넘기면 패키지의 자동 음수색이 무시되므로, 부호가 갈리는 값은 호출부에서 signedTone()으로 계산한다.
 import { computed } from "vue";
 import { ShMetricBars } from "@shakilabs/ui";
 import type { ChartTone, MetricBarGroup } from "@shakilabs/ui";
+import type { Tone } from "./chartTone";
 
-type Tone = "primary" | "fee" | "profit" | "muted";
 type ValueItem = { key: string; label: string; value: number; tone?: Tone; detail?: string };
 type Metric = { key: string; label: string; values: readonly ValueItem[] };
 

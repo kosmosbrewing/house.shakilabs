@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { ShBreakdownBar } from "@shakilabs/ui";
 import MetricComparisonBars from "@/components/result-visualization/MetricComparisonBars.vue";
+import { signedTone } from "@/components/result-visualization/chartTone";
 import { formatWon } from "@/lib/utils";
 import type { RentalYieldResult } from "@/utils/housingCalculator";
 
@@ -21,7 +22,8 @@ const incomeMetrics = computed(() => [{
   label: "수입·순수익 비교",
   values: [
     { key: "gross", label: "공실 전 임대수입", value: props.result.annualRentGross, tone: "muted" as const },
-    { key: "net", label: "비용 반영 순수익", value: props.result.annualNetIncome, tone: "profit" as const },
+    // 순수익은 음수(손실)일 수 있다 — 톤을 고정하면 손실이 수익색으로 나온다.
+    { key: "net", label: "비용 반영 순수익", value: props.result.annualNetIncome, tone: signedTone(props.result.annualNetIncome) },
   ],
 }]);
 </script>
