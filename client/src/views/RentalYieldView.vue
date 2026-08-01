@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import CalculatorInteractionTracker from "@/components/analytics/CalculatorInteractionTracker.vue";
 import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
@@ -72,7 +73,12 @@ const faqJsonLd = {
         <h2 id="rental-yield-input-title" class="retro-title">투자 조건 입력</h2>
       </div>
       <div class="retro-panel-content">
-        <RentalYieldCalculator v-model="form" :result="result" />
+        <CalculatorInteractionTracker
+          calculator-id="rental_yield"
+          page-path="/house/rental-yield"
+        >
+          <RentalYieldCalculator v-model="form" :result="result" />
+        </CalculatorInteractionTracker>
       </div>
     </section>
 

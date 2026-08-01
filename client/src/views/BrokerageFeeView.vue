@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import CalculatorInteractionTracker from "@/components/analytics/CalculatorInteractionTracker.vue";
 import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
@@ -72,7 +73,12 @@ const faqJsonLd = {
         <h2 id="brokerage-fee-input-title" class="retro-title">거래 조건 입력</h2>
       </div>
       <div class="retro-panel-content">
-        <BrokerageFeeInput v-model="form" />
+        <CalculatorInteractionTracker
+          calculator-id="brokerage_fee"
+          page-path="/house/brokerage-fee"
+        >
+          <BrokerageFeeInput v-model="form" />
+        </CalculatorInteractionTracker>
       </div>
     </section>
 
