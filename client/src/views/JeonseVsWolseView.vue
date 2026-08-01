@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import CalculatorInteractionTracker from "@/components/analytics/CalculatorInteractionTracker.vue";
 import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
@@ -72,7 +73,12 @@ const faqJsonLd = {
         <h2 id="jeonse-vs-wolse-input-title" class="retro-title">비교 조건 입력</h2>
       </div>
       <div class="retro-panel-content">
-        <JeonseVsWolseInput v-model="form" />
+        <CalculatorInteractionTracker
+          calculator-id="jeonse_vs_wolse"
+          page-path="/house/jeonse-vs-wolse"
+        >
+          <JeonseVsWolseInput v-model="form" />
+        </CalculatorInteractionTracker>
       </div>
     </section>
 

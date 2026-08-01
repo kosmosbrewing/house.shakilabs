@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CalculatorInteractionTracker from "@/components/analytics/CalculatorInteractionTracker.vue";
 import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
@@ -40,7 +41,12 @@ const faqJsonLd = {
         <p class="text-caption leading-relaxed text-muted-foreground">
           핵심 3개 항목만 빠르게 합산하는 민영주택 청약 가점 계산기입니다.
         </p>
-        <HousingSubscriptionCalculator />
+        <CalculatorInteractionTracker
+          calculator-id="housing_subscription"
+          page-path="/house/housing-subscription"
+        >
+          <HousingSubscriptionCalculator />
+        </CalculatorInteractionTracker>
       </div>
     </section>
 

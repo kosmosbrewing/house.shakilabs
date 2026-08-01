@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import CalculatorInteractionTracker from "@/components/analytics/CalculatorInteractionTracker.vue";
 import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
@@ -72,7 +73,12 @@ const faqJsonLd = {
         <h2 id="capital-gains-tax-input-title" class="retro-title">양도 조건 입력</h2>
       </div>
       <div class="retro-panel-content">
-        <CapitalGainsTaxCalculator v-model="form" :result="result" />
+        <CalculatorInteractionTracker
+          calculator-id="capital_gains_tax"
+          page-path="/house/capital-gains-tax"
+        >
+          <CapitalGainsTaxCalculator v-model="form" :result="result" />
+        </CalculatorInteractionTracker>
       </div>
     </section>
 
