@@ -48,3 +48,11 @@ client/.vercel/
 /artifacts/text-layout-audit/*
 !/artifacts/text-layout-audit/report.md
 !/artifacts/text-layout-audit/issues.json
+
+# Build-generated artifacts; only the reviewed production SBOM pair is committed.
+# 스캐폴딩 시 다른 앱의 워킹트리를 복사하면서 untracked 산출물이 함께 커밋된 사고가 있었다.
+/client/artifacts/*
+!/client/artifacts/sbom/
+/client/artifacts/sbom/*
+!/client/artifacts/sbom/production.cyclonedx.json
+!/client/artifacts/sbom/production.spdx.json
