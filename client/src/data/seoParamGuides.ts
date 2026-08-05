@@ -2,7 +2,7 @@
 // 프리셋 축 증량 시 "숫자만 바꾼 페이지 양산" 게이트를 지키기 위해,
 // 파라미터마다 실제 계산 결과로 본문·FAQ를 생성해 페이지별 고유 해석을 보장한다.
 // vite-ssg 빌드 시점에 실행되는 순수 함수라 SSR 안전.
-import type { GuideData } from "@/data/seoGuides";
+import { HOUSE_PROPERTY_TAX_GUIDE, type GuideData } from "@/data/seoGuides";
 import {
   CIVIL_DELAY_INTEREST_RATE,
   LITIGATION_DELAY_INTEREST_RATE,
@@ -118,6 +118,8 @@ export function buildPropertyTaxGuide(priceWon: number): GuideData {
           : `추정 공시가격 ${officialLabel}이 기본공제 12억원 이하라 1세대 1주택 단독소유 기준으로는 종부세가 부과되지 않습니다.`,
       },
     ],
+    // 프리셋 페이지도 랜딩과 같은 공공기관 출처를 노출한다 (E-E-A-T 근거 공유)
+    sources: HOUSE_PROPERTY_TAX_GUIDE.sources,
     disclaimer: PARAM_DISCLAIMER,
   };
 }

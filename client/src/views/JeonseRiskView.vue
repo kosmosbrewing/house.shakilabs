@@ -213,6 +213,7 @@ const faqJsonLd = {
       :title="HOUSE_JEONSE_RISK_GUIDE.title"
       :intro="HOUSE_JEONSE_RISK_GUIDE.intro"
       :sections="HOUSE_JEONSE_RISK_GUIDE.sections"
+      :sources="HOUSE_JEONSE_RISK_GUIDE.sources"
       :disclaimer="HOUSE_JEONSE_RISK_GUIDE.disclaimer"
     />
   </div>

@@ -44,6 +44,16 @@ const constantsStore = useConstantsStore();
           실제 계약·소송 금액은 전문가 확인을 권장합니다.
         </p>
 
+        <h2 class="text-heading font-bold">운영자 정보</h2>
+        <div class="retro-panel-muted space-y-2 p-4">
+          <p class="text-body font-bold text-foreground">운영: ShakiLabs · 문의: skdba1313@gmail.com</p>
+          <p class="text-body text-muted-foreground">
+            모든 계산식과 기준값은 지방세법·소송촉진법 등 관련 법령과
+            위택스·주택도시보증공사(HUG)·금융감독원 같은 공공기관의 공시 자료에 대조해 검증하며,
+            법령이나 조례가 바뀌면 확인일을 명시해 갱신합니다.
+          </p>
+        </div>
+
         <h2 class="text-heading font-bold">문의</h2>
         <p class="text-body text-muted-foreground">
           오류 제보나 기능 건의는

@@ -3,12 +3,15 @@
 export interface GuideSection { h2: string; body: string; }
 export interface GuideFaq { q: string; a: string; }
 export interface GuideChecklist { title: string; items: string[]; }
+// 공공기관 공식 출처 링크 — 콘텐츠 신뢰도(E-E-A-T) 근거로 가이드 하단에 노출한다
+export interface GuideSource { label: string; url: string; }
 export interface GuideData {
   title: string;
   intro: string;
   sections?: GuideSection[];
   faqs?: GuideFaq[];
   checklist?: GuideChecklist;
+  sources?: GuideSource[];
   disclaimer?: string;
 }
 
@@ -424,6 +427,16 @@ export const HOUSE_JEONSE_VS_WOLSE_GUIDE: GuideData = {
       a: "이 계산기는 관리비를 반영하지 않으므로, 계산된 연간 비용에 각 매물의 연간 관리비를 직접 더해 최종 비교하시기 바랍니다. 관리비 10만원 차이는 연 120만원으로 결론을 바꿀 수 있는 크기입니다.",
     },
   ],
+  sources: [
+    {
+      label: "금융감독원 금융상품통합비교공시 (전세자금대출 금리 비교)",
+      url: "https://finlife.fss.or.kr",
+    },
+    {
+      label: "주택도시기금 (버팀목 전세자금대출 등 정책 대출 기준)",
+      url: "https://nhuf.molit.go.kr",
+    },
+  ],
   disclaimer: COMMON_DISCLAIMER,
 };
 
@@ -524,6 +537,17 @@ export const HOUSE_PROPERTY_TAX_GUIDE: GuideData = {
     {
       q: "전년도 세액은 왜 입력하나요?",
       a: "재산세는 직전 연도 과세표준 기준 5% 과표상한, 종부세는 전년도 재산세+종부세 합계의 150% 세부담상한이 있기 때문입니다. 전년도 값을 입력하면 상한 적용 후의 실제 고지액에 가까운 결과를 얻을 수 있습니다.",
+    },
+  ],
+  // 재산세는 지방세라 위택스가 공식 창구다 (국세청 홈택스 아님 — 종부세만 국세)
+  sources: [
+    {
+      label: "위택스 (재산세 등 지방세 조회·납부)",
+      url: "https://www.wetax.go.kr",
+    },
+    {
+      label: "부동산 공시가격 알리미 (공동주택 공시가격 확인)",
+      url: "https://www.realtyprice.kr",
     },
   ],
   disclaimer: COMMON_DISCLAIMER,
