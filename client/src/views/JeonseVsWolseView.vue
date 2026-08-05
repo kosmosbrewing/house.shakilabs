@@ -104,6 +104,7 @@ const faqJsonLd = {
       :title="HOUSE_JEONSE_VS_WOLSE_GUIDE.title"
       :intro="HOUSE_JEONSE_VS_WOLSE_GUIDE.intro"
       :sections="HOUSE_JEONSE_VS_WOLSE_GUIDE.sections"
+      :sources="HOUSE_JEONSE_VS_WOLSE_GUIDE.sources"
       :disclaimer="HOUSE_JEONSE_VS_WOLSE_GUIDE.disclaimer"
     />
 

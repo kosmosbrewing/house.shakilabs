@@ -138,6 +138,7 @@ const faqJsonLd = computed(() => ({
       :title="guide.title"
       :intro="guide.intro"
       :sections="guide.sections"
+      :sources="guide.sources"
       :disclaimer="guide.disclaimer"
     />
 
