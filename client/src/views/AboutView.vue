@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RouterLink } from "vue-router";
 import SEOHead from "@/components/common/SEOHead.vue";
 import { buttonVariants } from "@/components/ui/button";
 import { useConstantsStore } from "@/stores/constants";
@@ -58,6 +59,26 @@ const constantsStore = useConstantsStore();
           전세 vs 월세 비교는 사용자가 입력한 기회비용 금리에 따라 결론이 뒤집힐 수 있고,
           보유세는 실제 공시가격과 감면 여부에, 양도세는 보유·거주 기간과 다주택 여부에 따라 달라집니다.
           실제 계약·신고·소송 금액은 세무사, 공인중개사, 변호사 등 전문가 확인을 권장합니다.
+        </p>
+
+        <h2 class="text-heading font-bold">이용 비용과 데이터 처리</h2>
+        <p class="text-body text-muted-foreground">
+          모든 계산기는 무료이며 회원가입이나 결제 절차가 없습니다.
+          입력한 보증금·공시가격·취득가액 같은 금액은 이용자의 브라우저 안에서만 계산되고,
+          서버로 전송되거나 데이터베이스에 저장되지 않습니다.
+          일부 화면은 편의를 위해 입력값을 기기의 브라우저 저장소에 임시 보관하지만
+          이 값도 기기 밖으로 나가지 않으며 브라우저 데이터를 지우면 함께 삭제됩니다.
+          수집 항목과 광고 쿠키에 대한 자세한 내용은
+          <RouterLink to="/privacy" class="retro-link">개인정보 처리방침</RouterLink>에 정리해 두었습니다.
+        </p>
+
+        <h2 class="text-heading font-bold">업데이트 정책</h2>
+        <p class="text-body text-muted-foreground">
+          세율과 요율은 해마다 바뀝니다. 지방세법·소송촉진법 개정, 지자체 중개보수 조례 변경,
+          공정시장가액비율 고시가 나오면 해당 계산기의 상수를 갱신하고 화면에 표시되는 확인일을 함께 올립니다.
+          계산 로직은 배포 전 자동화된 테스트로 검증하기 때문에, 상수를 바꾸더라도
+          기존 구간의 계산 결과가 조용히 틀어지지 않습니다.
+          바뀐 기준이 반영되지 않은 화면을 발견하면 아래 메일로 알려주시면 확인 후 반영합니다.
         </p>
 
         <h2 class="text-heading font-bold">운영자 정보</h2>
