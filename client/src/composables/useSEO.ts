@@ -19,6 +19,15 @@ type SEOOptions = {
   jsonLd?: MaybeRefOrGetter<
     Record<string, unknown> | Record<string, unknown>[] | undefined
   >;
+  /**
+   * Overrides the path used for canonical / hreflang / og:url.
+   * Amount-variant routes (e.g. /property-tax/30000) pass their base page
+   * ("/property-tax") because the prerendered body is near-identical across
+   * variants — canonical consolidation instead of noindex, so ranking signals
+   * merge into the base calculator. Reversible: drop the override and the
+   * route becomes self-canonical again.
+   */
+  canonicalPath?: MaybeRefOrGetter<string | undefined>;
 };
 
 function normalizeTitle(rawTitle: string): string {
@@ -45,6 +54,7 @@ export function useSEO({
   ogImage,
   noindex = false,
   jsonLd,
+  canonicalPath,
 }: SEOOptions): void {
   const route = useRoute();
 
@@ -63,7 +73,9 @@ export function useSEO({
         ? [resolvedJsonLd]
         : [];
     const siteUrl = getSiteUrl().replace(/\/+$/, "");
-    const currentPath = route.path || "/";
+    // canonical/hreflang/og:url must always agree, so they all derive from the
+    // same resolved path (consolidation override first, route path otherwise).
+    const currentPath = toValue(canonicalPath) || route.path || "/";
     const currentUrl = currentPath === "/" ? siteUrl : `${siteUrl}${currentPath}`;
 
     return {

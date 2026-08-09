@@ -19,6 +19,12 @@ import { formatManWon, formatPercent, formatWon } from "@/lib/utils";
 import { mergeFaqs } from "@/lib/faqMerge";
 
 const props = defineProps<{ initialAmount?: number }>();
+// Doorway-variant consolidation: the amount presets (/brokerage-fee/:param) render a
+// near-identical body to this page, so they canonicalize here instead of
+// competing as separate URLs. The base route is self-canonical either way, so
+// the override is unconditional. Reversible: drop this prop (and the route from
+// PARAM_ROUTES in scripts/seo-routes.mjs) once a preset gains unique content.
+const canonicalPath = "/brokerage-fee";
 const amountLabel = computed(() => props.initialAmount ? formatManWon(props.initialAmount / 10000) : null);
 
 const seoTitle = computed(() =>
@@ -64,7 +70,12 @@ const faqJsonLd = {
 </script>
 
 <template>
-  <SEOHead :title="seoTitle" :description="seoDescription" :json-ld="faqJsonLd" />
+  <SEOHead
+    :title="seoTitle"
+    :description="seoDescription"
+    :json-ld="faqJsonLd"
+    :canonical-path="canonicalPath"
+  />
   <div class="container space-y-5 py-5">
     <CalculatorPageHeader title="주택 중개보수 계산기" />
 
