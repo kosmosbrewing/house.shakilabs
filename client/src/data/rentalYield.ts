@@ -46,15 +46,23 @@ export const RENTAL_YIELD_FAQS: readonly { q: string; a: string }[] = [
   },
 ] as const;
 
+// molit.go.kr root redirects to itself (HTTP 307 loop) even from a browser UA,
+// so it is replaced by the ministry's real-transaction-price portal, which
+// answers 200 on a cookieless GET and is the actual basis for market prices.
 export const RENTAL_YIELD_SOURCES = [
   {
-    name: "국토교통부",
-    url: "https://www.molit.go.kr/",
-    basis: "부동산 시장 정보",
+    name: "국토교통부 실거래가 공개시스템",
+    url: "https://rt.molit.go.kr/",
+    basis: "아파트·오피스텔 매매·전월세 실거래가",
   },
   {
     name: "한국부동산원",
     url: "https://www.reb.or.kr/",
     basis: "임대시장 동향 통계",
+  },
+  {
+    name: "한국은행 경제통계시스템(ECOS)",
+    url: "https://ecos.bok.or.kr/",
+    basis: "예금·대출 금리 비교 기준",
   },
 ] as const;

@@ -27,6 +27,12 @@ import { formatManWon, formatWon } from "@/lib/utils";
 import { mergeFaqs } from "@/lib/faqMerge";
 
 const props = defineProps<{ initialDeposit?: number }>();
+// Doorway-variant consolidation: the amount presets (/delay-interest/:param) render a
+// near-identical body to this page, so they canonicalize here instead of
+// competing as separate URLs. The base route is self-canonical either way, so
+// the override is unconditional. Reversible: drop this prop (and the route from
+// PARAM_ROUTES in scripts/seo-routes.mjs) once a preset gains unique content.
+const canonicalPath = "/delay-interest";
 const depositLabel = computed(() => props.initialDeposit ? formatManWon(props.initialDeposit / 10000) : null);
 
 const seoTitle = computed(() =>
@@ -88,7 +94,12 @@ const faqJsonLd = computed(() => ({
 </script>
 
 <template>
-  <SEOHead :title="seoTitle" :description="seoDescription" :json-ld="faqJsonLd" />
+  <SEOHead
+    :title="seoTitle"
+    :description="seoDescription"
+    :json-ld="faqJsonLd"
+    :canonical-path="canonicalPath"
+  />
   <div class="text-resize-layout container space-y-5 py-5">
     <CalculatorPageHeader title="보증금 반환 지연이자 계산기" />
 

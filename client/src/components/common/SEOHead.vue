@@ -6,6 +6,8 @@ const props = defineProps<{
   description: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   noindex?: boolean;
+  /** Canonical consolidation target for amount-variant routes (see useSEO). */
+  canonicalPath?: string;
 }>();
 
 useSEO({
@@ -13,6 +15,7 @@ useSEO({
   description: () => props.description,
   jsonLd: () => props.jsonLd,
   noindex: () => props.noindex,
+  canonicalPath: () => props.canonicalPath,
 });
 </script>
 

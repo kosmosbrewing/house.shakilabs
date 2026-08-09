@@ -17,6 +17,12 @@ import { formatManWon, formatPercent, formatWon } from "@/lib/utils";
 import { mergeFaqs } from "@/lib/faqMerge";
 
 const props = defineProps<{ initialDeposit?: number }>();
+// Doorway-variant consolidation: the amount presets (/jeonse-wolse-rate/:param) render a
+// near-identical body to this page, so they canonicalize here instead of
+// competing as separate URLs. The base route is self-canonical either way, so
+// the override is unconditional. Reversible: drop this prop (and the route from
+// PARAM_ROUTES in scripts/seo-routes.mjs) once a preset gains unique content.
+const canonicalPath = "/jeonse-wolse-rate";
 const depositLabel = computed(() => props.initialDeposit ? formatManWon(props.initialDeposit / 10000) : null);
 
 const seoTitle = computed(() =>
@@ -76,7 +82,12 @@ const faqJsonLd = {
 </script>
 
 <template>
-  <SEOHead :title="seoTitle" :description="seoDescription" :json-ld="faqJsonLd" />
+  <SEOHead
+    :title="seoTitle"
+    :description="seoDescription"
+    :json-ld="faqJsonLd"
+    :canonical-path="canonicalPath"
+  />
   <div class="container space-y-5 py-5">
     <CalculatorPageHeader title="전월세 전환율 계산기" />
 

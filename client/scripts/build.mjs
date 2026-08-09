@@ -1,18 +1,8 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import {
-  SEO_ROUTES,
-  BROKERAGE_PRICES,
-  JEONSE_DEPOSITS,
-  JEONSE_WOLSE_RATE_DEPOSITS,
-  DELAY_DEPOSITS,
-  PROPERTY_TAX_PRICES,
-  CAPITAL_GAINS_SELL_PRICES,
-  ACQUISITION_PRICES,
-  RENTAL_YIELD_PRICES,
-} from "./seo-routes.mjs";
+import { SEO_ROUTES, SITEMAP_ROUTES } from "./seo-routes.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
@@ -23,17 +13,6 @@ const viteSsgBin = resolve(
   ".bin",
   process.platform === "win32" ? "vite-ssg.cmd" : "vite-ssg"
 );
-
-const paramPaths = new Set([
-  ...BROKERAGE_PRICES.map((p) => `/brokerage-fee/${p}`),
-  ...JEONSE_DEPOSITS.map((d) => `/jeonse-vs-wolse/${d}`),
-  ...JEONSE_WOLSE_RATE_DEPOSITS.map((d) => `/jeonse-wolse-rate/${d}`),
-  ...DELAY_DEPOSITS.map((d) => `/delay-interest/${d}`),
-  ...PROPERTY_TAX_PRICES.map((p) => `/property-tax/${p}`),
-  ...CAPITAL_GAINS_SELL_PRICES.map((p) => `/capital-gains-tax/${p}`),
-  ...ACQUISITION_PRICES.map((p) => `/acquisition-tax/${p}`),
-  ...RENTAL_YIELD_PRICES.map((p) => `/rental-yield/${p}`),
-]);
 
 const basePriority = {
   "/": "1.0",
@@ -59,9 +38,6 @@ function getRouteConfig(path) {
       priority: basePriority[path],
     };
   }
-  if (paramPaths.has(path)) {
-    return { changefreq: "monthly", priority: "0.7" };
-  }
   return { changefreq: "monthly", priority: "0.5" };
 }
 
@@ -75,8 +51,11 @@ function resolveBuildDate() {
 }
 
 function renderSitemap(buildDate) {
+  // Amount-variant routes (PARAM_ROUTES) are intentionally absent: they
+  // canonicalize to their base calculator, so advertising them would point
+  // crawlers at URLs that immediately hand ranking signals elsewhere.
   const baseUrl = "https://shakilabs.com/house";
-  const urls = SEO_ROUTES.map((path) => {
+  const urls = SITEMAP_ROUTES.map((path) => {
     const { changefreq, priority } = getRouteConfig(path);
     const loc = path === "/" ? baseUrl : `${baseUrl}${path}`;
     return `  <url>
@@ -92,6 +71,31 @@ function renderSitemap(buildDate) {
 ${urls}
 </urlset>
 `;
+}
+
+function routeOutputPath(route) {
+  return route === "/"
+    ? resolve(projectRoot, "dist", "index.html")
+    : resolve(projectRoot, "dist", `${route.slice(1)}.html`);
+}
+
+// index.html carries a no-JS fallback <noscript> for the SPA shell, and
+// vite-ssg copies that template into every prerendered page. On a prerendered
+// route the real content is already in the HTML, so the leftover fallback only
+// duplicates the page heading — every route shipped two <h1> elements. Strip it
+// after the render so each static page keeps exactly one H1.
+function removeRenderedNoscriptFallbacks() {
+  for (const route of [...SEO_ROUTES, "/404"]) {
+    const outputPath = routeOutputPath(route);
+    if (!existsSync(outputPath)) continue;
+
+    const html = readFileSync(outputPath, "utf8");
+    writeFileSync(
+      outputPath,
+      html.replace(/\n?\s*<noscript>[\s\S]*?<\/noscript>/i, ""),
+      "utf8"
+    );
+  }
 }
 
 const buildDate = resolveBuildDate();
@@ -111,6 +115,8 @@ const result = spawnSync(viteSsgBin, ["build"], {
 if (result.status !== 0) {
   process.exit(result.status ?? 1);
 }
+
+removeRenderedNoscriptFallbacks();
 
 const validationResult = spawnSync(
   process.execPath,
