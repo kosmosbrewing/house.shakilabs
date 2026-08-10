@@ -64,6 +64,11 @@ function validateRoute(route) {
     `Rendered route must not retain the shell noscript: ${route}`);
   const h1Count = html.match(/<h1\b/gi)?.length ?? 0;
   assert(h1Count === 1, `Expected one H1 for ${route}, found ${h1Count}`);
+
+  // 404에서 로더를 걷어내는 정규식이 지나치게 넓어지면 정상 라우트의 광고까지
+  // 조용히 사라진다. 수익 배선이 살아 있는지 반대 방향으로도 못 박는다.
+  assert(/pagead2\.googlesyndication\.com/.test(html),
+    `Content route must keep the AdSense loader: ${route}`);
 }
 
 function validateSitemap() {
@@ -94,6 +99,11 @@ assert(existsSync(notFoundPath), "Missing custom 404.html output");
 const notFoundHtml = readFileSync(notFoundPath, "utf8");
 assert(notFoundHtml.includes('content="noindex,nofollow"'), "404.html must be noindex,nofollow");
 assert(!/<noscript>/i.test(notFoundHtml), "404.html must not retain the shell noscript");
+// 콘텐츠가 없는 화면의 광고는 Google Valuable Inventory 정책 위반이다. noindex는 색인만
+// 막을 뿐 정책은 로더의 존재로 판단하고, 로더가 실리면 자동 광고가 슬롯을 직접 심는다.
+assert(!/adsbygoogle|googlesyndication/i.test(notFoundHtml),
+  "404.html must not load the AdSense script (Valuable Inventory policy)");
+assert(notFoundHtml.includes('href="/house'), "404.html must contain a recovery link");
 
 console.log(
   `Validated ${SEO_ROUTES.length} prerendered routes ` +
