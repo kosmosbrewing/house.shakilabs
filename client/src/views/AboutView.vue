@@ -41,6 +41,22 @@ const constantsStore = useConstantsStore();
           공인중개사·임대인과 금액을 두고 이야기할 때 근거 화면을 그대로 공유하라고 만든 기능입니다.
         </p>
 
+        <h2 class="text-heading font-bold">계산기별로 답하는 질문</h2>
+        <p class="text-body text-muted-foreground">
+          각 계산기는 주거 계약에서 실제로 다투게 되는 질문 하나씩을 맡고 있습니다.
+        </p>
+        <ul class="text-body text-muted-foreground space-y-1 list-disc list-inside">
+          <li>보증금을 제때 못 돌려받았는데 얼마를 더 청구할 수 있나 — 지연이자</li>
+          <li>이 조건이면 전세가 유리한가 월세가 유리한가 — 손익분기 월세와 기회비용 금리</li>
+          <li>보증금을 월세로 돌리자는 제안이 적정한가 — 전월세 전환율 상한 대비 실제 전환율</li>
+          <li>지금 이 전세가 떼일 위험은 어느 정도인가 — 시세 대비 보증금과 선순위 채권 비율</li>
+          <li>중개사가 부른 보수가 상한을 넘지 않았나 — 구간별 상한요율과 한도액</li>
+          <li>이 집을 사면 취득 단계와 보유 단계에서 세금이 얼마인가 — 취득세와 재산세·종부세</li>
+          <li>지금 팔면 세금을 떼고 얼마가 남나 — 양도차익 대비 세후 이익</li>
+          <li>내 청약 가점은 몇 점인가 — 무주택 기간·부양가족·통장 가입 기간 배점</li>
+          <li>대출을 끼면 수익률이 올라가나 — 총수익률과 자기자본수익률(ROE)의 차이</li>
+        </ul>
+
         <h2 class="text-heading font-bold">계산 기준과 검증 방식</h2>
         <p class="text-body text-muted-foreground">
           이 사이트의 세율·요율은 임의로 정한 값이 아니라 법령 원문과 지자체 고시에서 옮겨온 값입니다.
