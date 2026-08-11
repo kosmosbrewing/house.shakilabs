@@ -113,7 +113,9 @@
         --accent-foreground: 217 74% 36%;
         --popover: 0 0% 100%;
         --popover-foreground: 222 47% 11%;
-        --destructive: 0 72% 52%;
+        /* 0 72% 52%는 배경(210 40% 98%) 위 4.49:1로 AA 미달이었다.
+           라이트 빨강은 --fee/--status-danger와 같은 0 74% 42%로 통일한다. */
+        --destructive: 0 74% 42%;
         --destructive-foreground: 210 40% 98%;
         --border: 214 16% 85%;
         --input: 214 16% 85%;
@@ -140,15 +142,22 @@
         --accent-foreground: 214 100% 79%;
         --popover: 217 33% 17%;
         --popover-foreground: 210 40% 96%;
-        --destructive: 0 72% 58%;
-        --destructive-foreground: 0 0% 100%;
+        /* 다크 빨강은 텍스트로 쓰인다(sh-field-error·sh-summary__delta--danger·
+           sh-badge--danger·다주택 중과 배지). 0 72% 58%는 카드(217 33% 17%) 위
+           3.67:1로 AA 미달이라 명도를 높인다. 배경으로 쓰일 때 위에 올라가는
+           --destructive-foreground는 --primary-foreground와 같은 방식으로
+           앱 hue를 유지한 채 명도를 낮춰 6.83:1이 된다. */
+        --destructive: 0 75% 72%;
+        --destructive-foreground: 0 65% 12%;
         --border: 214 16% 26%;
         --input: 214 16% 30%;
         --ring: 213 94% 68%;
         --profit: 151 60% 54%;
         --profit-foreground: 0 0% 100%;
-        --fee: 0 62% 58%;
-        --fee-foreground: 0 0% 100%;
+        /* text-fee는 세금·손실 금액 텍스트다. 0 62% 58%는 카드 위 3.64:1로
+           AA 미달이었다(라이브 실측). 8개 앱 공통 상향값으로 통일한다. */
+        --fee: 0 75% 72%;
+        --fee-foreground: 0 65% 12%;
       }
 
       html {
