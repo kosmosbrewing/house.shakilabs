@@ -5,8 +5,11 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "border border-primary bg-primary text-white hover:text-white active:text-white shadow-sm hover:-translate-y-[1px] hover:bg-primary/90 active:translate-y-0 active:scale-[0.985] active:bg-primary/95",
-        destructive: "border border-destructive bg-destructive text-white hover:text-white active:text-white shadow-sm hover:-translate-y-[1px] hover:bg-destructive/90 active:translate-y-0 active:scale-[0.985] active:bg-destructive/95",
+        // text-white 하드코딩이 토큰을 우회해 다크에서 2.52:1까지 떨어졌다.
+        // 라이트 --primary-foreground는 그대로 흰색이라 라이트 화면은 그대로고,
+        // 다크에서만 어두운 전경색을 써서 6.63:1이 된다.
+        default: "border border-primary bg-primary text-primary-foreground hover:text-primary-foreground active:text-primary-foreground shadow-sm hover:-translate-y-[1px] hover:bg-primary/90 active:translate-y-0 active:scale-[0.985] active:bg-primary/95",
+        destructive: "border border-destructive bg-destructive text-destructive-foreground hover:text-destructive-foreground active:text-destructive-foreground shadow-sm hover:-translate-y-[1px] hover:bg-destructive/90 active:translate-y-0 active:scale-[0.985] active:bg-destructive/95",
         outline: "border border-border bg-background text-muted-foreground hover:-translate-y-[1px] hover:border-primary/40 hover:bg-primary/5 active:translate-y-0 active:scale-[0.985] active:border-primary/45 active:bg-primary/8",
         subtle: "border border-border/70 bg-card text-foreground shadow-sm hover:-translate-y-[1px] hover:border-primary/50 hover:bg-muted/20 active:translate-y-0 active:scale-[0.985] active:border-primary/55 active:bg-muted/30",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
