@@ -142,7 +142,7 @@ const faqJsonLd = {
                   <p class="text-heading font-bold text-foreground">{{ tool.title }}</p>
                   <p class="mt-2 text-caption leading-relaxed text-muted-foreground">{{ tool.desc }}</p>
                 </div>
-                <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-primary/12 text-primary">
+                <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-primary/[12%] text-primary">
                   <component :is="tool.icon" class="h-5 w-5" />
                 </span>
               </div>

@@ -10,6 +10,7 @@ import {
   canonicalUrlFor,
 } from "./seo-routes.mjs";
 import { validateRouteLists } from "./validate-route-lists.mjs";
+import { validateUtilitiesAreGenerated } from "./validate-tailwind-utilities.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
@@ -93,6 +94,7 @@ validateVercelConfig(resolve(projectRoot, "vercel.json"));
 SEO_ROUTES.forEach(validateRoute);
 const sitemapUrls = validateSitemap();
 const routeLists = validateRouteLists({ projectRoot, distRoot, sitemapUrls });
+const utilityCount = validateUtilitiesAreGenerated({ projectRoot, distRoot });
 
 // The home must render its own content. If the router ever turns "/" into a
 // redirect, vite-ssg follows it during the prerender and copies the target page
@@ -123,5 +125,6 @@ console.log(
     `(${SITEMAP_ROUTES.length} sitemap + ${PARAM_ROUTES.length} canonicalized variants), ` +
     `router cross-check ${routeLists.staticCount} static listed / ` +
     `${routeLists.redirectCount} redirects excluded, ` +
-    `${routeLists.llmsLinkCount} llms.txt links, and custom 404 output.`
+    `${routeLists.llmsLinkCount} llms.txt links, ` +
+    `${utilityCount} colour utilities generated, and custom 404 output.`
 );
