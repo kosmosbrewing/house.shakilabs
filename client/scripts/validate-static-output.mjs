@@ -5,14 +5,16 @@ import {
   SEO_ROUTES,
   SITEMAP_ROUTES,
   PARAM_ROUTES,
+  CANONICAL_BASE as canonicalBase,
   canonicalPathFor,
+  canonicalUrlFor,
 } from "./seo-routes.mjs";
+import { validateRouteLists } from "./validate-route-lists.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
 const repositoryRoot = resolve(projectRoot, "..");
 const distRoot = resolve(projectRoot, "dist");
-const canonicalBase = "https://shakilabs.com/house";
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -41,9 +43,7 @@ function validateRoute(route) {
   const html = readFileSync(outputPath, "utf8");
   // Amount variants must canonicalize to their base calculator (doorway
   // consolidation); every other route stays self-canonical.
-  const canonicalPath = canonicalPathFor(route);
-  const expectedCanonical =
-    canonicalPath === "/" ? canonicalBase : `${canonicalBase}${canonicalPath}`;
+  const expectedCanonical = canonicalUrlFor(canonicalPathFor(route));
 
   assert(html.includes(`<link rel="canonical" href="${expectedCanonical}">`),
     `Invalid canonical for ${route}: expected ${expectedCanonical}`);
@@ -74,9 +74,7 @@ function validateRoute(route) {
 function validateSitemap() {
   const sitemap = readFileSync(resolve(distRoot, "sitemap.xml"), "utf8");
   const actualUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-  const expectedUrls = SITEMAP_ROUTES.map((route) =>
-    route === "/" ? canonicalBase : `${canonicalBase}${route}`
-  );
+  const expectedUrls = SITEMAP_ROUTES.map(canonicalUrlFor);
   const variantUrls = new Set(
     PARAM_ROUTES.map((route) => `${canonicalBase}${route}`)
   );
@@ -85,6 +83,7 @@ function validateSitemap() {
     "Sitemap must contain exactly the self-canonical routes");
   assert(actualUrls.every((url) => !variantUrls.has(url)),
     "Sitemap must not list canonicalized amount-variant routes");
+  return new Set(actualUrls);
 }
 
 validateVercelConfig(resolve(repositoryRoot, "vercel.json"));
@@ -92,7 +91,21 @@ validateVercelConfig(resolve(projectRoot, "vercel.json"));
 // validateRoute also runs for PARAM_ROUTES: their static HTML must keep
 // existing (soft-404 guard) even though they are absent from the sitemap.
 SEO_ROUTES.forEach(validateRoute);
-validateSitemap();
+const sitemapUrls = validateSitemap();
+const routeLists = validateRouteLists({ projectRoot, distRoot, sitemapUrls });
+
+// The home must render its own content. If the router ever turns "/" into a
+// redirect, vite-ssg follows it during the prerender and copies the target page
+// straight into index.html — /house then ships as a byte copy of another
+// calculator, and satisfying the "must be listed" rule above becomes the bug.
+const rootHtml = readFileSync(resolve(distRoot, "index.html"), "utf8");
+const titleOf = (html) => html.match(/<title>([^<]+)<\/title>/)?.[1] ?? "";
+assert(!/<div id="app">\s*<\/div>/.test(rootHtml),
+  "Home must be prerendered, not shipped as the empty shell");
+for (const twin of ["/delay-interest", "/property-tax"]) {
+  assert(titleOf(rootHtml) !== titleOf(readFileSync(routeOutputPath(twin), "utf8")),
+    `Home must not duplicate ${twin}: identical titles mean the home has no page of its own`);
+}
 
 const notFoundPath = resolve(distRoot, "404.html");
 assert(existsSync(notFoundPath), "Missing custom 404.html output");
@@ -107,6 +120,8 @@ assert(notFoundHtml.includes('href="/house'), "404.html must contain a recovery 
 
 console.log(
   `Validated ${SEO_ROUTES.length} prerendered routes ` +
-    `(${SITEMAP_ROUTES.length} sitemap + ${PARAM_ROUTES.length} canonicalized variants) ` +
-    "and custom 404 output."
+    `(${SITEMAP_ROUTES.length} sitemap + ${PARAM_ROUTES.length} canonicalized variants), ` +
+    `router cross-check ${routeLists.staticCount} static listed / ` +
+    `${routeLists.redirectCount} redirects excluded, ` +
+    `${routeLists.llmsLinkCount} llms.txt links, and custom 404 output.`
 );

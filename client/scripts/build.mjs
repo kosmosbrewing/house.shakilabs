@@ -2,7 +2,12 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import { SEO_ROUTES, SITEMAP_ROUTES } from "./seo-routes.mjs";
+import {
+  SEO_ROUTES,
+  SITEMAP_ROUTES,
+  SITEMAP_PRIORITIES,
+  canonicalUrlFor,
+} from "./seo-routes.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
@@ -14,31 +19,16 @@ const viteSsgBin = resolve(
   process.platform === "win32" ? "vite-ssg.cmd" : "vite-ssg"
 );
 
-const basePriority = {
-  "/": "1.0",
-  "/delay-interest": "0.8",
-  "/jeonse-vs-wolse": "0.8",
-  "/brokerage-fee": "0.8",
-  "/first-home": "0.8",
-  "/housing-subscription": "0.8",
-  "/property-tax": "0.8",
-  "/capital-gains-tax": "0.9",
-  "/acquisition-tax": "0.9",
-  "/jeonse-wolse-rate": "0.8",
-  "/rental-yield": "0.8",
-  "/about": "0.4",
-  "/terms": "0.3",
-  "/privacy": "0.3",
-};
-
+// No fallback branch on purpose: an unknown route used to silently ship at 0.5,
+// which is how /jeonse-risk ended up ranked below every sibling calculator.
+// validate-static-output.mjs asserts SITEMAP_PRIORITIES covers SITEMAP_ROUTES,
+// so a missing entry is a build failure instead of a quiet demotion.
 function getRouteConfig(path) {
-  if (basePriority[path]) {
-    return {
-      changefreq: path === "/" ? "weekly" : ["about", "terms", "privacy"].some((s) => path.includes(s)) ? "monthly" : "monthly",
-      priority: basePriority[path],
-    };
+  const priority = SITEMAP_PRIORITIES[path];
+  if (!priority) {
+    throw new Error(`No sitemap priority declared for ${path} (see scripts/seo-routes.mjs)`);
   }
-  return { changefreq: "monthly", priority: "0.5" };
+  return { changefreq: path === "/" ? "weekly" : "monthly", priority };
 }
 
 function resolveBuildDate() {
@@ -54,10 +44,9 @@ function renderSitemap(buildDate) {
   // Amount-variant routes (PARAM_ROUTES) are intentionally absent: they
   // canonicalize to their base calculator, so advertising them would point
   // crawlers at URLs that immediately hand ranking signals elsewhere.
-  const baseUrl = "https://shakilabs.com/house";
   const urls = SITEMAP_ROUTES.map((path) => {
     const { changefreq, priority } = getRouteConfig(path);
-    const loc = path === "/" ? baseUrl : `${baseUrl}${path}`;
+    const loc = canonicalUrlFor(path);
     return `  <url>
     <loc>${loc}</loc>
     <lastmod>${buildDate}</lastmod>
