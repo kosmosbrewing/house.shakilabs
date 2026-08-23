@@ -28,7 +28,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <header class="border-b border-border bg-primary/8">
+  <!-- 8 is not on the Tailwind opacity scale, so the slash form emitted no rule
+       and every page shipped a header with no background. The arbitrary-value
+       syntax restores the intended tint. Do not spell a utility class out in a
+       comment here: the build gate scans raw source and reads it as a usage. -->
+  <header class="border-b border-border bg-primary/[8%]">
     <div class="container pt-2.5 pb-2.5">
       <div class="overflow-hidden">
         <div class="retro-titlebar h-[44px] border-b-0 bg-transparent px-1.5 sm:px-2">
