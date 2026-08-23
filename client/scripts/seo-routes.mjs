@@ -56,6 +56,40 @@ export const SITEMAP_ROUTES = SEO_ROUTES.filter(
   (route) => !PARAM_ROUTES.includes(route)
 );
 
+// Sitemap priority per listed route. This used to live in build.mjs behind a
+// lookup that fell back to 0.5 for anything it did not know, which made it a
+// second hand-kept copy of the route list: /jeonse-risk was never added, so a
+// full calculator shipped at 0.5 while every sibling sat at 0.8, and nothing
+// complained. Keeping the table next to SEO_ROUTES lets the build gate assert
+// that the two cover exactly the same routes, so the fallback can go away.
+export const SITEMAP_PRIORITIES = {
+  "/": "1.0",
+  "/delay-interest": "0.8",
+  "/jeonse-vs-wolse": "0.8",
+  "/jeonse-risk": "0.8",
+  "/jeonse-wolse-rate": "0.8",
+  "/brokerage-fee": "0.8",
+  "/first-home": "0.8",
+  "/housing-subscription": "0.8",
+  "/property-tax": "0.8",
+  "/capital-gains-tax": "0.9",
+  "/acquisition-tax": "0.9",
+  "/rental-yield": "0.8",
+  "/about": "0.4",
+  "/terms": "0.3",
+  "/privacy": "0.3",
+};
+
+export const CANONICAL_BASE = "https://shakilabs.com/house";
+
+// cleanUrls redirects "/house/" to "/house", so the home is addressed without a
+// trailing slash everywhere. canonical, og:url and the sitemap <loc> must all
+// derive the URL through this one helper or the cross-checks end up comparing
+// strings that were never meant to match.
+export function canonicalUrlFor(route) {
+  return route === "/" ? CANONICAL_BASE : `${CANONICAL_BASE}${route}`;
+}
+
 // Canonical target of a prerendered route: amount variants point at their base
 // calculator (e.g. /property-tax/30000 -> /property-tax); everything else is
 // self-canonical.
