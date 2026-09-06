@@ -1,3 +1,6 @@
+// 앱 전체를 대표하는 단일 "법령·조례 확인일"은 존재하지 않는다 — 계산기마다 확인일이 다르다.
+// 이 두 상수는 PublicConstants 스키마 호환을 위해 남겨 둔 값이고 화면에 렌더하지 않는다.
+// 확인일을 보여줄 자리에는 @/data/verificationDates를 쓸 것.
 export const HOUSE_DATA_UPDATED = "2026-03-15";
 export const HOUSE_DATA_VERIFIED = "2026-03-15";
 

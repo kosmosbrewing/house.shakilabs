@@ -3,6 +3,7 @@ import { RouterLink } from "vue-router";
 import SEOHead from "@/components/common/SEOHead.vue";
 import { buttonVariants } from "@/components/ui/button";
 import { useConstantsStore } from "@/stores/constants";
+import { VERIFICATION_DATES } from "@/data/verificationDates";
 
 const constantsStore = useConstantsStore();
 </script>
@@ -63,8 +64,16 @@ const constantsStore = useConstantsStore();
           각 계산기 하단의 "출처 및 기준" 영역에 근거 문서 링크와 확인일을 함께 표시하므로,
           결과를 믿기 전에 원문을 직접 열어 대조할 수 있습니다.
         </p>
+        <p class="text-body text-muted-foreground">
+          확인일은 계산기마다 다릅니다. 세법 개정과 지자체 조례 개정은 같은 날 이뤄지지 않으므로
+          하나의 날짜로 묶어 적으면 나머지가 사실과 어긋납니다. 주제별로 나눠 적습니다.
+        </p>
         <ul class="text-body text-muted-foreground space-y-1 list-disc list-inside">
-          <li>법령·조례 확인일: {{ constantsStore.feeDataUpdated }}</li>
+          <li v-for="entry in VERIFICATION_DATES" :key="entry.topic">
+            {{ entry.topic }} — {{ entry.date }} 확인 ({{ entry.basis }})
+          </li>
+        </ul>
+        <ul class="text-body text-muted-foreground space-y-1 list-disc list-inside">
           <li>보증금 지연이자 — 약정이 없으면 민법상 연 5%, 소장 등이 송달된 다음 날부터는 소송촉진법상 연 12%를 구분해 적용</li>
           <li>재산세·종합부동산세 — 공시가격에 공정시장가액비율을 적용하고, 1세대 1주택 기본공제 12억 원과 세부담 상한을 반영</li>
           <li>중개보수 — 서울시 주택 중개보수 요율표의 거래금액 구간별 상한요율·한도액 기준</li>
