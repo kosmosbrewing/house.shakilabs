@@ -174,18 +174,39 @@ describe("calculateBrokerageFee", () => {
 });
 
 describe("calculateFirstHomeBenefits", () => {
+  const base = {
+    annualIncome: 60_000_000,
+    isFirstHomeBuyer: true,
+    isRegulatedArea: false,
+    isNewlywedOrMultiChild: false,
+  };
+
   it("비규제지역 생애최초는 LTV 80%와 취득세 감면을 계산한다", () => {
-    const result = calculateFirstHomeBenefits({
-      homePrice: 500_000_000,
-      annualIncome: 60_000_000,
-      isFirstHomeBuyer: true,
-      isRegulatedArea: false,
-      isNewlywedOrMultiChild: false,
-    });
+    const result = calculateFirstHomeBenefits({ ...base, homePrice: 500_000_000 });
 
     expect(result.estimatedTaxRelief).toBe(2_000_000);
-    expect(result.didimdolLoanAmount).toBe(300_000_000);
-    expect(result.requiredCash).toBe(200_000_000);
+    // 5억 × LTV 80% = 4억이지만 생애최초 호당 한도 2.4억에 걸린다
+    expect(result.didimdolLoanAmount).toBe(240_000_000);
+    expect(result.requiredCash).toBe(260_000_000);
+  });
+
+  // 주택도시기금 「내집마련디딤돌대출」 대출한도:
+  // "일반 2억원(생애최초 주택구입자 2.4억원, 신혼가구 또는 2자녀 이상 가구 3.2억원) 이내"
+  // 3억/4억은 '25.6.27. 이전 계약 체결 건에만 적용되는 종전 한도다.
+  it("생애최초 한도는 2.4억, 신혼·2자녀 이상은 3.2억이다", () => {
+    expect(calculateFirstHomeBenefits({ ...base, homePrice: 500_000_000 }).didimdolCap).toBe(240_000_000);
+    expect(
+      calculateFirstHomeBenefits({ ...base, homePrice: 500_000_000, isNewlywedOrMultiChild: true }).didimdolCap
+    ).toBe(320_000_000);
+    expect(
+      calculateFirstHomeBenefits({ ...base, homePrice: 500_000_000, isNewlywedOrMultiChild: true }).didimdolLoanAmount
+    ).toBe(320_000_000);
+  });
+
+  it("LTV가 한도보다 작으면 LTV가 대출액을 정한다", () => {
+    const result = calculateFirstHomeBenefits({ ...base, homePrice: 200_000_000 });
+    expect(result.didimdolLoanAmount).toBe(160_000_000);
+    expect(result.requiredCash).toBe(40_000_000);
   });
 });
 
@@ -329,6 +350,47 @@ describe("calculateCapitalGainsTax", () => {
     expect(result.longTermDeductionRate).toBe(0.06);
     expect(result.taxRate).toBeLessThan(0.45);
     expect(result.totalTax).toBeGreaterThan(0);
+  });
+
+  // 소득세법 제95조② 단서 + 시행령 제159조의4:
+  // 표 2(보유+거주 최대 80%)는 "보유기간 중 거주기간이 2년 이상"인 1세대 1주택에만 쓴다.
+  // 거주 요건을 빼고 표 2를 적용하면 전세를 준 장기보유 사례에서 세금이 과소 추정된다.
+  it("1주택이라도 거주 2년 미만이면 표 1(최대 30%)을 적용한다", () => {
+    const input = {
+      sellPrice: 1_500_000_000,
+      buyPrice: 800_000_000,
+      expenseRate: 0.03,
+      isOneHousehold: true,
+      isRegulatedArea: false,
+    };
+
+    const noResidence = calculateCapitalGainsTax({ ...input, holdingYears: 20, residenceYears: 0 });
+    expect(noResidence.longTermDeductionTable).toBe("1");
+    expect(noResidence.longTermDeductionRate).toBe(0.3);
+
+    const oneYear = calculateCapitalGainsTax({ ...input, holdingYears: 10, residenceYears: 1 });
+    expect(oneYear.longTermDeductionTable).toBe("1");
+    expect(oneYear.longTermDeductionRate).toBeCloseTo(0.2, 10);
+
+    const twoYears = calculateCapitalGainsTax({ ...input, holdingYears: 10, residenceYears: 2 });
+    expect(twoYears.longTermDeductionTable).toBe("2");
+    expect(twoYears.longTermDeductionRate).toBeCloseTo(0.48, 10);
+    // 거주 요건을 채우면 세금이 줄어야 한다 — 반대로 나오면 표 판정이 뒤집힌 것이다
+    expect(twoYears.totalTax).toBeLessThan(oneYear.totalTax);
+  });
+
+  it("표 2 안에서는 보유·거주가 대칭이다", () => {
+    const input = {
+      sellPrice: 1_500_000_000,
+      buyPrice: 800_000_000,
+      expenseRate: 0.03,
+      isOneHousehold: true,
+      isRegulatedArea: false,
+    };
+    const holdHeavy = calculateCapitalGainsTax({ ...input, holdingYears: 10, residenceYears: 3 });
+    const resideHeavy = calculateCapitalGainsTax({ ...input, holdingYears: 3, residenceYears: 10 });
+    expect(holdHeavy.longTermDeductionRate).toBeCloseTo(resideHeavy.longTermDeductionRate, 10);
+    expect(holdHeavy.totalTax).toBe(resideHeavy.totalTax);
   });
 
   it("지방소득세는 양도소득세의 10%", () => {

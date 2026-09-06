@@ -17,7 +17,12 @@ import {
 } from "@/utils/housingCalculator";
 import { RENT_BROKERAGE_TIERS, SALE_BROKERAGE_TIERS } from "../brokerageRates";
 import { ACQUISITION_TAX_UPDATED } from "../acquisitionTax";
-import { CAPITAL_GAINS_TAX_UPDATED } from "../capitalGainsTax";
+import {
+  CAPITAL_GAINS_TAX_UPDATED,
+  GENERAL_LONG_HOLD_MAX,
+  GENERAL_LONG_HOLD_RATE_PER_YEAR,
+  ONE_HOUSE_TABLE2_MIN_RESIDENCE_YEARS,
+} from "../capitalGainsTax";
 import { FIRST_HOME_UPDATED } from "../firstHome";
 import { PROPERTY_TAX_UPDATED, SPECIAL_RATE_THRESHOLD } from "../propertyTax";
 import { RENTAL_YIELD_UPDATED } from "../rentalYield";
@@ -259,11 +264,25 @@ describe("파생 다이제스트 — 인용 수치 엔진 재계산 일치", () 
     expect(cg({ sellPrice: first - SCAN_STEP }).totalTax).toBe(0);
     expect(CAPITAL_GAINS_DIGEST[1].h2).toContain(manwon(first - SCAN_STEP));
 
+    // 표 2(보유+거주 최대 80%)는 거주 2년 이상인 1세대 1주택만 쓴다 — 소득세법 시행령 제159조의4.
+    // 거주 요건을 빼고 표 2를 적용하면 전세를 준 장기보유 사례에서 세금이 과소 추정된다.
     const none = cg({ sellPrice: HIGH_SALE, holdingYears: 10, residenceYears: 0 });
-    const full = cg({ sellPrice: HIGH_SALE, holdingYears: 10, residenceYears: 10 });
+    const justUnder = cg({ sellPrice: HIGH_SALE, holdingYears: 10, residenceYears: ONE_HOUSE_TABLE2_MIN_RESIDENCE_YEARS - 1 });
+    const justMet = cg({ sellPrice: HIGH_SALE, holdingYears: 10, residenceYears: ONE_HOUSE_TABLE2_MIN_RESIDENCE_YEARS });
+    expect(none.longTermDeductionTable).toBe("1");
+    expect(justUnder.longTermDeductionTable).toBe("1");
+    expect(justMet.longTermDeductionTable).toBe("2");
+    expect(none.longTermDeductionRate).toBeCloseTo(10 * GENERAL_LONG_HOLD_RATE_PER_YEAR, 10);
+    expect(justMet.totalTax).toBeLessThan(justUnder.totalTax);
     expect(bodyOf(CAPITAL_GAINS_DIGEST, 2)).toContain(won(none.totalTax));
-    expect(bodyOf(CAPITAL_GAINS_DIGEST, 2)).toContain(won(full.totalTax));
-    // 보유·거주는 대칭이라 맞바꿔도 세액이 같다
+    expect(bodyOf(CAPITAL_GAINS_DIGEST, 2)).toContain(won(justMet.totalTax));
+    // 거주 없이 보유만 길게 가면 표 1 상한 30%에서 멈춘다 — 15년이든 20년이든 세액이 같다
+    const holdOnly20 = cg({ sellPrice: HIGH_SALE, holdingYears: 20, residenceYears: 0 });
+    const holdOnly15 = cg({ sellPrice: HIGH_SALE, holdingYears: 15, residenceYears: 0 });
+    expect(holdOnly20.longTermDeductionRate).toBe(GENERAL_LONG_HOLD_MAX);
+    expect(holdOnly20.totalTax).toBe(holdOnly15.totalTax);
+    expect(bodyOf(CAPITAL_GAINS_DIGEST, 3)).toContain(won(holdOnly20.totalTax));
+    // 표 2 안에서는 보유·거주가 대칭이라 맞바꿔도 세액이 같다
     expect(cg({ sellPrice: HIGH_SALE, holdingYears: 10, residenceYears: 3 }).totalTax)
       .toBe(cg({ sellPrice: HIGH_SALE, holdingYears: 3, residenceYears: 10 }).totalTax);
     expect(bodyOf(CAPITAL_GAINS_DIGEST, 4)).toContain(won(cg({ sellPrice: HIGH_SALE, isOneHousehold: false }).totalTax));

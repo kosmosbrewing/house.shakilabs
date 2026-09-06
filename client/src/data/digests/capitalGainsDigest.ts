@@ -15,11 +15,12 @@ import {
   ONE_HOUSE_HOLD_MAX,
   ONE_HOUSE_HOLD_RATE_PER_YEAR,
   ONE_HOUSE_RESIDE_MAX,
+  ONE_HOUSE_TABLE2_MIN_RESIDENCE_YEARS,
   SHORT_TERM_RATES,
 } from "../capitalGainsTax";
 import { DEFAULT_CAPITAL_GAINS_TAX_INPUT } from "@/lib/housingValidators";
 import { calculateCapitalGainsTax, type CapitalGainsTaxInput } from "@/utils/housingCalculator";
-import { type Finding, delta, manwon, pct, pp, times, won, years } from "./format";
+import { type Finding, manwon, pct, pp, times, won, years } from "./format";
 
 export const cg = (patch: Partial<CapitalGainsTaxInput>) =>
   calculateCapitalGainsTax({ ...DEFAULT_CAPITAL_GAINS_TAX_INPUT, ...patch });
@@ -65,16 +66,18 @@ function taxableRatioRamp(): Finding {
 }
 
 function residenceAxis(): Finding {
+  const R = ONE_HOUSE_TABLE2_MIN_RESIDENCE_YEARS;
   const none = cg({ sellPrice: HIGH_SALE, holdingYears: 10, residenceYears: 0 });
+  const justUnder = cg({ sellPrice: HIGH_SALE, holdingYears: 10, residenceYears: R - 1 });
+  const justMet = cg({ sellPrice: HIGH_SALE, holdingYears: 10, residenceYears: R });
   const full = cg({ sellPrice: HIGH_SALE, holdingYears: 10, residenceYears: 10 });
-  const half = cg({ sellPrice: HIGH_SALE, holdingYears: 10, residenceYears: 5 });
   return {
-    h2: `보유 ${years(10)}이 같아도 거주 ${years(10)} 여부가 세금을 ${delta(none.totalTax, full.totalTax)} 바꾼다`,
+    h2: `보유 ${years(10)}이 같아도 거주 ${years(R)}을 채우는 순간 공제율이 ${pct(justUnder.longTermDeductionRate, 0)}에서 ${pct(justMet.longTermDeductionRate, 0)}로 뛴다`,
     body:
-      `양도가 ${manwon(HIGH_SALE)}·취득가 ${manwon(DEFAULT_CAPITAL_GAINS_TAX_INPUT.buyPrice)}·보유 ${years(10)} 조건에서 거주 기간만 0·5·10년으로 바꾸면 공제율이 ${pct(none.longTermDeductionRate, 0)}, ${pct(half.longTermDeductionRate, 0)}, ${pct(full.longTermDeductionRate, 0)}로 올라갑니다. ` +
-      `세금은 ${won(none.totalTax)}, ${won(half.totalTax)}, ${won(full.totalTax)}입니다. 거주 1년이 평균 ${won((none.totalTax - full.totalTax) / 10)}씩 깎는 셈인데, 실제로는 균등하지 않습니다 — 앞의 5년이 ${won(none.totalTax - half.totalTax)}, 뒤의 5년이 ${won(half.totalTax - full.totalTax)}을 줄입니다. ` +
-      `과세표준이 줄면서 누진세율 구간까지 내려가기 때문입니다. 실제로 거주 0년일 때 적용 구간은 "${none.taxRateLabel}"이지만 거주 10년에서는 "${full.taxRateLabel}"으로 내려갑니다. ` +
-      `같은 집을 같은 기간 보유했어도 전세를 준 기간이 길면 이 축의 공제를 받지 못하므로, 매도 시점을 정하기 전에 거주 기간부터 확인해야 합니다.`,
+      `장기보유특별공제에는 표가 두 개 있습니다. 1세대 1주택이면서 거주기간이 ${years(R)} 이상일 때만 보유·거주를 합산하는 표 2를 쓰고, 그 요건을 못 채우면 1주택이라도 보유기간만 세는 표 1이 적용됩니다. ` +
+      `양도가 ${manwon(HIGH_SALE)}·취득가 ${manwon(DEFAULT_CAPITAL_GAINS_TAX_INPUT.buyPrice)}·보유 ${years(10)} 조건에서 거주만 ${years(R - 1)}으로 두면 표 ${justUnder.longTermDeductionTable}이 적용돼 공제율 ${pct(justUnder.longTermDeductionRate, 0)}, 세금 ${won(justUnder.totalTax)}입니다. 거주를 ${years(R)}으로 한 해만 더 채우면 표 ${justMet.longTermDeductionTable}로 바뀌어 ${pct(justMet.longTermDeductionRate, 0)}·${won(justMet.totalTax)}이 됩니다. ` +
+      `한 해 차이가 만드는 감소액이 ${won(justUnder.totalTax - justMet.totalTax)}인데, 그 뒤 거주를 ${years(10)}까지 8년 더 늘려도 ${won(justMet.totalTax - full.totalTax)}이 줄 뿐입니다. 거주 축은 균등하게 붙는 게 아니라 ${years(R)}이라는 문턱에서 한 번에 열립니다. ` +
+      `전세를 준 채 보유만 한 경우(거주 ${years(0)})는 표 ${none.longTermDeductionTable} 그대로라 세금이 ${won(none.totalTax)}으로, 적용 세율 구간도 "${none.taxRateLabel}"에서 "${full.taxRateLabel}"까지 벌어집니다. 매도 시점을 잡기 전에 전입 이력부터 확인해야 하는 이유입니다.`,
   };
 }
 
@@ -82,13 +85,14 @@ function holdResideSymmetry(): Finding {
   const holdHeavy = cg({ sellPrice: HIGH_SALE, holdingYears: 10, residenceYears: 3 });
   const resideHeavy = cg({ sellPrice: HIGH_SALE, holdingYears: 3, residenceYears: 10 });
   const holdOnly = cg({ sellPrice: HIGH_SALE, holdingYears: 20, residenceYears: 0 });
+  const holdOnly15 = cg({ sellPrice: HIGH_SALE, holdingYears: 15, residenceYears: 0 });
   return {
     h2: `보유 ${years(10)}·거주 ${years(3)}과 보유 ${years(3)}·거주 ${years(10)}은 세금이 1원도 다르지 않다`,
     body:
-      `1세대 1주택 장기보유특별공제는 보유와 거주가 각각 연 ${pct(ONE_HOUSE_HOLD_RATE_PER_YEAR, 0)}, 각각 상한 ${pct(ONE_HOUSE_HOLD_MAX, 0)}로 완전히 대칭입니다. ` +
-      `양도가 ${manwon(HIGH_SALE)} 기준으로 두 조합을 돌리면 공제율이 ${pct(holdHeavy.longTermDeductionRate, 0)}로 같고 세금도 둘 다 ${won(resideHeavy.totalTax)}입니다. ` +
-      `대칭이 깨지는 곳은 한쪽에만 기간이 쏠릴 때입니다. 거주 없이 보유만 ${years(20)}을 채우면 공제율은 상한 ${pct(ONE_HOUSE_HOLD_MAX, 0)}에서 멈춰 세금이 ${won(holdOnly.totalTax)}으로, 두 축을 합쳐 ${pct(holdHeavy.longTermDeductionRate, 0)}를 만든 경우보다 ${won(holdOnly.totalTax - holdHeavy.totalTax)} 많습니다. ` +
-      `보유 기간을 더 늘려도 이 차이는 줄지 않습니다. 거주 축의 상한 ${pct(ONE_HOUSE_RESIDE_MAX, 0)}는 살아본 적이 없으면 영원히 잠겨 있는 몫이기 때문입니다.`,
+      `표 2 안에서는 보유와 거주가 각각 연 ${pct(ONE_HOUSE_HOLD_RATE_PER_YEAR, 0)}, 각각 상한 ${pct(ONE_HOUSE_HOLD_MAX, 0)}로 완전히 대칭입니다. ` +
+      `양도가 ${manwon(HIGH_SALE)} 기준으로 두 조합을 돌리면 공제율이 ${pct(holdHeavy.longTermDeductionRate, 0)}로 같고 세금도 둘 다 ${won(resideHeavy.totalTax)}입니다. 두 축의 합만 같으면 어느 쪽에 쏠렸는지는 결과에 남지 않습니다. ` +
+      `대칭이 깨지는 곳은 거주가 아예 없을 때입니다. 거주 없이 보유만 ${years(20)}을 채우면 표 2를 쓸 자격 자체가 없어 표 ${holdOnly.longTermDeductionTable}로 내려가고, 공제율은 그 표의 상한 ${pct(holdOnly.longTermDeductionRate, 0)}에서 멈춰 세금이 ${won(holdOnly.totalTax)}이 됩니다. 두 축을 합쳐 ${pct(holdHeavy.longTermDeductionRate, 0)}를 만든 경우보다 ${won(holdOnly.totalTax - holdHeavy.totalTax)} 많습니다. ` +
+      `보유를 더 늘려도 이 차이는 줄지 않습니다. ${years(15)}이면 이미 ${pct(holdOnly15.longTermDeductionRate, 0)} 상한에 닿아 세금이 ${won(holdOnly15.totalTax)}으로 ${years(20)}일 때와 같고, 거주 축의 상한 ${pct(ONE_HOUSE_RESIDE_MAX, 0)}는 살아본 적이 없으면 영원히 잠겨 있기 때문입니다.`,
   };
 }
 
@@ -184,6 +188,7 @@ export const CAPITAL_GAINS_BASIS: Finding = {
   h2: "위 발견의 계산 기준",
   body:
     `위 금액은 전부 이 페이지의 양도소득세 계산기에 조건을 넣어 실행한 값이며, 따로 적지 않은 항목은 기본값(취득가 ${manwon(DEFAULT_CAPITAL_GAINS_TAX_INPUT.buyPrice)}, 필요경비율 ${pct(DEFAULT_CAPITAL_GAINS_TAX_INPUT.expenseRate, 0)}, 보유 ${years(DEFAULT_CAPITAL_GAINS_TAX_INPUT.holdingYears)}, 거주 ${years(DEFAULT_CAPITAL_GAINS_TAX_INPUT.residenceYears)}, 1세대 1주택, 비조정지역)을 씁니다. ` +
-    `보유·거주 기간은 계산 편의를 위해 소수점 단위로 입력할 수 있게 되어 있지만 실제 판정은 등기·전입 일자로 하며, 세율·공제율은 소득세법 기준 ${CAPITAL_GAINS_TAX_UPDATED} 확인분입니다. ` +
+    `장기보유특별공제는 거주기간 ${ONE_HOUSE_TABLE2_MIN_RESIDENCE_YEARS}년 이상인 1세대 1주택에만 표 2(보유+거주 최대 ${pct(ONE_HOUSE_HOLD_MAX + ONE_HOUSE_RESIDE_MAX, 0)})를 적용하고 그 밖에는 표 1(최대 ${pct(0.3, 0)})을 적용합니다(소득세법 제95조②·시행령 제159조의4, ${CAPITAL_GAINS_TAX_UPDATED} 확인분). `
+    + `다만 법령의 두 표는 "3년 이상 4년 미만" 같은 연 단위 구간표인데 이 계산기는 공제율을 연율로 곱해 계산하므로, 보유·거주를 소수점으로 넣으면 구간표보다 조금 높게 나옵니다. 실제 판정은 등기·전입 일자 기준입니다. ` +
     `이 계산기는 1세대 1주택 비과세와 장기보유특별공제, 지방소득세까지만 모델링합니다. 상속·증여 취득, 부담부증여, 다주택 중과, 감면 특례, 분양권·조합원입주권은 반영하지 않으므로 해당 사례에서는 실제 세액이 위 수치와 다르게 나옵니다.`,
 };

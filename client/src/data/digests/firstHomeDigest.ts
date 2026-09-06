@@ -5,7 +5,12 @@
 // difference disappears, the newlywed cap starts paying, and the relief stops
 // covering the bill.
 
-import { FIRST_HOME_UPDATED } from "../firstHome";
+import {
+  DIDIMDOL_CAP_FIRST_TIME,
+  DIDIMDOL_CAP_LEGACY_FIRST_TIME,
+  DIDIMDOL_CAP_NEWLYWED_OR_MULTI_CHILD,
+  FIRST_HOME_UPDATED,
+} from "../firstHome";
 import { DEFAULT_FIRST_HOME_INPUT } from "@/lib/housingValidators";
 import { calculateFirstHomeBenefits, type FirstHomeBenefitInput } from "@/utils/housingCalculator";
 import { type Finding, eun, manwon, pct, pp, times, won } from "./format";
@@ -74,7 +79,8 @@ function incomeCutoff(): Finding {
 
 function ltvVanishes(): Finding {
   const price = ltvIrrelevantPrice();
-  const sample = 375_000_000;
+  // 한도(2.4억) 아래여야 규제/비규제 LTV 차이가 결과에 실제로 남는다 — 위쪽은 양쪽 다 한도에 걸린다
+  const sample = 300_000_000;
   const plain = fh({ homePrice: sample });
   const regulated = fh({ homePrice: sample, isRegulatedArea: true });
   const atPrice = fh({ homePrice: price });
@@ -120,18 +126,18 @@ function reliefShare(): Finding {
 }
 
 function requiredCashLadder(): Finding {
-  const rungs = [300_000_000, 600_000_000, 900_000_000].map((homePrice) => ({ homePrice, r: fh({ homePrice }) }));
+  const rungs = [200_000_000, 300_000_000, 600_000_000].map((homePrice) => ({ homePrice, r: fh({ homePrice }) }));
   const [low, mid, high] = rungs;
   const text = rungs
     .map(({ homePrice, r }) => `${manwon(homePrice)} 대출 ${won(r.didimdolLoanAmount)}·현금 ${won(r.requiredCash)}`)
     .join(", ");
   return {
-    h2: `한도에 걸린 뒤로는 주택가액이 ${manwon(300_000_000)} 오르면 필요 현금도 정확히 ${won(high.r.requiredCash - mid.r.requiredCash)} 늘어난다`,
+    h2: `한도에 걸린 뒤로는 주택가액이 ${manwon(high.homePrice - mid.homePrice)} 오르면 필요 현금도 정확히 ${won(high.r.requiredCash - mid.r.requiredCash)} 늘어난다`,
     body:
-      `대출 한도가 ${manwon(low.r.didimdolCap)}에서 멈추기 때문에, 그 한도에 도달한 뒤로는 가격 상승분이 전액 현금 부담이 됩니다. ` +
-      `계산해 보면 ${text}입니다. ${manwon(low.homePrice)}에서는 LTV ${pct(low.r.ltvLimit, 0)}가 먼저 걸려 대출이 ${won(low.r.didimdolLoanAmount)}이지만, ${manwon(mid.homePrice)}부터는 한도가 걸려 대출이 ${won(mid.r.didimdolLoanAmount)}으로 고정됩니다. ` +
-      `그래서 ${manwon(low.homePrice)}→${manwon(mid.homePrice)} 구간에서 현금이 ${won(mid.r.requiredCash - low.r.requiredCash)} 늘어나는 동안 ${manwon(mid.homePrice)}→${manwon(high.homePrice)} 구간에서는 ${won(high.r.requiredCash - mid.r.requiredCash)}, 즉 가격 상승분 전부가 현금으로 옮겨 갑니다. ` +
-      `주택가액 대비 대출 비율로 보면 ${pct(low.r.didimdolLoanAmount / low.homePrice)}에서 ${pct(high.r.didimdolLoanAmount / high.homePrice)}로 떨어져, 가격이 높을수록 이 제도의 지렛대 효과가 약해집니다.`,
+      `이 사다리는 디딤돌 한도 ${manwon(low.r.didimdolCap)}·LTV ${pct(low.r.ltvLimit, 0)}(비규제지역 생애최초)를 전제로 계산기를 돌린 값이고, 계산기가 디딤돌의 담보주택 평가액 상한을 모델링하지 않는다는 점을 감안하고 읽어야 합니다. ` +
+      `계산해 보면 ${text}입니다. ${manwon(low.homePrice)}에서는 LTV가 먼저 걸려 대출이 ${won(low.r.didimdolLoanAmount)}에 그치지만, ${manwon(mid.homePrice)}부터는 한도 ${manwon(mid.r.didimdolCap)}에 닿아 대출이 ${won(mid.r.didimdolLoanAmount)}으로 고정됩니다. ` +
+      `그래서 ${manwon(low.homePrice)}→${manwon(mid.homePrice)} 구간에서 현금이 ${won(mid.r.requiredCash - low.r.requiredCash)} 느는 동안 ${manwon(mid.homePrice)}→${manwon(high.homePrice)} 구간에서는 ${won(high.r.requiredCash - mid.r.requiredCash)}, 즉 가격 상승분 전부가 현금으로 옮겨 갑니다. ` +
+      `주택가액 대비 대출 비율로 보면 ${pct(low.r.didimdolLoanAmount / low.homePrice)}에서 ${pct(high.r.didimdolLoanAmount / high.homePrice)}로 떨어집니다. 다만 실제 디딤돌은 담보주택 평가액이 일정 금액 이하인 주택만 대상이라, 위 사다리의 높은 칸은 계산기 안에서만 성립하는 숫자입니다.`,
   };
 }
 
@@ -195,5 +201,5 @@ export const FIRST_HOME_BASIS: Finding = {
   body:
     `위 수치는 전부 이 페이지의 생애최초 주택 혜택 계산기를 돌린 값이며, 따로 적지 않은 조건은 기본값(주택가액 ${manwon(DEFAULT_FIRST_HOME_INPUT.homePrice)}, 부부합산 연소득 ${manwon(DEFAULT_FIRST_HOME_INPUT.annualIncome)}, 생애최초, 비규제지역, 신혼·다자녀 아님)을 씁니다. 감면·한도 기준은 ${FIRST_HOME_UPDATED} 확인분입니다. ` +
     `이 계산기는 취득세 감면 상한과 디딤돌대출 한도만 모델링한 참고용 추정입니다. 주택 면적·소재지 요건, 무주택 세대주 판정, 실거주 의무, 대출 기간과 상환 방식, 방공제(소액임차보증금) 같은 실제 심사 항목은 반영되어 있지 않아 실제 승인 금액은 위 수치보다 작을 수 있습니다. ` +
-    `특히 대출 한도는 주택가액만으로 계산하므로 고가 주택에서도 한도가 그대로 나오지만, 실제 기금 대출에는 주택가액 상한이 별도로 있습니다. 정확한 자격과 한도는 주택도시기금 창구에서 확인하시기 바랍니다.`,
+    `특히 대출 한도는 주택가액만으로 계산하므로 고가 주택에서도 한도가 그대로 나오지만, 실제 기금 대출에는 담보주택 평가액 상한이 따로 있어 그 위의 주택은 애초에 대상이 아닙니다. 상품 한도 ${manwon(DIDIMDOL_CAP_FIRST_TIME)}(신혼·2자녀 이상 ${manwon(DIDIMDOL_CAP_NEWLYWED_OR_MULTI_CHILD)})은 ${FIRST_HOME_UPDATED} 확인분이며, 2025년 6월 27일 이전에 계약을 체결한 건에는 종전 한도 ${manwon(DIDIMDOL_CAP_LEGACY_FIRST_TIME)}이 적용됩니다. 정확한 자격과 한도는 주택도시기금 창구에서 확인하시기 바랍니다.`,
 };

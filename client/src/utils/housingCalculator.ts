@@ -25,8 +25,14 @@ import {
   ONE_HOUSE_LONG_HOLD_MIN_YEARS,
   ONE_HOUSE_RESIDE_MAX,
   ONE_HOUSE_RESIDE_RATE_PER_YEAR,
+  ONE_HOUSE_TABLE2_MIN_RESIDENCE_YEARS,
   SHORT_TERM_RATES,
 } from "@/data/capitalGainsTax";
+import {
+  DIDIMDOL_CAP_FIRST_TIME,
+  DIDIMDOL_CAP_NEWLYWED_OR_MULTI_CHILD,
+  DIDIMDOL_INCOME_LIMIT,
+} from "@/data/firstHome";
 import { DEPOSIT_ADJUST_STEPS } from "@/data/jeonseWolseRate";
 export { calculatePropertyTax } from "@/utils/propertyTaxCalculator";
 export type { HousingType, PropertyTaxInput } from "@/utils/propertyTaxCalculator";
@@ -154,9 +160,11 @@ export function calculateFirstHomeBenefits(input: FirstHomeBenefitInput) {
     input.isFirstHomeBuyer && input.homePrice <= 1_200_000_000
       ? Math.min(acquisitionTax, 2_000_000)
       : 0;
-  const didimdolEligible = input.isFirstHomeBuyer && input.annualIncome <= 70_000_000;
+  const didimdolEligible = input.isFirstHomeBuyer && input.annualIncome <= DIDIMDOL_INCOME_LIMIT;
   const ltvLimit = input.isRegulatedArea ? 0.7 : 0.8;
-  const didimdolCap = input.isNewlywedOrMultiChild ? 400_000_000 : 300_000_000;
+  const didimdolCap = input.isNewlywedOrMultiChild
+    ? DIDIMDOL_CAP_NEWLYWED_OR_MULTI_CHILD
+    : DIDIMDOL_CAP_FIRST_TIME;
   const didimdolLoanAmount = didimdolEligible
     ? Math.min(roundWon(input.homePrice * ltvLimit), didimdolCap)
     : 0;
@@ -221,8 +229,20 @@ export interface CapitalGainsTaxInput {
   isRegulatedArea: boolean;
 }
 
+/**
+ * 장기보유특별공제율 — 표 2를 쓸 자격이 있는지부터 판정한다.
+ *
+ * 소득세법 제95조② 본문은 표 1(연 2%·상한 30%)을 원칙으로 두고, 단서에서만
+ * "대통령령으로 정하는 1세대 1주택"에 표 2(보유+거주 합산 최대 80%)를 허용한다.
+ * 그 대통령령(시행령 제159조의4)이 "보유기간 중 거주기간이 2년 이상"을 요구하므로,
+ * 1주택이라도 거주 2년을 못 채우면 표 2가 아니라 표 1이다.
+ * 거주 요건을 빼고 표 2를 적용하면 전세를 준 장기보유 사례에서 세금이 과소 추정된다.
+ */
 function calcLongTermDeductionRate(input: CapitalGainsTaxInput): number {
-  if (input.isOneHousehold) {
+  const usesTable2 = input.isOneHousehold
+    && input.residenceYears >= ONE_HOUSE_TABLE2_MIN_RESIDENCE_YEARS;
+
+  if (usesTable2) {
     if (input.holdingYears < ONE_HOUSE_LONG_HOLD_MIN_YEARS) return 0;
     const holdRate = Math.min(input.holdingYears * ONE_HOUSE_HOLD_RATE_PER_YEAR, ONE_HOUSE_HOLD_MAX);
     const resideRate = Math.min(input.residenceYears * ONE_HOUSE_RESIDE_RATE_PER_YEAR, ONE_HOUSE_RESIDE_MAX);
@@ -256,7 +276,9 @@ export function calculateCapitalGainsTax(input: CapitalGainsTaxInput) {
     taxableCapitalGain = roundWon(capitalGain * taxableRatio);
   }
 
-  // 장기보유특별공제
+  // 장기보유특별공제 — 어느 표를 적용했는지도 함께 돌려준다(화면·산문에서 근거를 밝히기 위함)
+  const usesTable2 = input.isOneHousehold
+    && input.residenceYears >= ONE_HOUSE_TABLE2_MIN_RESIDENCE_YEARS;
   const longTermDeductionRate = taxableCapitalGain > 0 ? calcLongTermDeductionRate(input) : 0;
   const longTermDeduction = roundWon(taxableCapitalGain * longTermDeductionRate);
 
@@ -304,6 +326,7 @@ export function calculateCapitalGainsTax(input: CapitalGainsTaxInput) {
     taxableCapitalGain,
     longTermDeductionRate,
     longTermDeduction,
+    longTermDeductionTable: usesTable2 ? ("2" as const) : ("1" as const),
     taxableGain,
     basicDeduction,
     taxBase,

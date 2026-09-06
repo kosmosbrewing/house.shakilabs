@@ -1,6 +1,6 @@
 // 양도소득세 관련 세율·공제·상수 (2026년 기준)
 
-export const CAPITAL_GAINS_TAX_UPDATED = "2026-03-19";
+export const CAPITAL_GAINS_TAX_UPDATED = "2026-09-06";
 
 // ── 1세대1주택 비과세 기준 (2022.1.1 이후 양도분) ──
 export const ONE_HOUSE_EXEMPT_THRESHOLD = 1_200_000_000;
@@ -34,19 +34,32 @@ export const INCOME_TAX_TIERS: IncomeTaxTier[] = [
   { min: 1_000_000_000, max: null, rate: 0.45, deduction: 65_940_000, label: "10억원 초과" },
 ];
 
-// ── 장기보유특별공제: 일반 (소득세법 제95조②) ──
-// 보유 3년 이상: 연 2%, 최대 30% (15년)
+// ── 장기보유특별공제: 표 1 (소득세법 제95조② 본문) ──
+// 보유 3년 이상 4년 미만 6%부터 15년 이상 30%까지 연 2%씩 — 표를 그대로 옮기면 연 2%·상한 30%다.
 export const GENERAL_LONG_HOLD_RATE_PER_YEAR = 0.02;
 export const GENERAL_LONG_HOLD_MAX = 0.3;
 export const GENERAL_LONG_HOLD_MIN_YEARS = 3;
 
-// ── 장기보유특별공제: 1세대1주택 (소득세법 제95조②) ──
-// 보유: 연 4%, 최대 40% / 거주: 연 4%, 최대 40% → 합산 최대 80%
+// ── 장기보유특별공제: 표 2 (소득세법 제95조② 단서, 1세대 1주택) ──
+// 보유 3~4년 12%부터 10년 이상 40%까지 연 4%, 거주 2~3년 8%부터 10년 이상 40%까지 연 4%.
+// 거주기간별 공제는 표 2에서도 "2년 이상 3년 미만"부터 시작하므로 거주 1년의 공제는 0이다.
 export const ONE_HOUSE_HOLD_RATE_PER_YEAR = 0.04;
 export const ONE_HOUSE_HOLD_MAX = 0.4;
 export const ONE_HOUSE_RESIDE_RATE_PER_YEAR = 0.04;
 export const ONE_HOUSE_RESIDE_MAX = 0.4;
 export const ONE_HOUSE_LONG_HOLD_MIN_YEARS = 3;
+
+/**
+ * 표 2를 쓰려면 거주기간이 2년 이상이어야 한다 — 소득세법 시행령 제159조의4.
+ *
+ * 원문: "법 제95조제2항 표 외의 부분 단서 … 에서 "대통령령으로 정하는 1세대 1주택"이란
+ *        각각 1세대가 양도일 … 현재 국내에 1주택 … 을 보유하고 보유기간 중 거주기간이
+ *        2년 이상인 것을 말한다."
+ *
+ * 즉 1주택이라도 거주 2년을 못 채우면 표 2(최대 80%)가 아니라 표 1(최대 30%)이 적용된다.
+ * 이 요건을 빠뜨리면 거주 없이 오래 보유한 사례에서 세금을 과소 추정하게 된다.
+ */
+export const ONE_HOUSE_TABLE2_MIN_RESIDENCE_YEARS = 2;
 
 // ── 프리셋 ──
 export const SELL_PRICE_PRESETS = [
@@ -64,6 +77,11 @@ export const CAPITAL_GAINS_TAX_SOURCES = [
     basis: "양도소득세 과세 대상, 세율, 장기보유특별공제",
   },
   {
+    name: "소득세법 시행령 제159조의4",
+    url: "https://www.law.go.kr/법령/소득세법 시행령/제159조의4",
+    basis: "장기보유특별공제 표 2 적용 대상 1세대 1주택의 거주기간 2년 이상 요건",
+  },
+  {
     name: "국세청 양도소득세 안내",
     url: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2312&cntntsId=7711",
     basis: "1세대1주택 비과세 요건, 장기보유특별공제율",
@@ -78,7 +96,7 @@ export const CAPITAL_GAINS_TAX_FAQS = [
   },
   {
     q: "장기보유특별공제는 어떻게 적용되나요?",
-    a: "일반: 3년 이상 보유 시 연 2%, 최대 30%. 1세대 1주택: 보유 연 4%(최대 40%) + 거주 연 4%(최대 40%) = 최대 80% 공제됩니다.",
+    a: "표 1(3년 이상 보유 시 연 2%, 최대 30%)이 원칙이고, 1세대 1주택이면서 보유기간 중 거주기간이 2년 이상이면 표 2(보유 연 4% 최대 40% + 거주 연 4% 최대 40% = 최대 80%)가 적용됩니다. 1주택이라도 거주 2년을 채우지 못하면 표 2가 아니라 표 1을 적용하므로 최대 30%에 그칩니다.",
   },
   {
     q: "2년 미만 보유하면 세율이 높아지나요?",
