@@ -3,6 +3,7 @@ import { DEFAULT_DELAY_INTEREST_RATE } from "@/data/delayInterest";
 import type { BrokerageDealType } from "@/data/brokerageRates";
 import type { HomeCount } from "@/data/acquisitionTax";
 import { LEGAL_CONVERSION_RATE_CAP } from "@/data/jeonseWolseRate";
+import type { JeonseRiskInput } from "@/utils/jeonseRiskCalculator";
 import type {
   AcquisitionTaxInput,
   BrokerageFeeInput,
@@ -44,6 +45,15 @@ export const DEFAULT_FIRST_HOME_INPUT: FirstHomeBenefitInput = {
   isFirstHomeBuyer: true,
   isRegulatedArea: false,
   isNewlywedOrMultiChild: false,
+};
+
+// 깡통전세 진단 기본값 — 뷰의 ref 초기값이 여기서 나온다. 화면에 직접 리터럴을 적어 두면
+// 다이제스트가 "화면 기본값과 같은 조건"이라고 말할 근거가 코드 어디에도 남지 않는다.
+export const DEFAULT_JEONSE_RISK_INPUT: JeonseRiskInput = {
+  marketPrice: 500_000_000,
+  jeonseDeposit: 350_000_000,
+  seniorDebt: 0,
+  isMetropolitan: true,
 };
 
 export const DEFAULT_HOUSING_SUBSCRIPTION_INPUT: HousingSubscriptionInput = {
