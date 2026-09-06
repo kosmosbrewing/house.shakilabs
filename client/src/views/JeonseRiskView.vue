@@ -10,23 +10,25 @@ import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import { ShPresetGroup, ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import {
-  HOUSE_JEONSE_RISK_GUIDE,
+  AUCTION_RATE_SCENARIOS,
   JEONSE_RISK_DATA_UPDATED,
   JEONSE_RISK_FAQS,
   JEONSE_RISK_SOURCES,
 } from "@/data/jeonseRisk";
+import { HOUSE_JEONSE_RISK_GUIDE } from "@/data/seoGuides";
+import { DEFAULT_JEONSE_RISK_INPUT } from "@/lib/housingValidators";
 import { calculateJeonseRisk, type JeonseRiskLevel } from "@/utils/jeonseRiskCalculator";
 import { formatNumber, formatPercent, formatWon, parseNumericInput } from "@/lib/utils";
 import { mergeFaqs } from "@/lib/faqMerge";
 
 const seoTitle = "깡통전세 위험 진단 계산기 — 전세가율·HUG 가입 판정";
 const seoDescription =
-  "매매 시세와 보증금, 선순위 근저당을 입력하면 전세가율·부채비율 위험 등급, 낙찰가율 75% 가정 회수 추정, HUG 전세보증금반환보증 가입 가능 여부를 진단합니다.";
+  "매매 시세와 보증금, 선순위 근저당을 입력하면 전세가율·부채비율 위험 등급, 낙찰가율 70·75·80% 세 가정별 회수 추정, HUG 전세보증금반환보증 가입 가능 여부를 진단합니다.";
 
-const marketPrice = ref(500_000_000);
-const jeonseDeposit = ref(350_000_000);
-const seniorDebt = ref(0);
-const region = ref<"metro" | "other">("metro");
+const marketPrice = ref(DEFAULT_JEONSE_RISK_INPUT.marketPrice);
+const jeonseDeposit = ref(DEFAULT_JEONSE_RISK_INPUT.jeonseDeposit);
+const seniorDebt = ref(DEFAULT_JEONSE_RISK_INPUT.seniorDebt);
+const region = ref<"metro" | "other">(DEFAULT_JEONSE_RISK_INPUT.isMetropolitan ? "metro" : "other");
 const isMetropolitan = computed(() => region.value === "metro");
 
 const pricePresets = [300_000_000, 500_000_000, 700_000_000, 1_000_000_000].map((value) => ({
@@ -64,6 +66,16 @@ const bannerTitle = computed(() =>
     ? `부채비율 ${formatPercent(result.value.debtRatio, 1)} 기준 진단 결과입니다. 통상 80% 이상이면 깡통전세 위험으로 봅니다.`
     : "매매 시세를 입력하면 위험 진단이 시작됩니다.",
 );
+
+// 낙찰가율 밴드를 한 줄로 요약할 때는 "가정"이라는 말을 붙여 관측값으로 읽히지 않게 한다
+const scenarioRateLabel = AUCTION_RATE_SCENARIOS.map((rate) => formatPercent(rate, 0)).join("·");
+const shortfallRange = computed(() => {
+  const values = result.value.auctionScenarios.map((scenario) => scenario.shortfall);
+  const worst = Math.max(...values);
+  const best = Math.min(...values);
+  if (worst <= 0) return "세 가정 모두 없음";
+  return best === worst ? formatWon(worst) : `${formatWon(best)} ~ ${formatWon(worst)}`;
+});
 
 const facts = computed(() => [
   { label: "전세가율", value: formatPercent(result.value.jeonseRatio, 1) },
@@ -165,8 +177,8 @@ const faqJsonLd = {
       :title="bannerTitle"
       leader-label="위험 등급"
       :leader-value="riskLabel"
-      delta-label="낙찰가율 75% 가정 부족분"
-      :delta-value="result.auctionShortfall > 0 ? formatWon(result.auctionShortfall) : '없음'"
+      :delta-label="`낙찰가율 ${scenarioRateLabel} 가정 부족분`"
+      :delta-value="shortfallRange"
       :facts="facts"
     />
 
@@ -179,12 +191,40 @@ const faqJsonLd = {
       <div class="retro-panel-content space-y-2 text-caption leading-relaxed text-muted-foreground">
         <p>
           <strong class="text-foreground">경매 회수 추정:</strong>
-          낙찰가율 75% 가정 시 낙찰 대금 {{ formatWon(result.auctionProceeds) }}에서 선순위 {{ formatWon(seniorDebt) }}를 뺀
-          <strong class="text-foreground">{{ formatWon(result.auctionRecovery) }}</strong>까지 회수 가능하고,
-          <template v-if="result.auctionShortfall > 0">
-            보증금 대비 <strong class="text-status-danger">{{ formatWon(result.auctionShortfall) }} 부족</strong>합니다.
-          </template>
-          <template v-else>보증금 전액 회수가 가능한 구조입니다.</template>
+          낙찰가율은 이 계산기가 선언한 <strong class="text-foreground">가정값</strong>이며 관측된 낙찰 통계가 아닙니다.
+          하나로 못 박지 않고 {{ scenarioRateLabel }} 세 가정으로 나눠, 낙찰 대금에서 선순위 {{ formatWon(seniorDebt) }}를 먼저 뺀 회수액을 보여줍니다.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[22rem] border-collapse text-caption">
+            <caption class="sr-only">낙찰가율 가정별 회수 추정</caption>
+            <thead>
+              <tr class="border-b border-border/60 text-left text-foreground">
+                <th scope="col" class="py-1 pr-3 font-semibold">낙찰가율 가정</th>
+                <th scope="col" class="py-1 pr-3 text-right font-semibold">낙찰 대금</th>
+                <th scope="col" class="py-1 pr-3 text-right font-semibold">회수 추정</th>
+                <th scope="col" class="py-1 text-right font-semibold">부족분</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="scenario in result.auctionScenarios"
+                :key="scenario.rate"
+                class="border-b border-border/30 last:border-0"
+              >
+                <th scope="row" class="py-1 pr-3 text-left font-normal">{{ formatPercent(scenario.rate, 0) }}</th>
+                <td class="py-1 pr-3 text-right tabular-nums">{{ formatWon(scenario.proceeds) }}</td>
+                <td class="py-1 pr-3 text-right tabular-nums">{{ formatWon(scenario.recovery) }}</td>
+                <td class="py-1 text-right tabular-nums">
+                  <strong v-if="scenario.shortfall > 0" class="text-status-danger">{{ formatWon(scenario.shortfall) }}</strong>
+                  <template v-else>없음</template>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          세 줄의 판정이 갈린다면 그 계약은 가정 하나에 결과가 좌우되는 구간에 있다는 뜻이므로,
+          가장 보수적인 {{ formatPercent(AUCTION_RATE_SCENARIOS[0], 0) }} 줄을 기준으로 판단하는 편이 안전합니다.
         </p>
         <p>
           <strong class="text-foreground">HUG 보증 가입:</strong>
