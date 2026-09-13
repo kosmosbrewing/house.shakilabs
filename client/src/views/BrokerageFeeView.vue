@@ -29,8 +29,8 @@ const amountLabel = computed(() => props.initialAmount ? formatManWon(props.init
 
 const seoTitle = computed(() =>
   amountLabel.value
-    ? `${amountLabel.value} 주택 중개보수 계산기 | shakilabs.com/house`
-    : "주택 중개보수 계산기 — 매매·전세·월세 상한요율",
+    ? `${amountLabel.value} 주택 중개보수 계산기`
+    : "주택 중개보수 계산기 · 매매·전세·월세 상한요율",
 );
 const seoDescription = computed(() =>
   amountLabel.value

@@ -21,7 +21,7 @@ import { calculateJeonseRisk, type JeonseRiskLevel } from "@/utils/jeonseRiskCal
 import { formatNumber, formatPercent, formatWon, parseNumericInput } from "@/lib/utils";
 import { mergeFaqs } from "@/lib/faqMerge";
 
-const seoTitle = "깡통전세 위험 진단 계산기 — 전세가율·HUG 가입 판정";
+const seoTitle = "깡통전세 위험 진단 계산기 · 전세가율·HUG 가입 판정";
 const seoDescription =
   "매매 시세와 보증금, 선순위 근저당을 입력하면 전세가율·부채비율 위험 등급, 낙찰가율 70·75·80% 세 가정별 회수 추정, HUG 전세보증금반환보증 가입 가능 여부를 진단합니다.";
 
