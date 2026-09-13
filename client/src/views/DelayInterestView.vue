@@ -37,8 +37,8 @@ const depositLabel = computed(() => props.initialDeposit ? formatManWon(props.in
 
 const seoTitle = computed(() =>
   depositLabel.value
-    ? `보증금 ${depositLabel.value} 지연이자 계산기 | shakilabs.com/house`
-    : "보증금 반환 지연이자 계산기 — 민법 5%·소송촉진법 12%",
+    ? `보증금 ${depositLabel.value} 지연이자 계산기`
+    : "보증금 반환 지연이자 계산기 · 민법 5%·소송촉진법 12%",
 );
 const seoDescription = computed(() =>
   depositLabel.value

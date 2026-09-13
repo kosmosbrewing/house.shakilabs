@@ -31,8 +31,8 @@ const priceLabel = computed(() => props.initialPrice ? formatManWon(props.initia
 
 const seoTitle = computed(() =>
   priceLabel.value
-    ? `${priceLabel.value} 아파트 재산세·보유세 계산기 | shakilabs.com/house`
-    : "1세대 1주택 재산세·보유세 계산기 — 2026년 기준",
+    ? `${priceLabel.value} 아파트 재산세·보유세 계산기`
+    : "1세대 1주택 재산세·보유세 계산기 · 2026년 기준",
 );
 const seoDescription = computed(() =>
   priceLabel.value

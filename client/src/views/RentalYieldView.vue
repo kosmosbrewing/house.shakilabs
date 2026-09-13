@@ -27,8 +27,8 @@ const priceLabel = computed(() => props.initialPrice ? formatManWon(props.initia
 
 const seoTitle = computed(() =>
   priceLabel.value
-    ? `${priceLabel.value} 임대수익률 계산기 | 순수익률·자기자본수익률`
-    : "임대수익률 계산기 — 부동산 투자 순수익률·ROE 시뮬레이션",
+    ? `${priceLabel.value} 임대수익률 계산기 · 순수익률·자기자본수익률`
+    : "임대수익률 계산기 · 부동산 투자 순수익률·ROE 시뮬레이션",
 );
 const seoDescription = computed(() =>
   priceLabel.value

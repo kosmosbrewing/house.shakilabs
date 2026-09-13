@@ -29,8 +29,8 @@ const depositLabel = computed(() => props.initialDeposit ? formatManWon(props.in
 
 const seoTitle = computed(() =>
   depositLabel.value
-    ? `전세 ${depositLabel.value} vs 월세 비교 계산기 | shakilabs.com/house`
-    : "전세 vs 월세 비교 계산기 — 손익분기 월세",
+    ? `전세 ${depositLabel.value} vs 월세 비교 계산기`
+    : "전세 vs 월세 비교 계산기 · 손익분기 월세",
 );
 const seoDescription = computed(() =>
   depositLabel.value

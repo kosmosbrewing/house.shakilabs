@@ -3,10 +3,11 @@ import { toValue, type MaybeRefOrGetter } from "vue";
 import { useRoute } from "vue-router";
 import { getSiteUrl } from "@/lib/site";
 
-const TITLE_SUFFIX = " | 주거 계산기";
+const TITLE_SUFFIX = " | 주거 계산기 | ShakiLabs";
 const LEGACY_TITLE_SUFFIXES = [
   " | 오픈마켓 수수료 비교 계산기",
   " | 오픈마켓 수수료 계산기",
+  " | 주거 계산기",
   " | ShakiLabs",
   TITLE_SUFFIX,
 ] as const;

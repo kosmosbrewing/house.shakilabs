@@ -27,8 +27,8 @@ const priceLabel = computed(() => props.initialPrice ? formatManWon(props.initia
 
 const seoTitle = computed(() =>
   priceLabel.value
-    ? `${priceLabel.value} 주택 취득세 계산기 | 다주택 중과 반영`
-    : "주택 취득세 계산기 — 1~3주택 취득세·지방교육세·농특세",
+    ? `${priceLabel.value} 주택 취득세 계산기 · 다주택 중과 반영`
+    : "주택 취득세 계산기 · 1~3주택 취득세·지방교육세·농특세",
 );
 const seoDescription = computed(() =>
   priceLabel.value

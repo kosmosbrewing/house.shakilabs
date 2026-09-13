@@ -27,8 +27,8 @@ const depositLabel = computed(() => props.initialDeposit ? formatManWon(props.in
 
 const seoTitle = computed(() =>
   depositLabel.value
-    ? `전세 ${depositLabel.value} 전월세 전환율 계산기 | 법정 상한 판정`
-    : "전월세 전환율 계산기 — 법정 상한 전환율 판정·적정 월세",
+    ? `전세 ${depositLabel.value} 전월세 전환율 계산기 · 법정 상한 판정`
+    : "전월세 전환율 계산기 · 법정 상한 전환율 판정·적정 월세",
 );
 const seoDescription = computed(() =>
   depositLabel.value

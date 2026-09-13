@@ -27,8 +27,8 @@ const priceLabel = computed(() => props.initialSellPrice ? formatManWon(props.in
 
 const seoTitle = computed(() =>
   priceLabel.value
-    ? `${priceLabel.value} 양도소득세 계산기 | 1세대1주택 비과세·장특공제`
-    : "양도소득세 계산기 — 1세대1주택 비과세·장기보유특별공제 시뮬레이션",
+    ? `${priceLabel.value} 양도소득세 계산기 · 1세대1주택 비과세·장특공제`
+    : "양도소득세 계산기 · 1세대1주택 비과세·장기보유특별공제 시뮬레이션",
 );
 const seoDescription = computed(() =>
   priceLabel.value
