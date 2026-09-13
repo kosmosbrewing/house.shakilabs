@@ -3,7 +3,8 @@ import { toValue, type MaybeRefOrGetter } from "vue";
 import { useRoute } from "vue-router";
 import { getSiteUrl } from "@/lib/site";
 
-const TITLE_SUFFIX = " | 주거 계산기 | ShakiLabs";
+const CATEGORY = "주거 계산기";
+const TITLE_SUFFIX = ` | ${CATEGORY} | ShakiLabs`;
 const LEGACY_TITLE_SUFFIXES = [
   " | 오픈마켓 수수료 비교 계산기",
   " | 오픈마켓 수수료 계산기",
@@ -44,6 +45,12 @@ function normalizeTitle(rawTitle: string): string {
 
   if (!baseTitle) {
     return `주거 계산기${TITLE_SUFFIX}`;
+  }
+
+  // 페이지 이름이 이미 카테고리로 시작하면 배지를 또 붙이지 않는다.
+  // 홈이 "주거 계산기 | 주거 계산기 | ShakiLabs"로 중복 렌더되던 문제(라이브 실측).
+  if (baseTitle === CATEGORY || baseTitle.startsWith(`${CATEGORY} `)) {
+    return `${baseTitle} | ShakiLabs`;
   }
 
   return `${baseTitle}${TITLE_SUFFIX}`;
