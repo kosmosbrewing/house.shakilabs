@@ -5,7 +5,7 @@
   "name": "house-calculator@0.0.0",
   "documentNamespace": "http://spdx.org/spdxdocs/house-calculator-0.0.0-***",
   "creationInfo": {
-    "created": "2026-07-31T13:19:42.897Z",
+    "created": "2026-09-14T10:10:27.012Z",
     "creators": [
       "Tool: npm/cli-11.7.0"
     ]
@@ -472,10 +472,10 @@
     },
     {
       "name": "@shakilabs/ui",
-      "SPDXID": "SPDXRef-Package-shakilabs.ui-0.3.11",
-      "versionInfo": "0.3.11",
+      "SPDXID": "SPDXRef-Package-shakilabs.ui-0.3.15",
+      "versionInfo": "0.3.15",
       "packageFileName": "node_modules/@shakilabs/ui",
-      "downloadLocation": "file:/private/tmp/100mvp-ui0311-house/client/vendor/shakilabs-ui-0.3.11.tgz",
+      "downloadLocation": "file:/Users/igyubin/Desktop/projects/01_shakishaki/100_MVP/.worktrees/06house-v3shell/client/vendor/shakilabs-ui-0.3.15.tgz",
       "filesAnalyzed": false,
       "homepage": "NOASSERTION",
       "licenseDeclared": "NOASSERTION",
@@ -483,13 +483,13 @@
         {
           "referenceCategory": "PACKAGE-MANAGER",
           "referenceType": "purl",
-          "referenceLocator": "pkg:npm/%40shakilabs/ui@0.3.11"
+          "referenceLocator": "pkg:npm/%40shakilabs/ui@0.3.15"
         }
       ],
       "checksums": [
         {
           "algorithm": "SHA512",
-          "checksumValue": "587b2081553c1ea36a8d10d51310d1a90fbfe68e152b0b431878219d13bab020c4fe10506a48f5626d1c47fb253ef01ab5a4f8a47764c1f580359f48adc07571"
+          "checksumValue": "7e3db2282cfd3aef16b6ef2dfb52eb59ba734353bbae60fc41dd00eb67131cc92f6cf2e49eae718546efe48b22e819afe4cfadc3b76bf83f8dabd654957ef1f5"
         }
       ]
     },
@@ -2714,7 +2714,7 @@
       "relationshipType": "DEPENDENCY_OF"
     },
     {
-      "spdxElementId": "SPDXRef-Package-shakilabs.ui-0.3.11",
+      "spdxElementId": "SPDXRef-Package-shakilabs.ui-0.3.15",
       "relatedSpdxElement": "SPDXRef-Package-house-calculator-0.0.0",
       "relationshipType": "DEPENDENCY_OF"
     },

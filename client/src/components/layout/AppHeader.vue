@@ -1,9 +1,10 @@
 <script setup lang="ts">
+// v3 AppShell(BL-003/004) — 앱 자체 헤더 마크업을 패키지 ShGlobalHeader로 교체한다.
+// 검정 고정 배경·56px 높이·로고→포털 홈(/)은 패키지가 강제하므로 앱은 유틸(테마 토글)만 채운다.
+// 기존 헤더 안 팁 티커는 헤더 내용물이 아니므로 AppLayout의 본문 배너로 옮겼다(BL-005).
 import { onMounted, ref } from "vue";
 import { Moon, Sun } from "lucide-vue-next";
-import { ShButton } from "@shakilabs/ui";
-import TickerBar from "@/components/common/TickerBar.vue";
-import { tickerMessages } from "@/data/tickerMessages";
+import { ShButton, ShGlobalHeader } from "@shakilabs/ui";
 
 const THEME_STORAGE_KEY = "house-calculator:theme:v1";
 type ThemeMode = "light" | "dark";
@@ -28,47 +29,19 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- 8 is not on the Tailwind opacity scale, so the slash form emitted no rule
-       and every page shipped a header with no background. The arbitrary-value
-       syntax restores the intended tint. Do not spell a utility class out in a
-       comment here: the build gate scans raw source and reads it as a usage. -->
-  <header class="border-b border-border bg-primary/[8%]">
-    <div class="container pt-2.5 pb-2.5">
-      <div class="overflow-hidden">
-        <div class="retro-titlebar h-[44px] border-b-0 bg-transparent px-1.5 sm:px-2">
-          <div class="flex h-full w-full items-center gap-2.5 sm:gap-4">
-            <a
-              href="/house"
-              aria-label="ShakiLabs 홈"
-              class="inline-flex h-[44px] w-[44px] shrink-0 items-center justify-center gap-1 px-0.5 text-muted-foreground transition-colors hover:text-foreground sm:h-8 sm:w-auto sm:justify-start sm:gap-1.5"
-            >
-              <span
-                class="inline-flex h-6 w-6 items-center justify-center rounded-md bg-muted/60 ring-1 ring-border/60"
-                aria-hidden="true"
-              >
-                <img src="/favicon.png" alt="" class="h-4 w-4 shrink-0" />
-              </span>
-              <span class="hidden sm:inline font-brand text-tiny font-semibold tracking-wide text-foreground/90">
-                ShakiLabs
-              </span>
-            </a>
-            <div class="flex min-w-0 flex-1 items-center justify-center text-center font-brand text-caption sm:text-body">
-              <TickerBar :messages="tickerMessages" />
-            </div>
-            <ShButton
-              type="button"
-              variant="secondary"
-              size="sm"
-              class="design-system-theme-toggle shrink-0 text-muted-foreground"
-              :aria-label="theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'"
-              @click="toggleTheme"
-            >
-              <Moon v-if="theme === 'dark'" class="h-4 w-4" />
-              <Sun v-else class="h-4 w-4" />
-            </ShButton>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
+  <ShGlobalHeader>
+    <template #utility>
+      <ShButton
+        type="button"
+        variant="secondary"
+        size="sm"
+        class="design-system-theme-toggle shrink-0"
+        :aria-label="theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'"
+        @click="toggleTheme"
+      >
+        <Moon v-if="theme === 'dark'" class="h-4 w-4" />
+        <Sun v-else class="h-4 w-4" />
+      </ShButton>
+    </template>
+  </ShGlobalHeader>
 </template>
