@@ -178,7 +178,7 @@ function setPricePreset(price: number) {
       </div>
     </section>
 
-    <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" />
+    <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" :hero-index="0" />
 
     <RentalYieldCharts :result="result" />
 

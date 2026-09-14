@@ -69,6 +69,7 @@ const fundingSegments = computed(() => [
       ]"
       :icons="statIcons"
       :icon-classes="statIconClasses"
+      :hero-index="1"
     />
 
     <ShBreakdownBar

@@ -4,6 +4,7 @@ import { Home, Banknote, Scale, PiggyBank } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import PairComparisonMeters from "@/components/result-visualization/PairComparisonMeters.vue";
 import HouseStatGrid from "@/components/house/HouseStatGrid.vue";
+import ResultHero from "@/components/common/ResultHero.vue";
 import type { JeonseVsWolseInput } from "@/utils/housingCalculator";
 import { formatPercent, formatWon, formatWonShort } from "@/lib/utils";
 
@@ -22,12 +23,18 @@ const props = defineProps<{
   };
 }>();
 
-const headline = computed(() => {
-  if (props.result.cheaperOption === "same") return "두 선택지가 거의 비슷합니다.";
+// 이 계산기의 대표 수치는 4개 stat 중 하나가 아니라 "누적 부담 차이"다(BL-020).
+// 라벨이 유·불리를 말하고 히어로 숫자가 그 크기를 말한다.
+const heroLabel = computed(() => {
+  if (props.result.cheaperOption === "same") return `${props.form.analysisYears}년 누적 부담 차이`;
   return props.result.cheaperOption === "jeonse"
-    ? `현재 조건에서는 ${formatWon(props.result.difference)} 만큼 전세가 유리합니다.`
-    : `현재 조건에서는 ${formatWon(Math.abs(props.result.difference))} 만큼 월세가 유리합니다.`;
+    ? `${props.form.analysisYears}년 기준 전세가 유리한 금액`
+    : `${props.form.analysisYears}년 기준 월세가 유리한 금액`;
 });
+const heroValue = computed(() => formatWon(Math.abs(props.result.difference)));
+const heroClass = computed(() =>
+  props.result.cheaperOption === "same" ? "text-muted-foreground" : "text-primary"
+);
 
 const statItems = computed(() => [
   { label: "전세 연간 부담", value: formatWon(props.result.jeonseAnnualCost), cls: "" },
@@ -68,6 +75,16 @@ function formatWonScale(value: number): string {
 
 <template>
   <div class="space-y-4">
+    <Card class="border-border/50 bg-card">
+      <CardContent class="px-4 py-2">
+        <ResultHero :label="heroLabel" :value="heroValue" :value-class="heroClass">
+          <template #secondary>
+            비교 금리 {{ formatPercent(form.annualOpportunityRate, 1) }} · 비교 기간 {{ form.analysisYears }}년 기준
+          </template>
+        </ResultHero>
+      </CardContent>
+    </Card>
+
     <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" />
 
     <PairComparisonMeters
@@ -80,9 +97,7 @@ function formatWonScale(value: number): string {
 
     <Card class="border-border/50 bg-muted/30">
       <CardContent class="p-4 space-y-2">
-        <p class="text-body font-semibold text-foreground">{{ headline }}</p>
         <p class="text-caption leading-relaxed text-muted-foreground">
-          비교 금리 {{ formatPercent(form.annualOpportunityRate, 1) }}, 비교 기간 {{ form.analysisYears }}년 기준입니다.
           손익분기 월세가 현재 월세보다 낮으면 전세가, 높으면 월세가 유리합니다.
         </p>
       </CardContent>

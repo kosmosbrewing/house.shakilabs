@@ -177,6 +177,7 @@ function formatPercentagePoint(value: number): string {
       :items="statItems"
       :icons="statIcons"
       :icon-classes="statIconClasses"
+      :hero-index="0"
     />
 
     <ThresholdComparison

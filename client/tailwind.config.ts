@@ -28,8 +28,19 @@ const config: Config = {
           "Malgun Gothic",
           ...fontFamily.sans,
         ],
-        brand: [
+        // 강조 숫자 전용 스택(BL-020). GmarketSans 서브셋은 숫자·단위만 담으므로
+        // ResultHero 말고 다른 곳에 붙이면 한글이 글리프 단위로 폴백돼 섞여 보인다.
+        // 이름을 title/brand가 아니라 numeral로 둔 이유가 이것이다.
+        numeral: [
           "GmarketSans",
+          "Pretendard",
+          "Apple SD Gothic Neo",
+          "Malgun Gothic",
+          ...fontFamily.sans,
+        ],
+        // 한글 제목용. GmarketSans를 뺐다 — 숫자 전용 서브셋으로 바뀌어
+        // "주택 취득세 계산기"의 '세'만 Gmarket으로 찍히는 혼합 렌더가 나온다.
+        brand: [
           "Pretendard",
           "Apple SD Gothic Neo",
           "Malgun Gothic",

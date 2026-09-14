@@ -5,6 +5,12 @@ import { fileURLToPath } from "node:url";
 const scriptRoot = dirname(fileURLToPath(import.meta.url));
 export const clientRoot = resolve(scriptRoot, "..");
 
+// 강조 숫자(ResultHero) 전용 문자셋. 값은 전부 포맷터(formatWon/formatWonShort/
+// formatPercent/formatManWon) 출력이라 숫자·통화 단위면 충분하다.
+// U+2212(−)는 이 폰트에 글리프가 없어 폴백(Pretendard)이 글리프 단위로 받는다.
+export const NUMERAL_CHARACTERS =
+  "0123456789,.%+-~/()\u00B7 원억만천조년월일개회건세명점배급시간분초약";
+
 export const fontJobs = [
   {
     source: resolve(clientRoot, "public/fonts/Pretendard-Regular.woff"),
@@ -28,10 +34,13 @@ export const fontJobs = [
     preload: true,
   },
   {
+    // 강조 숫자 전용. 이 폰트는 ResultHero의 히어로 수치 한 곳(font-title)에서만 쓰인다.
+    // 전체 UI 문자셋(≈900자)으로 자르면 111KB, 아래 45자면 15KB 미만이다.
     source: resolve(clientRoot, "public/fonts/GmarketSansBold.woff"),
-    output: resolve(clientRoot, "public/fonts/GmarketSansBold-subset-v3.woff2"),
-    publicName: "GmarketSansBold-subset-v3.woff2",
-    maxBytes: 128 * 1024,
+    output: resolve(clientRoot, "public/fonts/GmarketSansBold-num-v1.woff2"),
+    publicName: "GmarketSansBold-num-v1.woff2",
+    characters: NUMERAL_CHARACTERS,
+    maxBytes: 24 * 1024,
     preload: false,
   },
 ];

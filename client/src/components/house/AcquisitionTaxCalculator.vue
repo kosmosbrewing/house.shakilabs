@@ -99,7 +99,7 @@ function setPreset(price: number) {
       </label>
     </section>
 
-    <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" />
+    <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" :hero-index="0" />
 
     <ShBreakdownBar
       label="취득 단계 세금 구성"

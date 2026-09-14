@@ -60,6 +60,7 @@ const scoreSegments = computed(() => [
       ]"
       :icons="statIcons"
       :icon-classes="statIconClasses"
+      :hero-index="3"
     />
 
     <ShBreakdownBar

@@ -28,13 +28,20 @@
   font-display: swap;
 }
 
+/* 강조 숫자 전용(BL-020). 이 폰트는 ResultHero의 히어로 수치 한 곳(font-title)에서만
+   쓰이고 값은 전부 포맷터 출력이라 숫자·단위 42자면 충분하다. 전체 문자셋 서브셋
+   111KB → 15KB 미만. unicode-range는 실제로 담긴 글자만 선언한다 —
+   그래서 히어로가 없는 페이지는 이 폰트를 아예 받지 않는다.
+   944KB 원본 .woff는 서브셋 생성 소스로만 남기고 src에서 뺀다. */
 @font-face {
   font-family: "GmarketSans";
-  src: url("/fonts/GmarketSansBold-subset-v3.woff2") format("woff2"),
-       url("/fonts/GmarketSansBold.woff") format("woff");
+  src: url("/fonts/GmarketSansBold-num-v1.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0020, U+0025, U+0028-0029, U+002B-0039, U+007E, U+00B7, U+AC04,
+    U+AC1C, U+AC74, U+AE09, U+B144, U+B9CC, U+BA85, U+BC30, U+BD84, U+C138, U+C2DC,
+    U+C57D, U+C5B5, U+C6D0, U+C6D4, U+C77C, U+C810, U+C870, U+CC9C, U+CD08, U+D68C;
 }
 
 @tailwind base;
