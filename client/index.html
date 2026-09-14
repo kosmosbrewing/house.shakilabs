@@ -99,12 +99,15 @@
     </script>
     <style>
       :root {
-        --background: 210 40% 98%;
-        --foreground: 222 47% 11%;
+        /* v3 §2.1 역할 토큰(Wave2 레시피 §4) — canvas/card/ink/ink-muted/line/focus는
+           hex에서 역산(반올림 왕복 검증 완료, travel a035f62 실측값과 동일).
+           --primary(house 파랑)는 건드리지 않는다 — 구조색만 바꾼다. */
+        --background: 60 11.11% 96.47%; /* color.canvas #F7F7F5 */
+        --foreground: 0 0% 3.92%; /* color.ink #0A0A0A */
         --muted: 210 40% 96%;
-        --muted-foreground: 215 16% 37%;
-        --card: 0 0% 100%;
-        --card-foreground: 222 47% 11%;
+        --muted-foreground: 60 3.37% 34.9%; /* color.ink-muted #5C5C56 */
+        --card: 0 0% 100%; /* color.card #FFFFFF */
+        --card-foreground: 0 0% 3.92%;
         --primary: 214 74% 33%;
         --primary-foreground: 0 0% 100%;
         --secondary: 214 100% 97%;
@@ -112,14 +115,14 @@
         --accent: 214 95% 95%;
         --accent-foreground: 217 74% 36%;
         --popover: 0 0% 100%;
-        --popover-foreground: 222 47% 11%;
+        --popover-foreground: 0 0% 3.92%;
         /* 0 72% 52%는 배경(210 40% 98%) 위 4.49:1로 AA 미달이었다.
            라이트 빨강은 --fee/--status-danger와 같은 0 74% 42%로 통일한다. */
         --destructive: 0 74% 42%;
         --destructive-foreground: 210 40% 98%;
-        --border: 214 16% 85%;
+        --border: 60 8% 90.2%; /* color.line #E8E8E4 */
         --input: 214 16% 85%;
-        --ring: 214 74% 33%;
+        --ring: 0 0% 3.92%; /* color.focus #0A0A0A (v3 §2.1 — 포커스는 브랜드색이 아니라 ink) */
         --radius: 0.4rem;
         --profit: 151 70% 26%;
         --profit-foreground: 0 0% 100%;
@@ -128,30 +131,31 @@
       }
 
       .dark {
-        --background: 222 47% 11%;
-        --foreground: 210 40% 96%;
+        --background: 0 0% 7.06%; /* color.canvas dark #121212 */
+        --foreground: 0 0% 96.08%; /* color.ink dark #F5F5F5 */
         --muted: 217 33% 17%;
-        --muted-foreground: 215 20% 72%;
-        --card: 217 33% 17%;
-        --card-foreground: 210 40% 96%;
+        --muted-foreground: 60 3.33% 64.71%; /* color.ink-muted dark #A8A8A2 */
+        --card: 0 0% 10.98%; /* color.card dark #1C1C1C */
+        --card-foreground: 0 0% 96.08%;
         --primary: 213 94% 68%;
         --primary-foreground: 217 90% 14%;
         --secondary: 216 28% 18%;
         --secondary-foreground: 210 40% 96%;
         --accent: 216 26% 20%;
         --accent-foreground: 214 100% 79%;
-        --popover: 217 33% 17%;
-        --popover-foreground: 210 40% 96%;
+        --popover: 0 0% 10.98%;
+        --popover-foreground: 0 0% 96.08%;
         /* 다크 빨강은 텍스트로 쓰인다(sh-field-error·sh-summary__delta--danger·
            sh-badge--danger·다주택 중과 배지). 0 72% 58%는 카드(217 33% 17%) 위
            3.67:1로 AA 미달이라 명도를 높인다. 배경으로 쓰일 때 위에 올라가는
            --destructive-foreground는 --primary-foreground와 같은 방식으로
-           앱 hue를 유지한 채 명도를 낮춰 6.83:1이 된다. */
+           앱 hue를 유지한 채 명도를 낮춰 6.83:1이 된다. Wave2 §4에서 카드가
+           0 0% 10.98%로 더 어두워졌지만 재측정 결과 대비는 오히려 상승(아래 참조). */
         --destructive: 0 75% 72%;
         --destructive-foreground: 0 65% 12%;
-        --border: 214 16% 26%;
+        --border: 0 0% 16.47%; /* color.line dark #2A2A2A */
         --input: 214 16% 30%;
-        --ring: 213 94% 68%;
+        --ring: 0 0% 96.08%; /* color.focus dark #F5F5F5 */
         --profit: 151 60% 54%;
         --profit-foreground: 0 0% 100%;
         /* text-fee는 세금·손실 금액 텍스트다. 0 62% 58%는 카드 위 3.64:1로
