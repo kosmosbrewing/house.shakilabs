@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 계산기 대표 수치의 단일 문법(BL-020, docs/RESULT_DESIGN_BACKLOG):
-// 라벨(13px muted) → 금액(text-display 26px, font-numeral = GmarketSans, tabular-nums)
+// 라벨(13px muted) → 금액(text-display 26px, font-brand = GmarketSans, tabular-nums)
 // → 선택적 보조 문장(14px muted). 브랜드/의미색은 이 히어로 수치에만 쓰고
 // 아래 stat 그리드 값은 중립색으로 남긴다.
 //
@@ -130,7 +130,7 @@ onBeforeUnmount(cancelRaf);
 <template>
   <div data-result-hero class="text-center py-3">
     <p class="text-caption uppercase tracking-wide text-muted-foreground mb-1">{{ label }}</p>
-    <p class="text-display font-bold font-numeral tabular-nums" :class="valueClass">
+    <p class="text-display font-bold font-brand tabular-nums" :class="valueClass">
       {{ displayValue }}
     </p>
     <p v-if="$slots.secondary" class="text-body text-muted-foreground mt-1.5">

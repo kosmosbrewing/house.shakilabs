@@ -1,27 +1,29 @@
 {
   "schemaVersion": 2,
-  "characterCount": 852,
-  "characterSha256": "4998dc59a5c65fe2acd87c843eb1ee99d126a562da5035a9eb28ee8e69c20094",
+  "characterCount": 860,
+  "characterSha256": "9646f1261793e80d2df1824c1ce8338e2ba87ab64cc4213d65302236d4383be8",
   "fonts": [
     {
       "publicName": "Pretendard-Regular-subset.woff2",
-      "bytes": 62436,
-      "sha256": "ebb43396e3cde745fe5c7f8c3ae7786891c5fa582da619e8efcb96ad9ced30f0"
+      "bytes": 62764,
+      "sha256": "4e695b0a3a00c69b79c4fcf404454086f8fbefbb177bda06d8e7739c5d8b8f20"
     },
     {
       "publicName": "Pretendard-SemiBold-subset.woff2",
-      "bytes": 63164,
-      "sha256": "e14e9f1682c29122fecd2128140321ddac94963e70dd34f182686c56412d07dd"
+      "bytes": 63524,
+      "sha256": "5993d5bc4f0987b8d07e3e1d64c71db91f4e6e974344947de3dbfd5472ecc6c2"
     },
     {
       "publicName": "Pretendard-Bold-subset.woff2",
-      "bytes": 63556,
-      "sha256": "67cab6b2f6e70c9afe3b7f95a1cc965ec3927b0a97c29667f93fcb908c7592ff"
+      "bytes": 63880,
+      "sha256": "28bce1d0410958f0f84e01e94721f1ea935dc9050c92538f989f7369c2cd5136"
     },
     {
-      "publicName": "GmarketSansBold-num-v1.woff2",
-      "bytes": 14980,
-      "sha256": "9d58e9d9c22a55a2d19ae9138ed40c46c2d608438180e71ad3ec72877b42addf"
+      "publicName": "GmarketSansBold-brand-v1.woff2",
+      "bytes": 8932,
+      "sha256": "140053aa8e1c1bf48d83c8a0b69d700765a20240fddade1456e2990510804e8c",
+      "shippedCharacters": " %()+,-./0123456789sv~·가간개거건계관교구금급기깡께내년는단대도동드득래력련률리만많명문묻반방배벽보복부분비산상생서선세소수순스시아안애약양억역연와완용원월위유율이익인일임입자재적전점정제조종주중증지진질찾처천청체초총최취침크택통투트팁파포한함합험혜환회",
+      "droppedCharacters": ""
     }
   ]
 }
