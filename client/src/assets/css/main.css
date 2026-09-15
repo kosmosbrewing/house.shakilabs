@@ -28,10 +28,16 @@
   font-display: swap;
 }
 
+/* 브랜드 폰트 — 제목(font-brand)과 히어로 수치에만 쓴다(BL-020 개정판 레시피).
+   서브셋 문자셋은 "GmarketSans로 렌더되는 요소의 직속 텍스트 ∪ 숫자·단위"다
+   (scripts/collect-brand-charset.mjs가 빌드 산출물에서 수집한다). 전체 UI 문자셋으로 자르면 111KB.
+   unicode-range는 두지 않는다 — 문자셋이 이미 렌더 실측이라 범위를 또 좁힐 이유가 없고,
+   빠뜨리면 해당 글자만 폴백으로 새는 사고가 난다.
+   944KB 원본 .woff는 서브셋 생성 소스로만 남기고 src에서 뺀다 — woff2를 지원하는
+   브라우저는 두 번째 포맷을 요청조차 하지 않아 폴백으로 동작한 적이 없다. */
 @font-face {
   font-family: "GmarketSans";
-  src: url("/fonts/GmarketSansBold-subset-v3.woff2") format("woff2"),
-       url("/fonts/GmarketSansBold.woff") format("woff");
+  src: url("/fonts/GmarketSansBold-brand-v1.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;

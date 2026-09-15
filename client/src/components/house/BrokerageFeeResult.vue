@@ -39,6 +39,7 @@ const statIconClasses = [
       ]"
       :icons="statIcons"
       :icon-classes="statIconClasses"
+      :hero-index="2"
     />
 
     <Card class="border-border/50 bg-muted/30">

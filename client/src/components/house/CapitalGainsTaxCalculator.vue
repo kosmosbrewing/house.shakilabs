@@ -136,7 +136,7 @@ function formatPresetPrice(price: number): string {
       </div>
     </section>
 
-    <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" />
+    <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" :hero-index="0" />
 
     <ShBreakdownBar
       label="양도차익의 세금·세후 이익 구성"
