@@ -24,7 +24,7 @@ const titleId = "faq-panel-" + useId();
 </script>
 
 <template>
-  <section class="retro-panel overflow-hidden" :aria-labelledby="titleId">
+  <section class="retro-panel overflow-hidden max-w-[65ch]" :aria-labelledby="titleId">
     <div class="retro-titlebar rounded-t-2xl">
       <h2 :id="titleId" class="retro-title">{{ title }}</h2>
     </div>
