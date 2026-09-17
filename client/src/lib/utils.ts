@@ -41,7 +41,13 @@ export function formatWonShort(amount: number | null | undefined): string {
 // 퍼센트 포맷: 0.1234 → "12.3%"
 export function formatPercent(rate: number | null | undefined, decimals = 1): string {
   if (rate == null) return "-";
-  return `${(rate * 100).toFixed(decimals)}%`;
+  const percent = rate * 100;
+  const formatted = percent.toFixed(decimals);
+  // 반올림 결과가 0이면 부호를 떼야 한다 — 아주 작은 음수가 "-0.0%"로 찍히면
+  // 손실이 난 것처럼 읽힌다(/rental-yield에서 26px 빨강으로 노출됐다).
+  // 진짜 음수는 그대로 둔다: -0.05 → "-0.1%".
+  if (Number.parseFloat(formatted) === 0) return `${Math.abs(Number(formatted)).toFixed(decimals)}%`;
+  return `${formatted}%`;
 }
 
 // 통화 포맷: (14900, "KRW") → "₩14,900"
