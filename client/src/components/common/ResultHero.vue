@@ -25,7 +25,8 @@ const props = withDefaults(
   defineProps<{
     label: string;
     value: string;
-    /** 의미색 유틸리티. 계산기마다 세금=text-fee, 수익률=text-primary 등으로 다르다 */
+    /** 의미색 유틸리티. 위험 상태가 없으면 액센트(text-primary), 한도 초과 등 진짜
+     * 위험 상태면 text-status-danger — 계산기마다 다르다(2026-09-17 --fee 별칭 폐기) */
     valueClass?: string;
   }>(),
   { valueClass: "text-primary" }

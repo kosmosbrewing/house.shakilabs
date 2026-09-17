@@ -20,10 +20,12 @@ defineProps<{
 }>();
 
 const statIcons = [Receipt, Percent, AlertTriangle, TrendingDown] as const;
+// 히어로(index 2, "의뢰인 1인 최대")는 그리드에서 빠져 이 아이콘은 렌더되지 않지만
+// --fee 참조를 남기지 않기 위해 accent-muted로 맞춰 둔다.
 const statIconClasses = [
   "bg-muted text-muted-foreground",
   "bg-muted text-muted-foreground",
-  "bg-fee/10 text-fee",
+  "bg-accent text-accent-foreground",
   "bg-muted text-muted-foreground",
 ] as const;
 </script>
@@ -34,7 +36,7 @@ const statIconClasses = [
       :items="[
         { label: '환산 거래금액', value: formatWon(result.dealAmount), cls: '' },
         { label: '상한요율', value: formatPercent(result.tier.rate, 1), cls: '' },
-        { label: '의뢰인 1인 최대', value: formatWon(result.maxFee), cls: 'text-fee' },
+        { label: '의뢰인 1인 최대', value: formatWon(result.maxFee), cls: 'text-primary' },
         { label: '실효 요율', value: formatPercent(result.effectiveRate, 2), cls: '' },
       ]"
       :icons="statIcons"

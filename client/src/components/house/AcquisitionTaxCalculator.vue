@@ -24,23 +24,26 @@ const props = defineProps<{
   result: ReturnType<typeof import("@/utils/housingCalculator").calculateAcquisitionTax>;
 }>();
 
+// 2026-09-17: 납부 세금은 위험이 아니라 결과다(DESIGN_CLEANUP_PLAN §4.2-2) — 히어로는
+// 액센트(text-primary)로, 하위 항목은 중립으로 내린다. text-fee는 로컬 별칭이라 폐기.
 const statItems = computed(() => [
-  { label: "납부 세금 합계", value: formatWon(props.result.totalTax), cls: "text-fee" },
-  { label: "취득세", value: formatWon(props.result.acquisitionTax), cls: "text-fee" },
+  { label: "납부 세금 합계", value: formatWon(props.result.totalTax), cls: "text-primary" },
+  { label: "취득세", value: formatWon(props.result.acquisitionTax), cls: "" },
   { label: "지방교육세", value: formatWon(props.result.localEducationTax), cls: "" },
   { label: "실효세율", value: formatPercent(props.result.effectiveTotalRate, 2), cls: "text-muted-foreground" },
 ]);
 
 const statIcons = [Receipt, Home, Landmark, Percent] as const;
+// 스탯 카드 아이콘 배경 3색(취득세·지방교육세·실효세율) → accent-muted 1색(§4.2 밖 액센트 제거)
 const statIconClasses = [
-  "bg-fee/10 text-fee",
-  "bg-fee/10 text-fee",
-  "bg-primary/10 text-primary",
-  "bg-muted text-muted-foreground",
+  "bg-accent text-accent-foreground",
+  "bg-accent text-accent-foreground",
+  "bg-accent text-accent-foreground",
+  "bg-accent text-accent-foreground",
 ] as const;
 const taxSegments = computed(() => [
-  { key: "acquisition", label: "취득세", value: props.result.acquisitionTax, tone: "danger" as const },
-  { key: "education", label: "지방교육세", value: props.result.localEducationTax, tone: "primary" as const },
+  { key: "acquisition", label: "취득세", value: props.result.acquisitionTax, tone: "primary" as const },
+  { key: "education", label: "지방교육세", value: props.result.localEducationTax, tone: "muted" as const },
   { key: "rural", label: "농어촌특별세", value: props.result.ruralTax, tone: "muted" as const },
 ]);
 
@@ -136,12 +139,12 @@ function setPreset(price: number) {
           </li>
           <li v-if="result.isSurcharged" class="flex justify-between">
             <span>적용 세율 ({{ result.homeCountLabel }} · {{ result.rateLabel }})</span>
-            <span class="font-medium text-fee tabular-nums">{{ formatPercent(result.effectiveRate, 0) }}</span>
+            <span class="font-medium text-status-danger tabular-nums">{{ formatPercent(result.effectiveRate, 0) }}</span>
           </li>
           <li class="h-px bg-border/40" />
           <li class="flex justify-between">
             <span>취득세</span>
-            <span class="font-medium text-fee tabular-nums">{{ formatWon(result.acquisitionTax) }}</span>
+            <span class="font-medium text-foreground tabular-nums">{{ formatWon(result.acquisitionTax) }}</span>
           </li>
           <li class="flex justify-between">
             <span>지방교육세 (기본세율분 × 10%)</span>
@@ -154,7 +157,7 @@ function setPreset(price: number) {
           <li class="h-px bg-border/40" />
           <li class="flex justify-between font-semibold text-foreground">
             <span>납부 세금 합계</span>
-            <span class="tabular-nums text-fee">{{ formatWon(result.totalTax) }}</span>
+            <span class="tabular-nums text-foreground">{{ formatWon(result.totalTax) }}</span>
           </li>
         </ul>
       </CardContent>

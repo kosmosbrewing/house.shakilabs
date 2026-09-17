@@ -33,10 +33,12 @@ const judgmentLabel = computed(() => {
   }
 });
 
+// 법정 상한 "초과"는 진짜 위험 신호다(DESIGN_CLEANUP_PLAN — 한도 초과는 빨강 유지 대상).
+// 폐기된 --fee 로컬 별칭 대신 status-danger로 직접 표현한다.
 const judgmentCls = computed(() => {
   switch (props.result.judgment) {
     case "excessive":
-      return "text-fee";
+      return "text-status-danger";
     case "below":
       return "text-primary";
     case "appropriate":
@@ -51,7 +53,7 @@ const statItems = computed(() => [
   {
     label: "실제 전환율",
     value: formatPercent(props.result.actualConversionRate, 2),
-    cls: props.result.judgment === "excessive" ? "text-fee" : "text-primary",
+    cls: props.result.judgment === "excessive" ? "text-status-danger" : "text-primary",
   },
   {
     label: "법정 상한",
@@ -81,9 +83,9 @@ const statIcons = computed(() => [
   ArrowDown,
 ] as const);
 const statIconClasses = computed(() => [
-  props.result.judgment === "excessive" ? "bg-fee/10 text-fee" : "bg-primary/10 text-primary",
+  props.result.judgment === "excessive" ? "bg-status-danger/10 text-status-danger" : "bg-primary/10 text-primary",
   "bg-muted text-muted-foreground",
-  props.result.judgment === "excessive" ? "bg-fee/10 text-fee" : "bg-primary/10 text-primary",
+  props.result.judgment === "excessive" ? "bg-status-danger/10 text-status-danger" : "bg-primary/10 text-primary",
   "bg-muted text-muted-foreground",
 ] as const);
 
@@ -217,7 +219,7 @@ function formatPercentagePoint(value: number): string {
           <li class="h-px bg-border/40" />
           <li class="flex justify-between">
             <span>실제 전환율</span>
-            <span class="font-medium tabular-nums" :class="result.judgment === 'excessive' ? 'text-fee' : 'text-primary'">
+            <span class="font-medium tabular-nums" :class="result.judgment === 'excessive' ? 'text-status-danger' : 'text-primary'">
               {{ formatPercent(result.actualConversionRate, 2) }}
             </span>
           </li>
@@ -232,13 +234,13 @@ function formatPercentagePoint(value: number): string {
           </li>
           <li class="flex justify-between">
             <span>현재 월세와 차이</span>
-            <span class="font-medium tabular-nums" :class="result.monthlyRentGap > 0 ? 'text-fee' : 'text-primary'">
+            <span class="font-medium tabular-nums" :class="result.monthlyRentGap > 0 ? 'text-status-danger' : 'text-primary'">
               {{ result.monthlyRentGap > 0 ? '+' : '' }}{{ formatWon(result.monthlyRentGap) }}
             </span>
           </li>
           <li v-if="result.annualExcessBurden > 0" class="flex justify-between font-semibold text-foreground">
             <span>연간 초과 부담</span>
-            <span class="tabular-nums text-fee">{{ formatWon(result.annualExcessBurden) }}</span>
+            <span class="tabular-nums text-status-danger">{{ formatWon(result.annualExcessBurden) }}</span>
           </li>
         </ul>
       </CardContent>

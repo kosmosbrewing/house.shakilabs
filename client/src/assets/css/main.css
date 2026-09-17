@@ -45,20 +45,24 @@
 @tailwind utilities;
 
 @layer base {
+  /* 2026-09-17 카테고리 색 정리(DESIGN_CLEANUP_PLAN §2.2) — 의미색 4종을 v3 고정 hex로.
+     danger는 index.html의 --destructive와 같은 HSL이어야 한다(패키지 --sh-color-danger가
+     --destructive를 구독하므로 둘이 갈라지면 같은 "위험"이 두 가지 빨강으로 보인다).
+     caution은 v3 4색에 없는 house 자체 확장 토큰이라 이번 정리 대상이 아니다. */
   :root {
-    --status-success: 142 64% 24%;
-    --status-warning: 24 83% 31%;
+    --status-success: 149.68 63.76% 29.22%; /* #1B7A4A */
+    --status-warning: 25.96 90.48% 37.06%; /* #B45309 */
     --status-caution: 17 79% 34%;
-    --status-danger: 0 74% 42%;
-    --status-info: 212 83% 35%;
+    --status-danger: 0 66.39% 46.67%; /* #C62828 = --destructive */
+    --status-info: 213.51 65.68% 33.14%; /* #1D4E8C */
   }
 
   .dark {
-    --status-success: 148 63% 66%;
-    --status-warning: 43 95% 70%;
+    --status-success: 146.97 50.7% 57.84%; /* #5DCA8E */
+    --status-warning: 41.91 86.9% 55.1%; /* #F0B429 */
     --status-caution: 28 91% 66%;
-    --status-danger: 0 86% 73%;
-    --status-info: 205 90% 72%;
+    --status-danger: 0 80.89% 69.22%; /* #F07171 = --destructive */
+    --status-info: 213.55 66.91% 72.75%; /* #8BB4E8 */
   }
 
   * {
@@ -522,13 +526,14 @@ nav[aria-label="주요 메뉴"] .tab-scroll > a[aria-current="page"] {
   background: currentColor;
 }
 
-/* ui 0.3.10 차트 승격: MetricComparisonBars가 쓰는 패키지 톤을 앱 의미색으로 고정해
-   승격 전(BaseComparisonBar의 bg-profit/bg-fee) 색을 그대로 재현한다.
-   - [data-metric-comparison]으로 범위를 좁힌 이유: 같은 페이지의 ShBreakdownBar가 쓰는
-     danger는 원래 --destructive 색이라 전역 오버라이드하면 그쪽 색까지 바뀐다.
+/* ui 0.3.10 차트 승격: MetricComparisonBars가 쓰는 패키지 톤을 앱 의미색으로 고정한다.
+   2026-09-17: --fee 폐기로 danger 쪽을 --status-danger로 옮겼다 — 이제 --destructive와
+   같은 값이라(위 :root 참조) 같은 페이지의 ShBreakdownBar danger와도 색이 갈라지지 않는다.
+   - [data-metric-comparison]으로 범위를 좁힌 이유는 그대로 유효하다: 이 블록은 손익 부호
+     전용이고, ShBreakdownBar는 카테고리 분류색이라 같은 선택자를 공유하면 안 된다.
    - :root를 겸한 이유: main.css가 @shakilabs/ui/styles.css보다 먼저 로드되므로
      동일 특이도면 패키지 규칙이 이긴다. */
 :root [data-metric-comparison] .sh-chart-fill--success { fill: hsl(var(--profit)); }
-:root [data-metric-comparison] .sh-chart-fill--danger { fill: hsl(var(--fee)); }
+:root [data-metric-comparison] .sh-chart-fill--danger { fill: hsl(var(--status-danger)); }
 :root [data-metric-comparison] .sh-metric-bars__label--success { color: hsl(var(--profit)); }
-:root [data-metric-comparison] .sh-metric-bars__label--danger { color: hsl(var(--fee)); }
+:root [data-metric-comparison] .sh-metric-bars__label--danger { color: hsl(var(--status-danger)); }
