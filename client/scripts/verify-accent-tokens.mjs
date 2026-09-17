@@ -3,15 +3,28 @@
 // 이미지가 크로미움을 받아야 한다(§6-10 함정). index.html 소스와 빌드된 CSS를
 // 텍스트로 파싱해서 계산만 한다.
 //
-// 검사 5가지:
-//  1. --primary/--accent/--secondary/--ring 실값이 §2.2 확정 표(house = 주거·자동차
+// 검사 목록:
+//  1. --primary/--accent/--secondary 실값이 §2.2 확정 표(house = 주거·자동차
 //     그룹, 파랑)와 문자열 일치
-//  2. 라이트 --primary L 24~41%, 다크 L 45~72% 밴드 안
-//  3. 의미색 4종(success/warning/danger/info)이 v3 고정 hex와 일치
-//  4. 로컬 별칭(--fee 등, 2026-09-17에 폐기한 house 전용 빨강)이 빌드 CSS에 없음
-//  5. primary vs 카드/캔버스, accent-foreground vs accent 틴트 대비 >= 4.5:1
+//  2. --ring이 브랜드색이 아니라 ink(color.focus, --foreground와 동일)인지 확인.
+//     조율자 정정(2026-09-17): 낡은 DESIGN_TOKENS.md "--ring = primary" 공식은
+//     이 앱 세대의 정본이 아니다 — v3 §2.1의 color.focus는 color.ink와 같은
+//     #0A0A0A/#F5F5F5. 미선언 시 @shakilabs/ui가 조용히 222 47% 20%(슬레이트)로
+//     폴백하므로(함정 3) 존재 자체도 확인한다.
+//  3. 라이트 --primary L 24~41%, 다크 L 45~72% 밴드 안
+//  4. 의미색 4종(success/warning/danger/info)이 v3 고정 hex와 일치
+//  5. 로컬 별칭(--fee 등, 2026-09-17에 폐기한 house 전용 빨강)이 빌드 CSS에 없음
+//  6. primary vs 카드/캔버스, accent-foreground vs accent 틴트 대비 >= 4.5:1
 //     (라이트·다크 각각. 카드·캔버스 색 자체도 index.html --card/--background에서
 //     읽어온다 — 하드코딩하면 그 값이 드리프트해도 게이트가 못 잡는다)
+//  7. status-warning vs --muted(카드 내부 배경) 대비 >= 4.5:1 — v3 고정 경고색
+//     #B45309/#F0B429는 함대 기존값보다 밝아서 muted 위에서 아슬아슬할 수 있다
+//     (조율자 함정 2, 다른 그룹에서 미달 실측).
+//  8. primary-foreground(on-primary) vs accent 솔리드 면(=--accent-hsl, house는
+//     --primary와 동일) 대비 — @shakilabs/ui MemoryControl 토글 트랙처럼 텍스트가
+//     아닌 요소에 쓰이므로 WCAG 1.4.11 비텍스트 기준 3:1로 판정한다(조율자 함정 1).
+//     house·car는 --accent-hsl을 --primary와 같은 값으로 유지하므로 이 자리에서
+//     같은 값끼리 비교해 검증한다 — 대비 검사 행 자체를 지우지 않는다.
 //
 // 역방향 검증(§4 의무): --primary의 L을 24~41% 밴드 밖으로 1% 옮기고 이 스크립트를
 // 돌려 red(비정상 종료)가 되는지 확인한 뒤 원복하고 커밋한다. 통과만 보고하는
@@ -28,19 +41,19 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-// ── §2.2 확정 표 — 주거·자동차 그룹(파랑). 재계산하지 않고 계획서 값을 그대로 쓴다. ──
+// ── §2.2 확정 표 — 주거·자동차 그룹(파랑). 재계산하지 않고 계획서 값을 그대로 쓴다.
+// --ring은 이 표에 없다: 브랜드 액센트가 아니라 v3 §2.1 color.focus(ink)라서
+// --foreground와 같은 값이어야 한다(아래 별도 검사). ──
 const EXPECTED_HSL = {
   light: {
     primary: "214 74% 33%",
     accent: "214 72% 95%",
     secondary: "214 15% 91%",
-    ring: "214 74% 33%",
   },
   dark: {
     primary: "213 94% 68%",
     accent: "213 74% 22%",
     secondary: "213 15% 20%",
-    ring: "213 94% 68%",
   },
 };
 
@@ -157,12 +170,23 @@ const rootBlocks = extractBlocks(indexHtml, ":root");
 const darkBlocks = extractBlocks(indexHtml, "\\.dark");
 assert(rootBlocks.length > 0, "index.html: no :root { ... } block found");
 assert(darkBlocks.length > 0, "index.html: no .dark { ... } block found");
-const rootTokens = Object.assign({}, ...rootBlocks.map(parseCustomProperties));
-const darkTokens = Object.assign({}, ...darkBlocks.map(parseCustomProperties));
+
+// v3-appshell.css가 --accent-hsl/--accent-muted-hsl을 따로 선언한다(@shakilabs/ui
+// 0.3.15 계약 — v3-appshell.css 자체 주석 참조). index.html만 읽으면 이 값을 놓친다.
+const appshellCssPath = resolve(projectRoot, "src/assets/css/v3-appshell.css");
+const appshellRootBlocks = existsSync(appshellCssPath)
+  ? extractBlocks(readFileSync(appshellCssPath, "utf8"), ":root")
+  : [];
+const appshellDarkBlocks = existsSync(appshellCssPath)
+  ? extractBlocks(readFileSync(appshellCssPath, "utf8"), "\\.dark")
+  : [];
+
+const rootTokens = Object.assign({}, ...rootBlocks.map(parseCustomProperties), ...appshellRootBlocks.map(parseCustomProperties));
+const darkTokens = Object.assign({}, ...darkBlocks.map(parseCustomProperties), ...appshellDarkBlocks.map(parseCustomProperties));
 
 const errors = [];
 
-// ── 2) primary/accent/secondary/ring 문자열 일치 ──
+// ── 2) primary/accent/secondary 문자열 일치 ──
 for (const [mode, tokens, expected] of [
   ["light", rootTokens, EXPECTED_HSL.light],
   ["dark", darkTokens, EXPECTED_HSL.dark],
@@ -174,6 +198,24 @@ for (const [mode, tokens, expected] of [
         `[token] ${mode} --${name}: expected "${expectedValue}", got "${actual ?? "(missing)"}"`
       );
     }
+  }
+}
+
+// ── 2b) --ring은 브랜드색이 아니라 ink(color.focus)다. --foreground와 같은 값이어야
+// 하고, 존재 자체도 확인한다(미선언 시 패키지가 조용히 슬레이트로 폴백 — 함정 3). ──
+for (const [mode, tokens] of [
+  ["light", rootTokens],
+  ["dark", darkTokens],
+]) {
+  if (!tokens.ring) {
+    errors.push(`[ring] ${mode} --ring is not declared (package falls back to slate 222 47% 20% silently)`);
+    continue;
+  }
+  if (tokens.ring !== tokens.foreground) {
+    errors.push(
+      `[ring] ${mode} --ring "${tokens.ring}" does not match --foreground "${tokens.foreground}" `
+        + `(color.focus must equal color.ink per v3 §2.1, not the brand accent)`
+    );
   }
 }
 
@@ -267,11 +309,60 @@ for (const [mode, tokens] of [
   );
 }
 
+// ── 8) status-warning vs --muted (카드 내부 배경). v3 고정 경고색이 함대 기존값보다
+// 밝아서 muted 위에서 아슬아슬할 수 있다(조율자 함정 2) — 의미색은 built CSS에서,
+// muted는 index.html 소스에서 읽는다. ──
+for (const [mode, cssTokens, srcTokens] of [
+  ["light", cssRootTokens, rootTokens],
+  ["dark", cssDarkTokens, darkTokens],
+]) {
+  const warningRaw = cssTokens["status-warning"];
+  const mutedRaw = srcTokens.muted;
+  if (!warningRaw || !mutedRaw) {
+    errors.push(`[contrast] ${mode} warning-on-muted: missing --status-warning or --muted to compare`);
+    continue;
+  }
+  const warningVsMuted = contrastRatio(hslToRgb(parseHslTriplet(warningRaw)), hslToRgb(parseHslTriplet(mutedRaw)));
+  console.log(`verify-accent-tokens: ${mode} warning-on-muted = ${warningVsMuted.toFixed(2)}`);
+  if (warningVsMuted < 4.5) {
+    errors.push(`[contrast] ${mode} status-warning vs --muted = ${warningVsMuted.toFixed(2)} (< 4.5)`);
+  }
+}
+
+// ── 9) primary-foreground(on-primary) vs accent 솔리드 면. @shakilabs/ui의
+// --sh-color-accent는 --accent-hsl(house/car는 --primary와 동일 값으로 주입)을 읽고,
+// MemoryControl 토글 트랙처럼 비텍스트 요소의 배경으로 쓰인다 — WCAG 1.4.11 3:1 기준
+// (조율자 함정 1). --accent-hsl이 --primary와 다르게 드리프트하면 이 자리에서 값
+// 불일치로도 잡힌다. ──
+for (const [mode, tokens] of [
+  ["light", rootTokens],
+  ["dark", darkTokens],
+]) {
+  const accentHsl = tokens["accent-hsl"];
+  if (!accentHsl) {
+    errors.push(`[contrast] ${mode} --accent-hsl not found (package --sh-color-accent would fall back to --primary silently)`);
+    continue;
+  }
+  if (accentHsl !== tokens.primary) {
+    errors.push(
+      `[contrast] ${mode} --accent-hsl "${accentHsl}" no longer matches --primary "${tokens.primary}" — `
+        + `re-derive the on-primary-vs-accent-solid check below against the real value`
+    );
+  }
+  const onPrimaryRgb = hslToRgb(parseHslTriplet(tokens["primary-foreground"]));
+  const accentSolidRgb = hslToRgb(parseHslTriplet(accentHsl));
+  const nonTextRatio = contrastRatio(onPrimaryRgb, accentSolidRgb);
+  console.log(`verify-accent-tokens: ${mode} on-primary vs accent-solid (non-text, WCAG 1.4.11 >= 3:1) = ${nonTextRatio.toFixed(2)}`);
+  if (nonTextRatio < 3) {
+    errors.push(`[contrast] ${mode} primary-foreground vs accent-solid = ${nonTextRatio.toFixed(2)} (< 3, WCAG 1.4.11)`);
+  }
+}
+
 if (errors.length > 0) {
   console.error("verify-accent-tokens: FAILED");
   for (const error of errors) console.error(`  - ${error}`);
   process.exit(1);
 }
 
-console.log("verify-accent-tokens: OK — primary/accent/secondary/ring match §2.2, L bands in range, "
-  + "status colours match v3 hex, no banned local alias, all contrast checks >= 4.5:1.");
+console.log("verify-accent-tokens: OK — primary/accent/secondary match §2.2, ring is ink (color.focus), "
+  + "L bands in range, status colours match v3 hex, no banned local alias, all contrast checks pass.");

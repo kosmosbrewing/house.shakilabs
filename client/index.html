@@ -102,10 +102,10 @@
         /* v3 §2.1 역할 토큰(Wave2 레시피 §4) — canvas/card/ink/ink-muted/line/focus는
            hex에서 역산(반올림 왕복 검증 완료, travel a035f62 실측값과 동일).
            2026-09-17 카테고리 색 정리(DESIGN_CLEANUP_PLAN §2.2): house --primary(파랑)
-           값 자체는 이미 정본과 같아 유지하고, 파생 토큰(secondary/accent/ring)과
-           의미색만 표에 맞춰 재계산한다. --ring은 --primary로 되돌린다 — 포커스를
-           ink로 뒀던 이전 실험은 8개 앱 공통 컨벤션(DESIGN_TOKENS.md "--ring = primary")
-           과 어긋났고, @shakilabs/ui가 --ring을 --sh-color-focus로 직접 구독한다. */
+           값 자체는 이미 정본과 같아 유지하고, 파생 토큰(secondary/accent)과 의미색만
+           표에 맞춰 재계산한다. --ring은 손대지 않는다 — v3 §2.1의 color.focus는
+           color.ink와 같은 #0A0A0A/#F5F5F5이지 브랜드색이 아니다(낡은 DESIGN_TOKENS.md의
+           "--ring = primary" 공식은 이 앱 세대에는 적용되지 않는다, 조율자 정정 확인). */
         --background: 60 11.11% 96.47%; /* color.canvas #F7F7F5 */
         --foreground: 0 0% 3.92%; /* color.ink #0A0A0A */
         --muted: 210 40% 96%;
@@ -127,7 +127,10 @@
         --destructive-foreground: 210 40% 98%;
         --border: 60 8% 90.2%; /* color.line #E8E8E4 */
         --input: 214 16% 85%;
-        --ring: 214 74% 33%; /* = --primary. @shakilabs/ui --sh-color-focus가 --ring을 직접 읽는다 */
+        --ring: 0 0% 3.92%; /* color.focus #0A0A0A (v3 §2.1 — 포커스는 브랜드색이 아니라 ink. 조율자
+        정정 2026-09-17: DESIGN_TOKENS.md의 낡은 "--ring = primary" 공식이 아니라 v3 §2.1이 정본.
+        @shakilabs/ui --sh-color-focus가 --ring을 직접 읽으므로 함대 전체 포커스 링 결정이다.
+        미선언 시 패키지가 조용히 222 47% 20%(슬레이트)로 폴백하니 반드시 명시해 둔다. */
         --radius: 0.4rem;
         --profit: 151 70% 26%;
         --profit-foreground: 0 0% 100%;
@@ -156,7 +159,7 @@
         --destructive-foreground: 0 65% 12%;
         --border: 0 0% 16.47%; /* color.line dark #2A2A2A */
         --input: 214 16% 30%;
-        --ring: 213 94% 68%; /* = --primary */
+        --ring: 0 0% 96.08%; /* color.focus dark #F5F5F5 (== --foreground, 브랜드색 아님) */
         --profit: 151 60% 54%;
         --profit-foreground: 0 0% 100%;
       }
