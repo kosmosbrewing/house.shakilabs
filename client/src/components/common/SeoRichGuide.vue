@@ -36,7 +36,7 @@ defineProps<{
 </script>
 
 <template>
-  <section class="seo-rich-guide retro-panel overflow-hidden">
+  <section class="seo-rich-guide retro-panel overflow-hidden max-w-[65ch]">
     <div class="retro-titlebar rounded-t-2xl">
       <h2 class="retro-title">{{ title }}</h2>
     </div>
