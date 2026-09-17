@@ -22,16 +22,17 @@ const props = defineProps<{
   result: RentalYieldResult;
 }>();
 
+// 순수익이 음수면 투자가 손실 상태라는 진짜 위험 신호다 — status-danger를 유지한다.
 const statItems = computed(() => [
   {
     label: "순수익률 (Net)",
     value: formatPercent(props.result.netYield, 1),
-    cls: props.result.netYield >= 0 ? "text-primary" : "text-fee",
+    cls: props.result.netYield >= 0 ? "text-primary" : "text-status-danger",
   },
   {
     label: "자기자본수익률",
     value: formatPercent(props.result.roe, 1),
-    cls: props.result.roe >= 0 ? "" : "text-fee",
+    cls: props.result.roe >= 0 ? "" : "text-status-danger",
   },
   {
     label: "총수익률 (Gross)",
@@ -41,7 +42,7 @@ const statItems = computed(() => [
   {
     label: "월 순수익",
     value: formatWon(props.result.monthlyNetIncome),
-    cls: props.result.monthlyNetIncome >= 0 ? "" : "text-fee",
+    cls: props.result.monthlyNetIncome >= 0 ? "" : "text-status-danger",
   },
 ]);
 
@@ -198,7 +199,7 @@ function setPricePreset(price: number) {
           </li>
           <li class="flex justify-between">
             <span>공실 손실 ({{ (form.vacancyRate * 100).toFixed(0) }}%)</span>
-            <span class="font-medium text-fee tabular-nums">-{{ formatWon(result.vacancyLoss) }}</span>
+            <span class="font-medium text-foreground tabular-nums">-{{ formatWon(result.vacancyLoss) }}</span>
           </li>
           <li class="flex justify-between">
             <span>연간 실 임대수입</span>
@@ -207,16 +208,16 @@ function setPricePreset(price: number) {
           <li class="h-px bg-border/40" />
           <li class="flex justify-between">
             <span>연간 대출이자</span>
-            <span class="font-medium text-fee tabular-nums">-{{ formatWon(result.annualLoanInterest) }}</span>
+            <span class="font-medium text-foreground tabular-nums">-{{ formatWon(result.annualLoanInterest) }}</span>
           </li>
           <li class="flex justify-between">
             <span>연간 관리비·수선비</span>
-            <span class="font-medium text-fee tabular-nums">-{{ formatWon(result.annualExpense) }}</span>
+            <span class="font-medium text-foreground tabular-nums">-{{ formatWon(result.annualExpense) }}</span>
           </li>
           <li class="h-px bg-border/40" />
           <li class="flex justify-between font-semibold text-foreground">
             <span>연간 순수익</span>
-            <span class="tabular-nums" :class="result.annualNetIncome >= 0 ? 'text-primary' : 'text-fee'">
+            <span class="tabular-nums" :class="result.annualNetIncome >= 0 ? 'text-primary' : 'text-status-danger'">
               {{ formatWon(result.annualNetIncome) }}
             </span>
           </li>

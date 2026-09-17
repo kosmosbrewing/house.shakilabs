@@ -56,15 +56,17 @@ function scaleMarkerClass(percent: number): string {
   return "-translate-x-1/2";
 }
 
+// tone "fee"는 "임계값 초과분" 계열 이름이다(호출부 MeterTone 타입은 그대로 둔다).
+// 실제 색만 로컬 --fee 별칭에서 status-danger로 옮긴다 — 초과 표시는 진짜 위험이다.
 function backgroundToneClass(tone: MeterTone): string {
-  if (tone === "fee") return "bg-fee";
+  if (tone === "fee") return "bg-status-danger";
   if (tone === "profit") return "bg-profit";
   if (tone === "muted") return "bg-muted-foreground/45";
   return "bg-primary";
 }
 
 function textToneClass(tone: MeterTone): string {
-  if (tone === "fee") return "text-fee";
+  if (tone === "fee") return "text-status-danger";
   if (tone === "profit") return "text-profit";
   if (tone === "muted") return "text-foreground";
   return "text-primary";

@@ -96,7 +96,7 @@ const ariaValueText = computed(() => [
       <p
         data-threshold-status
         class="text-caption font-semibold"
-        :class="state === 'above' ? 'text-fee' : state === 'below' ? 'text-primary' : 'text-foreground'"
+        :class="state === 'above' ? 'text-status-danger' : state === 'below' ? 'text-primary' : 'text-foreground'"
       >
         {{ statusText }}
       </p>

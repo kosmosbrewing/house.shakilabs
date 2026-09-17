@@ -101,7 +101,11 @@
       :root {
         /* v3 §2.1 역할 토큰(Wave2 레시피 §4) — canvas/card/ink/ink-muted/line/focus는
            hex에서 역산(반올림 왕복 검증 완료, travel a035f62 실측값과 동일).
-           --primary(house 파랑)는 건드리지 않는다 — 구조색만 바꾼다. */
+           2026-09-17 카테고리 색 정리(DESIGN_CLEANUP_PLAN §2.2): house --primary(파랑)
+           값 자체는 이미 정본과 같아 유지하고, 파생 토큰(secondary/accent/ring)과
+           의미색만 표에 맞춰 재계산한다. --ring은 --primary로 되돌린다 — 포커스를
+           ink로 뒀던 이전 실험은 8개 앱 공통 컨벤션(DESIGN_TOKENS.md "--ring = primary")
+           과 어긋났고, @shakilabs/ui가 --ring을 --sh-color-focus로 직접 구독한다. */
         --background: 60 11.11% 96.47%; /* color.canvas #F7F7F5 */
         --foreground: 0 0% 3.92%; /* color.ink #0A0A0A */
         --muted: 210 40% 96%;
@@ -110,24 +114,23 @@
         --card-foreground: 0 0% 3.92%;
         --primary: 214 74% 33%;
         --primary-foreground: 0 0% 100%;
-        --secondary: 214 100% 97%;
+        --secondary: 214 15% 91%;
         --secondary-foreground: 222 47% 11%;
-        --accent: 214 95% 95%;
-        --accent-foreground: 217 74% 36%;
+        --accent: 214 72% 95%;
+        --accent-foreground: 214 74% 30%;
         --popover: 0 0% 100%;
         --popover-foreground: 0 0% 3.92%;
-        /* 0 72% 52%는 배경(210 40% 98%) 위 4.49:1로 AA 미달이었다.
-           라이트 빨강은 --fee/--status-danger와 같은 0 74% 42%로 통일한다. */
-        --destructive: 0 74% 42%;
+        /* --destructive는 --status-danger와 같은 빨강이어야 한다(@shakilabs/ui
+           tokens.css의 --sh-color-danger가 --destructive를 직접 구독 — 별개로 두면
+           패키지 위험색과 앱 위험색이 갈라진다). v3 고정 hex #C62828의 HSL. */
+        --destructive: 0 66.39% 46.67%;
         --destructive-foreground: 210 40% 98%;
         --border: 60 8% 90.2%; /* color.line #E8E8E4 */
         --input: 214 16% 85%;
-        --ring: 0 0% 3.92%; /* color.focus #0A0A0A (v3 §2.1 — 포커스는 브랜드색이 아니라 ink) */
+        --ring: 214 74% 33%; /* = --primary. @shakilabs/ui --sh-color-focus가 --ring을 직접 읽는다 */
         --radius: 0.4rem;
         --profit: 151 70% 26%;
         --profit-foreground: 0 0% 100%;
-        --fee: 0 74% 42%;
-        --fee-foreground: 0 0% 100%;
       }
 
       .dark {
@@ -138,30 +141,24 @@
         --card: 0 0% 10.98%; /* color.card dark #1C1C1C */
         --card-foreground: 0 0% 96.08%;
         --primary: 213 94% 68%;
-        --primary-foreground: 217 90% 14%;
-        --secondary: 216 28% 18%;
+        --primary-foreground: 213 94% 10%;
+        --secondary: 213 15% 20%;
         --secondary-foreground: 210 40% 96%;
-        --accent: 216 26% 20%;
-        --accent-foreground: 214 100% 79%;
+        --accent: 213 74% 22%;
+        --accent-foreground: 213 94% 78%;
         --popover: 0 0% 10.98%;
         --popover-foreground: 0 0% 96.08%;
-        /* 다크 빨강은 텍스트로 쓰인다(sh-field-error·sh-summary__delta--danger·
-           sh-badge--danger·다주택 중과 배지). 0 72% 58%는 카드(217 33% 17%) 위
-           3.67:1로 AA 미달이라 명도를 높인다. 배경으로 쓰일 때 위에 올라가는
-           --destructive-foreground는 --primary-foreground와 같은 방식으로
-           앱 hue를 유지한 채 명도를 낮춰 6.83:1이 된다. Wave2 §4에서 카드가
-           0 0% 10.98%로 더 어두워졌지만 재측정 결과 대비는 오히려 상승(아래 참조). */
-        --destructive: 0 75% 72%;
+        /* 다크 빨강은 텍스트로도(sh-field-error·sh-summary__delta--danger·sh-badge--danger·
+           다주택 중과 배지) 배경으로도 쓰인다. v3 고정 hex #F07171의 HSL — 재계산 결과
+           카드(0 0% 10.98%) 위 5.93:1, 기존 foreground(0 65% 12%)와 짝지어도 6.15:1로
+           그대로 통과해 foreground 값은 유지한다(실측, 아래 게이트 참조). */
+        --destructive: 0 80.89% 69.22%;
         --destructive-foreground: 0 65% 12%;
         --border: 0 0% 16.47%; /* color.line dark #2A2A2A */
         --input: 214 16% 30%;
-        --ring: 0 0% 96.08%; /* color.focus dark #F5F5F5 */
+        --ring: 213 94% 68%; /* = --primary */
         --profit: 151 60% 54%;
         --profit-foreground: 0 0% 100%;
-        /* text-fee는 세금·손실 금액 텍스트다. 0 62% 58%는 카드 위 3.64:1로
-           AA 미달이었다(라이브 실측). 8개 앱 공통 상향값으로 통일한다. */
-        --fee: 0 75% 72%;
-        --fee-foreground: 0 65% 12%;
       }
 
       html {

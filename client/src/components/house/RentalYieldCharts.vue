@@ -8,10 +8,11 @@ import type { RentalYieldResult } from "@/utils/housingCalculator";
 
 const props = defineProps<{ result: RentalYieldResult }>();
 const loanAmount = computed(() => Math.max(0, props.result.purchasePrice - props.result.totalInvestment));
+// 대출금은 위험이 아니라 자금 구성의 한 축이다 — 자기자본(primary)만 강조하고 나머지는 중립.
 const fundingSegments = computed(() => [
   { key: "equity", label: "자기자본", value: props.result.equity, tone: "primary" as const },
   { key: "deposit", label: "임차인 보증금", value: props.result.deposit, tone: "muted" as const },
-  { key: "loan", label: "대출금", value: loanAmount.value, tone: "danger" as const },
+  { key: "loan", label: "대출금", value: loanAmount.value, tone: "muted" as const },
 ]);
 const isFundingBalanced = computed(() => {
   const total = fundingSegments.value.reduce((sum, segment) => sum + segment.value, 0);
