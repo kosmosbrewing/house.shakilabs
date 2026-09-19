@@ -88,7 +88,7 @@ const faqJsonLd = computed(() => ({
     :json-ld="faqJsonLd"
     :canonical-path="canonicalPath"
   />
-  <div class="container space-y-5 py-5">
+  <div class="sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="재산세·보유세 계산기" />
 
     <SessionDraftControl />

@@ -99,7 +99,7 @@ const faqJsonLd = {
 
 <template>
   <SEOHead :title="seoTitle" :description="seoDescription" :json-ld="faqJsonLd" />
-  <div class="container space-y-5 py-5">
+  <div class="sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="깡통전세 위험 진단" />
 
     <section class="retro-panel overflow-hidden" aria-labelledby="jeonse-risk-input-title">

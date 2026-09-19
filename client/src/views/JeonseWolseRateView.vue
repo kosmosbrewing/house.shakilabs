@@ -88,7 +88,7 @@ const faqJsonLd = {
     :json-ld="faqJsonLd"
     :canonical-path="canonicalPath"
   />
-  <div class="container space-y-5 py-5">
+  <div class="sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="전월세 전환율 계산기" />
 
     <section class="retro-panel overflow-hidden" aria-labelledby="jeonse-wolse-rate-input-title">

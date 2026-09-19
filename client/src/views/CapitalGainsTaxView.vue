@@ -76,7 +76,7 @@ const faqJsonLd = {
     :json-ld="faqJsonLd"
     :canonical-path="canonicalPath"
   />
-  <div class="container space-y-5 py-5">
+  <div class="sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="양도소득세 계산기" />
 
     <section class="retro-panel overflow-hidden" aria-labelledby="capital-gains-tax-input-title">

@@ -120,7 +120,7 @@ const faqJsonLd = {
     :json-ld="faqJsonLd"
   />
 
-  <div class="container py-5 space-y-5">
+  <div class="sh-container sh-container--page py-5 space-y-5">
     <ShSurface padding="none" class="overflow-hidden">
       <div class="retro-titlebar rounded-t-2xl">
         <ShText as="h1" variant="heading">주거 계산기 홈</ShText>

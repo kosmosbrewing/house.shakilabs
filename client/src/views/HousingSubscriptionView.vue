@@ -30,7 +30,7 @@ const faqJsonLd = {
     description="무주택기간, 부양가족수, 청약통장 가입기간을 합산해 민영주택 청약 가점을 빠르게 계산합니다."
     :json-ld="faqJsonLd"
   />
-  <div class="container space-y-5 py-5">
+  <div class="sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="청약 가점 계산기" />
 
     <section class="retro-panel overflow-hidden" aria-labelledby="housing-subscription-input-title">

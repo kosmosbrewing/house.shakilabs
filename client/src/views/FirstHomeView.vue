@@ -29,7 +29,7 @@ const faqJsonLd = {
     description="취득세 감면과 디딤돌 대출 한도를 기준으로 생애최초 주택 구입 혜택을 빠르게 계산합니다."
     :json-ld="faqJsonLd"
   />
-  <div class="container space-y-5 py-5">
+  <div class="sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="생애최초 주택 혜택 계산기" />
 
     <section class="retro-panel overflow-hidden" aria-labelledby="first-home-input-title">
