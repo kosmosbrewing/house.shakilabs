@@ -11,7 +11,7 @@ const constantsStore = useConstantsStore();
     description="shakilabs.com/house의 개인정보 처리방침입니다. 부동산 계산 입력값의 브라우저 내 처리 원칙, 쿠키와 제3자 광고(Google AdSense), 맞춤 광고 해제 방법을 안내합니다."
   />
 
-  <div class="container py-5">
+  <div class="sh-container sh-container--prose py-5">
     <div class="retro-panel">
       <div class="retro-titlebar rounded-t-2xl">
         <h1 class="retro-title">개인정보 처리방침</h1>

@@ -76,7 +76,7 @@ const faqJsonLd = {
     :json-ld="faqJsonLd"
     :canonical-path="canonicalPath"
   />
-  <div class="container space-y-5 py-5">
+  <div class="sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="전세 vs 월세 비교 계산기" />
 
     <section class="retro-panel overflow-hidden" aria-labelledby="jeonse-vs-wolse-input-title">

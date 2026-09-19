@@ -19,22 +19,24 @@ const props = withDefaults(defineProps<{
   title: "자주 묻는 질문",
 });
 
+// 읽는 줄 캡(65ch)은 카드가 아니라 질문·답변 텍스트에 건다 — 카드째 좁히면
+// 위 계산기 카드와 우변이 어긋난다(SeoRichGuide와 같은 규칙).
 const visibleItems = computed(() => mergeFaqs(props.items, props.extra));
 const titleId = "faq-panel-" + useId();
 </script>
 
 <template>
-  <section class="retro-panel overflow-hidden max-w-[65ch]" :aria-labelledby="titleId">
+  <section class="retro-panel overflow-hidden" :aria-labelledby="titleId">
     <div class="retro-titlebar rounded-t-2xl">
       <h2 :id="titleId" class="retro-title">{{ title }}</h2>
     </div>
     <div class="retro-panel-content space-y-2">
       <details v-for="item in visibleItems" :key="item.q" class="group retro-panel-muted px-4 py-3">
         <summary class="flex cursor-pointer list-none items-start justify-between gap-3 text-body font-semibold leading-snug text-foreground">
-          <span>{{ item.q }}</span>
+          <span class="max-w-[65ch]">{{ item.q }}</span>
           <ChevronDown aria-hidden="true" class="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
         </summary>
-        <p class="mt-2 pr-6 text-caption leading-relaxed text-muted-foreground">{{ item.a }}</p>
+        <p class="mt-2 max-w-[65ch] pr-6 text-caption leading-relaxed text-muted-foreground">{{ item.a }}</p>
       </details>
     </div>
   </section>
