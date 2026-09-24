@@ -43,6 +43,20 @@ if (process.env.GITHUB_REPOSITORY) {
   check("cyclonedx vcs url", vcs?.url, `https://github.com/${process.env.GITHUB_REPOSITORY}`);
 }
 
+// @shakilabs/ui is a vendored file: dependency (tgz pinned by version in its filename), so npm
+// never flags a drift between the package.json pin and the SBOM's recorded component version.
+// Without this check, bumping the pin without regenerating the SBOM leaves a stale UI version
+// committed while metadata.component above still reports this repo's own name/version as OK.
+const uiPin = pkg.dependencies?.["@shakilabs/ui"];
+const uiPinMatch = typeof uiPin === "string" ? uiPin.match(/shakilabs-ui-(\d+\.\d+\.\d+)\.tgz$/) : null;
+
+if (uiPinMatch) {
+  const expectedUiVersion = uiPinMatch[1];
+  const uiComponent = (cyclonedx.components ?? []).find((item) => item.name === "@shakilabs/ui");
+
+  check("cyclonedx components \"@shakilabs/ui\".version", uiComponent?.version, expectedUiVersion);
+}
+
 const spdxPath = resolve(sbomDir, "production.spdx.json");
 
 if (existsSync(spdxPath)) {
