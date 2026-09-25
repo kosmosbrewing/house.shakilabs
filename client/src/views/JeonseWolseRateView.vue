@@ -6,9 +6,10 @@ import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import { HOUSE_JEONSE_WOLSE_RATE_GUIDE } from "@/data/seoGuides";
-import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
+import { ShCalculatorSplit, ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
-import JeonseWolseRateCalculator from "@/components/house/JeonseWolseRateCalculator.vue";
+import JeonseWolseRateCalculatorInput from "@/components/house/JeonseWolseRateCalculatorInput.vue";
+import JeonseWolseRateCalculatorResult from "@/components/house/JeonseWolseRateCalculatorResult.vue";
 import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import { JEONSE_WOLSE_RATE_FAQS } from "@/data/jeonseWolseRate";
 import { useJeonseWolseRate } from "@/composables/useJeonseWolseRate";
@@ -91,31 +92,40 @@ const faqJsonLd = {
   <div class="sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="전월세 전환율 계산기" />
 
-    <section class="retro-panel overflow-hidden" aria-labelledby="jeonse-wolse-rate-input-title">
-      <div class="retro-titlebar rounded-t-2xl">
-        <h2 id="jeonse-wolse-rate-input-title" class="retro-title">전월세 조건 입력</h2>
-      </div>
-      <div class="retro-panel-content">
-        <CalculatorInteractionTracker
-          calculator-id="jeonse_wolse_rate"
-          page-path="/house/jeonse-wolse-rate"
-        >
-          <JeonseWolseRateCalculator v-model="form" :result="result" />
-        </CalculatorInteractionTracker>
-      </div>
-    </section>
+    <ShCalculatorSplit>
+      <template #input>
+        <section class="retro-panel overflow-hidden" aria-labelledby="jeonse-wolse-rate-input-title">
+          <div class="retro-titlebar rounded-t-2xl">
+            <h2 id="jeonse-wolse-rate-input-title" class="retro-title">전월세 조건 입력</h2>
+          </div>
+          <div class="retro-panel-content">
+            <CalculatorInteractionTracker
+              calculator-id="jeonse_wolse_rate"
+              page-path="/house/jeonse-wolse-rate"
+            >
+              <JeonseWolseRateCalculatorInput v-model="form" />
+            </CalculatorInteractionTracker>
+          </div>
+        </section>
+      </template>
 
-    <!-- 요약 배너 -->
-    <SummaryBanner
-      title="전세 보증금과 월세 조건을 기준으로 전환율을 분석한 결과입니다."
-      leader-label="적정 월세"
-      :leader-value="formatWon(result.fairMonthlyRent)"
-      delta-label="판정"
-      :delta-value="judgmentText"
-      :facts="facts"
-      show-share
-      @share="share.openShare"
-    />
+      <template #result>
+        <!-- 요약 배너 -->
+        <SummaryBanner
+          title="전세 보증금과 월세 조건을 기준으로 전환율을 분석한 결과입니다."
+          leader-label="적정 월세"
+          :leader-value="formatWon(result.fairMonthlyRent)"
+          delta-label="판정"
+          :delta-value="judgmentText"
+          :facts="facts"
+          show-share
+          @share="share.openShare"
+        />
+      </template>
+    </ShCalculatorSplit>
+
+    <!-- 결과 칸이 입력보다 300px 이상 길어져(rule 2) 상세 분석은 1×2 아래 전폭으로 내린다 -->
+    <JeonseWolseRateCalculatorResult :form="form" :result="result" />
 
     <FaqAccordionPanel :items="mergedFaqs" />
 

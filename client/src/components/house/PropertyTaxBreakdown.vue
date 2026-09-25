@@ -11,7 +11,7 @@ defineProps<{
 </script>
 
 <template>
-  <div v-if="result.isSupportedScenario" class="grid gap-4 lg:grid-cols-2">
+  <div v-if="result.isSupportedScenario" class="grid gap-4 md:grid-cols-2 lg:grid-cols-1">
     <Card>
       <CardContent class="p-4">
         <div class="mb-3 flex items-center gap-2">

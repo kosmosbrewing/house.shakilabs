@@ -7,7 +7,7 @@ import SEOHead from "@/components/common/SEOHead.vue";
 import ShareModal from "@/components/share/ShareModal.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import { HOUSE_BROKERAGE_FEE_GUIDE } from "@/data/seoGuides";
-import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
+import { ShCalculatorSplit, ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import BrokerageFeeFAQ from "@/components/house/BrokerageFeeFAQ.vue";
 import BrokerageFeeInput from "@/components/house/BrokerageFeeInput.vue";
 import BrokerageFeeResult from "@/components/house/BrokerageFeeResult.vue";
@@ -79,31 +79,38 @@ const faqJsonLd = {
   <div class="sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="주택 중개보수 계산기" />
 
-    <section class="retro-panel overflow-hidden" aria-labelledby="brokerage-fee-input-title">
-      <div class="retro-titlebar rounded-t-2xl">
-        <h2 id="brokerage-fee-input-title" class="retro-title">거래 조건 입력</h2>
-      </div>
-      <div class="retro-panel-content">
-        <CalculatorInteractionTracker
-          calculator-id="brokerage_fee"
-          page-path="/house/brokerage-fee"
-        >
-          <BrokerageFeeInput v-model="form" />
-        </CalculatorInteractionTracker>
-      </div>
-    </section>
+    <ShCalculatorSplit>
+      <template #input>
+        <section class="retro-panel overflow-hidden" aria-labelledby="brokerage-fee-input-title">
+          <div class="retro-titlebar rounded-t-2xl">
+            <h2 id="brokerage-fee-input-title" class="retro-title">거래 조건 입력</h2>
+          </div>
+          <div class="retro-panel-content">
+            <CalculatorInteractionTracker
+              calculator-id="brokerage_fee"
+              page-path="/house/brokerage-fee"
+            >
+              <BrokerageFeeInput v-model="form" />
+            </CalculatorInteractionTracker>
+          </div>
+        </section>
+      </template>
 
-    <SummaryBanner
-      title="서울시 부동산중개업정보의 주택 요율표를 기준으로 계산한 상한 보수입니다."
-      leader-label="중개보수 상한"
-      :leader-value="formatWon(result.maxFee)"
-      delta-label="적용 구간"
-      :delta-value="result.tier.label"
-      :facts="facts"
-      show-share
-      @share="share.openShare"
-    />
+      <template #result>
+        <SummaryBanner
+          title="서울시 부동산중개업정보의 주택 요율표를 기준으로 계산한 상한 보수입니다."
+          leader-label="중개보수 상한"
+          :leader-value="formatWon(result.maxFee)"
+          delta-label="적용 구간"
+          :delta-value="result.tier.label"
+          :facts="facts"
+          show-share
+          @share="share.openShare"
+        />
+      </template>
+    </ShCalculatorSplit>
 
+    <!-- 결과 칸이 입력보다 300px 이상 길어져(rule 2) 상세 내역은 1×2 아래 전폭으로 내린다 -->
     <BrokerageFeeResult :result="result" />
     <CompareSourceFooter :sources="[...BROKERAGE_SOURCES]" :updated-at="BROKERAGE_DATA_UPDATED" />
     <BrokerageFeeFAQ :faqs="mergedFaqs" />

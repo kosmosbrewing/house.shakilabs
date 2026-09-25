@@ -30,7 +30,7 @@ const incomeMetrics = computed(() => [{
 </script>
 
 <template>
-  <div class="grid gap-4 lg:grid-cols-2">
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-1">
     <MetricComparisonBars
       title="연간 임대 현금흐름"
       note="공실 전 수입과 비용 반영 순수익을 같은 손익 축에서 비교하며, 손실은 0원 기준선 왼쪽에 표시합니다."

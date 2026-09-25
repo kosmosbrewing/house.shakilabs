@@ -8,7 +8,7 @@ import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import PopularCalculators from "@/components/house/PopularCalculators.vue";
-import { ShPresetGroup, ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
+import { ShCalculatorSplit, ShPresetGroup, ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import {
   AUCTION_RATE_SCENARIOS,
   JEONSE_RISK_DATA_UPDATED,
@@ -102,17 +102,19 @@ const faqJsonLd = {
   <div class="sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="깡통전세 위험 진단" />
 
-    <section class="retro-panel overflow-hidden" aria-labelledby="jeonse-risk-input-title">
-      <div class="retro-titlebar rounded-t-2xl">
-        <h2 id="jeonse-risk-input-title" class="retro-title">진단 조건 입력</h2>
-      </div>
-      <div class="retro-panel-content">
-        <CalculatorInteractionTracker
-          calculator-id="jeonse_risk"
-          page-path="/house/jeonse-risk"
-          :can-view-result="result.isSupported"
-        >
-          <div class="space-y-4">
+    <ShCalculatorSplit>
+      <template #input>
+        <section class="retro-panel overflow-hidden" aria-labelledby="jeonse-risk-input-title">
+          <div class="retro-titlebar rounded-t-2xl">
+            <h2 id="jeonse-risk-input-title" class="retro-title">진단 조건 입력</h2>
+          </div>
+          <div class="retro-panel-content">
+            <CalculatorInteractionTracker
+              calculator-id="jeonse_risk"
+              page-path="/house/jeonse-risk"
+              :can-view-result="result.isSupported"
+            >
+              <div class="space-y-4">
             <div class="space-y-2">
               <div class="flex items-center justify-between gap-3">
                 <label for="risk-price" class="text-caption font-semibold text-foreground">매매 시세</label>
@@ -168,21 +170,23 @@ const faqJsonLd = {
               <ShPresetGroup v-model="region" :options="regionOptions" label="지역 선택" />
             </div>
           </div>
-        </CalculatorInteractionTracker>
-      </div>
-    </section>
+            </CalculatorInteractionTracker>
+          </div>
+        </section>
+      </template>
 
-    <SummaryBanner
-      v-if="result.isSupported"
-      :title="bannerTitle"
-      leader-label="위험 등급"
-      :leader-value="riskLabel"
-      :delta-label="`낙찰가율 ${scenarioRateLabel} 가정 부족분`"
-      :delta-value="shortfallRange"
-      :facts="facts"
-    />
+      <template #result>
+        <SummaryBanner
+          v-if="result.isSupported"
+          :title="bannerTitle"
+          leader-label="위험 등급"
+          :leader-value="riskLabel"
+          :delta-label="`낙찰가율 ${scenarioRateLabel} 가정 부족분`"
+          :delta-value="shortfallRange"
+          :facts="facts"
+        />
 
-    <AdSlot slot="120006" label="광고 · top" />
+        <AdSlot slot="120006" label="광고 · top" />
 
     <section v-if="result.isSupported" class="retro-panel overflow-hidden">
       <div class="retro-titlebar rounded-t-2xl">
@@ -244,6 +248,8 @@ const faqJsonLd = {
         </p>
       </div>
     </section>
+      </template>
+    </ShCalculatorSplit>
 
     <CompareSourceFooter :sources="[...JEONSE_RISK_SOURCES]" :updated-at="JEONSE_RISK_DATA_UPDATED" />
     <FaqAccordionPanel :items="mergedFaqs" />

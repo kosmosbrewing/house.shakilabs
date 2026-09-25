@@ -6,7 +6,7 @@ import AdSlot from "@/components/common/AdSlot.vue";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import ShareModal from "@/components/share/ShareModal.vue";
-import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
+import { ShCalculatorSplit, ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import DelayInterestFAQ from "@/components/house/DelayInterestFAQ.vue";
 import DelayInterestInput from "@/components/house/DelayInterestInput.vue";
 import DelayInterestResult from "@/components/house/DelayInterestResult.vue";
@@ -103,32 +103,39 @@ const faqJsonLd = computed(() => ({
   <div class="text-resize-layout sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="보증금 반환 지연이자 계산기" />
 
-    <section class="retro-panel overflow-hidden" aria-labelledby="delay-interest-input-title">
-      <div class="retro-titlebar rounded-t-2xl">
-        <h2 id="delay-interest-input-title" class="retro-title">지연이자 조건 입력</h2>
-      </div>
-      <div class="retro-panel-content">
-        <CalculatorInteractionTracker
-          calculator-id="deposit_delay_interest"
-          page-path="/house/delay-interest"
-        >
-          <DelayInterestInput v-model="form" />
-        </CalculatorInteractionTracker>
-      </div>
-    </section>
+    <ShCalculatorSplit>
+      <template #input>
+        <section class="retro-panel overflow-hidden" aria-labelledby="delay-interest-input-title">
+          <div class="retro-titlebar rounded-t-2xl">
+            <h2 id="delay-interest-input-title" class="retro-title">지연이자 조건 입력</h2>
+          </div>
+          <div class="retro-panel-content">
+            <CalculatorInteractionTracker
+              calculator-id="deposit_delay_interest"
+              page-path="/house/delay-interest"
+            >
+              <DelayInterestInput v-model="form" />
+            </CalculatorInteractionTracker>
+          </div>
+        </section>
+      </template>
 
-    <SummaryBanner
-      :title="rateBasis"
-      leader-label="예상 지연이자"
-      :leader-value="formatWon(result.totalInterest)"
-      delta-label="지연 일수"
-      :delta-value="`${form.overdueDays}일`"
-      :facts="facts"
-      show-share
-      @share="share.openShare"
-    />
+      <template #result>
+        <SummaryBanner
+          :title="rateBasis"
+          leader-label="예상 지연이자"
+          :leader-value="formatWon(result.totalInterest)"
+          delta-label="지연 일수"
+          :delta-value="`${form.overdueDays}일`"
+          :facts="facts"
+          show-share
+          @share="share.openShare"
+        />
 
-    <DelayInterestResult :form="form" :result="result" />
+        <DelayInterestResult :form="form" :result="result" />
+      </template>
+    </ShCalculatorSplit>
+
     <AdSlot slot="120001" label="광고 · top" />
     <section class="retro-panel overflow-hidden">
       <div class="retro-titlebar rounded-t-2xl">

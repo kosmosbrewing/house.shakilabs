@@ -1,24 +1,16 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { ShPresetGroup } from "@shakilabs/ui";
 import { Percent, Scale, AlertTriangle, CheckCircle2, ArrowDown } from "lucide-vue-next";
 import { Card, CardContent } from "@/components/ui/card";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
 import ThresholdComparison from "@/components/result-visualization/ThresholdComparison.vue";
 import HouseStatGrid from "@/components/house/HouseStatGrid.vue";
-import {
-  JEONSE_DEPOSIT_PRESETS,
-  JEONSE_WOLSE_RATE_SOURCES,
-  JEONSE_WOLSE_RATE_UPDATED,
-  BOK_BASE_RATE,
-  LEGAL_RATE_SPREAD,
-} from "@/data/jeonseWolseRate";
-import { formatWon, formatPercent, parseNumericInput } from "@/lib/utils";
+import { JEONSE_WOLSE_RATE_SOURCES, JEONSE_WOLSE_RATE_UPDATED } from "@/data/jeonseWolseRate";
+import { formatWon, formatPercent } from "@/lib/utils";
 import type { JeonseWolseRateInput, JeonseWolseRateResult } from "@/utils/housingCalculator";
 
-const form = defineModel<JeonseWolseRateInput>({ required: true });
-
 const props = defineProps<{
+  form: JeonseWolseRateInput;
   result: JeonseWolseRateResult;
 }>();
 
@@ -47,7 +39,7 @@ const judgmentCls = computed(() => {
 });
 
 // 월세 보증금이 전세 보증금 이상이면 전환율 계산 불가
-const isDepositInvalid = computed(() => form.value.wolseDeposit >= form.value.jeonseDeposit);
+const isDepositInvalid = computed(() => props.form.wolseDeposit >= props.form.jeonseDeposit);
 
 const statItems = computed(() => [
   {
@@ -89,10 +81,6 @@ const statIconClasses = computed(() => [
   "bg-muted text-muted-foreground",
 ] as const);
 
-function setDepositPreset(price: number) {
-  form.value = { ...form.value, jeonseDeposit: price };
-}
-
 function formatRate(value: number): string {
   return formatPercent(value, 2);
 }
@@ -108,64 +96,6 @@ function formatPercentagePoint(value: number): string {
 
 <template>
   <div class="space-y-4">
-    <!-- 입력 영역 -->
-    <section class="retro-panel-muted space-y-4 p-4">
-      <!-- 전세 보증금 + 프리셋 -->
-      <div class="space-y-1.5">
-        <label for="conversion-jeonse-deposit" class="text-caption font-semibold text-foreground">전세 보증금</label>
-        <input
-          id="conversion-jeonse-deposit"
-          type="text"
-          inputmode="numeric"
-          class="retro-input"
-          :value="form.jeonseDeposit.toLocaleString('ko-KR')"
-          @input="form.jeonseDeposit = parseNumericInput(($event.target as HTMLInputElement).value)"
-        />
-        <ShPresetGroup
-          :model-value="form.jeonseDeposit"
-          :options="JEONSE_DEPOSIT_PRESETS"
-          label="전세 보증금 빠른 선택"
-          @update:model-value="setDepositPreset"
-        />
-      </div>
-
-      <div class="grid gap-3 md:grid-cols-2">
-        <!-- 월세 보증금 -->
-        <div class="space-y-1.5">
-          <label for="conversion-wolse-deposit" class="text-caption font-semibold text-foreground">월세 보증금</label>
-          <input
-            id="conversion-wolse-deposit"
-            type="text"
-            inputmode="numeric"
-            class="retro-input"
-            :value="form.wolseDeposit.toLocaleString('ko-KR')"
-            @input="form.wolseDeposit = parseNumericInput(($event.target as HTMLInputElement).value)"
-          />
-        </div>
-
-        <!-- 월세 -->
-        <div class="space-y-1.5">
-          <label for="conversion-monthly-rent" class="text-caption font-semibold text-foreground">월세</label>
-          <input
-            id="conversion-monthly-rent"
-            type="text"
-            inputmode="numeric"
-            class="retro-input"
-            :value="form.monthlyRent.toLocaleString('ko-KR')"
-            @input="form.monthlyRent = parseNumericInput(($event.target as HTMLInputElement).value)"
-          />
-        </div>
-      </div>
-
-      <!-- 법정 전환율 (자동 표시) -->
-      <div class="rounded-xl border border-border/50 bg-background/50 p-3">
-        <p class="text-caption font-semibold text-muted-foreground">
-          법정 전환율 상한 = 기준금리({{ formatPercent(BOK_BASE_RATE, 1) }}) + {{ formatPercent(LEGAL_RATE_SPREAD, 1) }} = <span class="text-foreground">{{ formatPercent(form.legalRateCap, 1) }}</span>
-        </p>
-        <p class="mt-1 text-[10px] text-muted-foreground">주택임대차보호법 시행령 §9 · 2026.03 기준</p>
-      </div>
-    </section>
-
     <!-- 보증금 역전 경고 -->
     <div v-if="isDepositInvalid" class="rounded-xl border border-status-danger/30 bg-status-danger/5 p-4">
       <p class="flex items-center gap-2 font-semibold text-status-danger">

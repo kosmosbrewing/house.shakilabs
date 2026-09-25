@@ -6,9 +6,10 @@ import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import { HOUSE_CAPITAL_GAINS_TAX_GUIDE } from "@/data/seoGuides";
-import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
+import { ShCalculatorSplit, ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
-import CapitalGainsTaxCalculator from "@/components/house/CapitalGainsTaxCalculator.vue";
+import CapitalGainsTaxCalculatorInput from "@/components/house/CapitalGainsTaxCalculatorInput.vue";
+import CapitalGainsTaxCalculatorResult from "@/components/house/CapitalGainsTaxCalculatorResult.vue";
 import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import { CAPITAL_GAINS_TAX_FAQS } from "@/data/capitalGainsTax";
 import { useCapitalGainsTax } from "@/composables/useCapitalGainsTax";
@@ -79,31 +80,40 @@ const faqJsonLd = {
   <div class="sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="양도소득세 계산기" />
 
-    <section class="retro-panel overflow-hidden" aria-labelledby="capital-gains-tax-input-title">
-      <div class="retro-titlebar rounded-t-2xl">
-        <h2 id="capital-gains-tax-input-title" class="retro-title">양도 조건 입력</h2>
-      </div>
-      <div class="retro-panel-content">
-        <CalculatorInteractionTracker
-          calculator-id="capital_gains_tax"
-          page-path="/house/capital-gains-tax"
-        >
-          <CapitalGainsTaxCalculator v-model="form" :result="result" />
-        </CalculatorInteractionTracker>
-      </div>
-    </section>
+    <ShCalculatorSplit>
+      <template #input>
+        <section class="retro-panel overflow-hidden" aria-labelledby="capital-gains-tax-input-title">
+          <div class="retro-titlebar rounded-t-2xl">
+            <h2 id="capital-gains-tax-input-title" class="retro-title">양도 조건 입력</h2>
+          </div>
+          <div class="retro-panel-content">
+            <CalculatorInteractionTracker
+              calculator-id="capital_gains_tax"
+              page-path="/house/capital-gains-tax"
+            >
+              <CapitalGainsTaxCalculatorInput v-model="form" />
+            </CalculatorInteractionTracker>
+          </div>
+        </section>
+      </template>
 
-    <!-- 요약 배너 -->
-    <SummaryBanner
-      title="양도가·취득가와 보유기간을 기준으로 양도소득세를 시뮬레이션한 결과입니다."
-      leader-label="세금 합계"
-      :leader-value="formatWon(result.totalTax)"
-      delta-label="세후 차익"
-      :delta-value="formatWon(result.afterTaxProfit)"
-      :facts="facts"
-      show-share
-      @share="share.openShare"
-    />
+      <template #result>
+        <!-- 요약 배너 -->
+        <SummaryBanner
+          title="양도가·취득가와 보유기간을 기준으로 양도소득세를 시뮬레이션한 결과입니다."
+          leader-label="세금 합계"
+          :leader-value="formatWon(result.totalTax)"
+          delta-label="세후 차익"
+          :delta-value="formatWon(result.afterTaxProfit)"
+          :facts="facts"
+          show-share
+          @share="share.openShare"
+        />
+      </template>
+    </ShCalculatorSplit>
+
+    <!-- 결과 칸이 입력보다 300px 이상 길어져(rule 2) 상세 산출 내역은 1×2 아래 전폭으로 내린다 -->
+    <CapitalGainsTaxCalculatorResult :form="form" :result="result" />
 
     <PopularCalculators />
 
