@@ -1,14 +1,28 @@
 <script setup lang="ts">
+import { computed, ref } from "vue";
+import { ShCalculatorSplit } from "@shakilabs/ui";
 import CalculatorInteractionTracker from "@/components/analytics/CalculatorInteractionTracker.vue";
 import CalculatorPageHeader from "@/components/calculator/CalculatorPageHeader.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import { HOUSE_HOUSING_SUBSCRIPTION_GUIDE } from "@/data/seoGuides";
-import HousingSubscriptionCalculator from "@/components/house/HousingSubscriptionCalculator.vue";
+import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
+import HousingSubscriptionCalculatorInput from "@/components/house/HousingSubscriptionCalculatorInput.vue";
+import HousingSubscriptionCalculatorResult from "@/components/house/HousingSubscriptionCalculatorResult.vue";
+import HousingSubscriptionCalculatorDetail from "@/components/house/HousingSubscriptionCalculatorDetail.vue";
 import PopularCalculators from "@/components/house/PopularCalculators.vue";
-import { HOUSING_SUBSCRIPTION_FAQS } from "@/data/housingSubscription";
+import { HOUSING_SUBSCRIPTION_FAQS, HOUSING_SUBSCRIPTION_SOURCES } from "@/data/housingSubscription";
+import { DEFAULT_HOUSING_SUBSCRIPTION_INPUT, sanitizeHousingSubscriptionInput } from "@/lib/housingValidators";
+import { calculateHousingSubscriptionScore } from "@/utils/housingCalculator";
+import type { HousingSubscriptionInput } from "@/utils/housingCalculator";
 import { mergeFaqs } from "@/lib/faqMerge";
+
+// 입력+결과 상태는 이 화면에서 소유한다(다른 계산기의 useXxx 합성 함수 패턴과 동일) —
+// HousingSubscriptionCalculatorInput/Result 두 컴포넌트가 형제로 나뉘어 있어 공통 부모가 들고 있어야 한다.
+const form = ref<HousingSubscriptionInput>({ ...DEFAULT_HOUSING_SUBSCRIPTION_INPUT });
+const sanitized = computed(() => sanitizeHousingSubscriptionInput(form.value));
+const result = computed(() => calculateHousingSubscriptionScore(sanitized.value));
 
 // 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
 const mergedFaqs = mergeFaqs(HOUSING_SUBSCRIPTION_FAQS, HOUSE_HOUSING_SUBSCRIPTION_GUIDE.faqs);
@@ -33,22 +47,38 @@ const faqJsonLd = {
   <div class="sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="청약 가점 계산기" />
 
-    <section class="retro-panel overflow-hidden" aria-labelledby="housing-subscription-input-title">
-      <div class="retro-titlebar rounded-t-2xl">
-        <h2 id="housing-subscription-input-title" class="retro-title">청약 조건 입력</h2>
-      </div>
-      <div class="retro-panel-content space-y-4">
-        <p class="text-caption leading-relaxed text-muted-foreground">
-          핵심 3개 항목만 빠르게 합산하는 민영주택 청약 가점 계산기입니다.
-        </p>
-        <CalculatorInteractionTracker
-          calculator-id="housing_subscription"
-          page-path="/house/housing-subscription"
-        >
-          <HousingSubscriptionCalculator />
-        </CalculatorInteractionTracker>
-      </div>
-    </section>
+    <ShCalculatorSplit>
+      <template #input>
+        <section class="retro-panel overflow-hidden" aria-labelledby="housing-subscription-input-title">
+          <div class="retro-titlebar rounded-t-2xl">
+            <h2 id="housing-subscription-input-title" class="retro-title">청약 조건 입력</h2>
+          </div>
+          <div class="retro-panel-content space-y-4">
+            <p class="text-caption leading-relaxed text-muted-foreground">
+              핵심 3개 항목만 빠르게 합산하는 민영주택 청약 가점 계산기입니다.
+            </p>
+            <CalculatorInteractionTracker
+              calculator-id="housing_subscription"
+              page-path="/house/housing-subscription"
+            >
+              <HousingSubscriptionCalculatorInput v-model="form" />
+            </CalculatorInteractionTracker>
+          </div>
+        </section>
+      </template>
+
+      <template #result>
+        <HousingSubscriptionCalculatorResult :result="result" />
+      </template>
+
+      <template #below-input>
+        <!-- 출처·기준 노트는 입력과 관련된 보조 블록(rule 2a) -->
+        <CompareSourceFooter :sources="[...HOUSING_SUBSCRIPTION_SOURCES]" updated-at="2026-03-17" />
+      </template>
+    </ShCalculatorSplit>
+
+    <!-- 결과 칸이 입력보다 300px 이상 길어져(rule 2) 경쟁력 카드는 1×2 아래 전폭으로 내린다 -->
+    <HousingSubscriptionCalculatorDetail :result="result" />
 
     <PopularCalculators />
 

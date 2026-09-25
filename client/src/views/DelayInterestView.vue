@@ -6,7 +6,7 @@ import AdSlot from "@/components/common/AdSlot.vue";
 import CompareSourceFooter from "@/components/common/CompareSourceFooter.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import ShareModal from "@/components/share/ShareModal.vue";
-import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
+import { ShCalculatorSplit, ShPairRow, ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import DelayInterestFAQ from "@/components/house/DelayInterestFAQ.vue";
 import DelayInterestInput from "@/components/house/DelayInterestInput.vue";
 import DelayInterestResult from "@/components/house/DelayInterestResult.vue";
@@ -103,45 +103,62 @@ const faqJsonLd = computed(() => ({
   <div class="text-resize-layout sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="보증금 반환 지연이자 계산기" />
 
-    <section class="retro-panel overflow-hidden" aria-labelledby="delay-interest-input-title">
-      <div class="retro-titlebar rounded-t-2xl">
-        <h2 id="delay-interest-input-title" class="retro-title">지연이자 조건 입력</h2>
-      </div>
-      <div class="retro-panel-content">
-        <CalculatorInteractionTracker
-          calculator-id="deposit_delay_interest"
-          page-path="/house/delay-interest"
-        >
-          <DelayInterestInput v-model="form" />
-        </CalculatorInteractionTracker>
-      </div>
-    </section>
+    <ShCalculatorSplit>
+      <template #input>
+        <section class="retro-panel overflow-hidden" aria-labelledby="delay-interest-input-title">
+          <div class="retro-titlebar rounded-t-2xl">
+            <h2 id="delay-interest-input-title" class="retro-title">지연이자 조건 입력</h2>
+          </div>
+          <div class="retro-panel-content">
+            <CalculatorInteractionTracker
+              calculator-id="deposit_delay_interest"
+              page-path="/house/delay-interest"
+            >
+              <DelayInterestInput v-model="form" />
+            </CalculatorInteractionTracker>
+          </div>
+        </section>
+      </template>
 
-    <SummaryBanner
-      :title="rateBasis"
-      leader-label="예상 지연이자"
-      :leader-value="formatWon(result.totalInterest)"
-      delta-label="지연 일수"
-      :delta-value="`${form.overdueDays}일`"
-      :facts="facts"
-      show-share
-      @share="share.openShare"
-    />
+      <template #result>
+        <SummaryBanner
+          :title="rateBasis"
+          leader-label="예상 지연이자"
+          :leader-value="formatWon(result.totalInterest)"
+          delta-label="지연 일수"
+          :delta-value="`${form.overdueDays}일`"
+          :facts="facts"
+          show-share
+          @share="share.openShare"
+        />
 
-    <DelayInterestResult :form="form" :result="result" />
+        <DelayInterestResult :form="form" :result="result" />
+      </template>
+    </ShCalculatorSplit>
+
     <AdSlot slot="120001" label="광고 · top" />
-    <section class="retro-panel overflow-hidden">
-      <div class="retro-titlebar rounded-t-2xl">
-        <h2 class="retro-title">적용 순서와 계산 한계</h2>
-      </div>
-      <div class="retro-panel-content space-y-2 text-caption leading-relaxed text-muted-foreground">
-        <p><strong class="text-foreground">계산식:</strong> 보증금 × 연이율 × 지연일수 ÷ 365</p>
-        <p><strong class="text-foreground">적용 순서:</strong> 계약상 지연손해금 약정 → 약정이 없을 때 민법상 5% 검토 → 금전 지급 판결과 소장 등 송달 이후 소송촉진법상 12% 검토</p>
-        <p><strong class="text-foreground">시작일:</strong> 계약 종료일만으로 단정하지 않고 보증금 반환 이행기와 주택 인도 또는 이행제공 여부를 확인해야 합니다.</p>
-        <p><strong class="text-foreground">미지원:</strong> 일부 반환, 연체 차임·원상복구비 공제, 항쟁이 타당한 기간, 판결 주문별 적용 이율은 계산하지 않습니다.</p>
-      </div>
-    </section>
-    <CompareSourceFooter :sources="[...DELAY_INTEREST_SOURCES]" :updated-at="DELAY_INTEREST_DATA_UPDATED" />
+
+    <!-- 계산기 아래 데이터 블록 2열(ShPairRow, 사용자 결정 2026-09-25) — 적용 한계 설명(노트 패널)과 출처(계산 기준) 패널을 나란히.
+         순서는 그대로 두고 칸만 짝 짓는다. -->
+    <ShPairRow>
+      <template #start>
+        <section class="retro-panel overflow-hidden">
+          <div class="retro-titlebar rounded-t-2xl">
+            <h2 class="retro-title">적용 순서와 계산 한계</h2>
+          </div>
+          <div class="retro-panel-content space-y-2 text-caption leading-relaxed text-muted-foreground">
+            <p><strong class="text-foreground">계산식:</strong> 보증금 × 연이율 × 지연일수 ÷ 365</p>
+            <p><strong class="text-foreground">적용 순서:</strong> 계약상 지연손해금 약정 → 약정이 없을 때 민법상 5% 검토 → 금전 지급 판결과 소장 등 송달 이후 소송촉진법상 12% 검토</p>
+            <p><strong class="text-foreground">시작일:</strong> 계약 종료일만으로 단정하지 않고 보증금 반환 이행기와 주택 인도 또는 이행제공 여부를 확인해야 합니다.</p>
+            <p><strong class="text-foreground">미지원:</strong> 일부 반환, 연체 차임·원상복구비 공제, 항쟁이 타당한 기간, 판결 주문별 적용 이율은 계산하지 않습니다.</p>
+          </div>
+        </section>
+      </template>
+      <template #end>
+        <CompareSourceFooter :sources="[...DELAY_INTEREST_SOURCES]" :updated-at="DELAY_INTEREST_DATA_UPDATED" />
+      </template>
+    </ShPairRow>
+
     <DelayInterestFAQ :faqs="mergedFaqs" />
     <AdSlot slot="120002" label="광고 · middle" />
     <PopularCalculators />

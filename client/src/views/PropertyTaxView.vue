@@ -8,7 +8,7 @@ import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import { HOUSE_PROPERTY_TAX_GUIDE } from "@/data/seoGuides";
 import { buildPropertyTaxGuide } from "@/data/seoParamGuides";
-import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
+import { ShCalculatorSplit, ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
 import PropertyTaxInputPanel from "@/components/house/PropertyTaxInputPanel.vue";
 import PropertyTaxDetails from "@/components/house/PropertyTaxDetails.vue";
@@ -93,41 +93,48 @@ const faqJsonLd = computed(() => ({
 
     <SessionDraftControl />
 
-    <section class="retro-panel overflow-hidden" aria-labelledby="property-tax-input-title">
-      <div class="retro-titlebar rounded-t-2xl">
-        <h2 id="property-tax-input-title" class="retro-title">보유세 조건 입력</h2>
-      </div>
-      <div class="retro-panel-content">
-        <CalculatorInteractionTracker
-          calculator-id="property_tax"
-          page-path="/house/property-tax"
-          :can-view-result="result.isSupportedScenario"
+    <ShCalculatorSplit>
+      <template #input>
+        <section class="retro-panel overflow-hidden" aria-labelledby="property-tax-input-title">
+          <div class="retro-titlebar rounded-t-2xl">
+            <h2 id="property-tax-input-title" class="retro-title">보유세 조건 입력</h2>
+          </div>
+          <div class="retro-panel-content">
+            <CalculatorInteractionTracker
+              calculator-id="property_tax"
+              page-path="/house/property-tax"
+              :can-view-result="result.isSupportedScenario"
+            >
+              <PropertyTaxInputPanel v-model="form" />
+            </CalculatorInteractionTracker>
+          </div>
+        </section>
+      </template>
+
+      <template #result>
+        <div
+          v-if="!result.isSupportedScenario"
+          class="rounded-xl border border-status-warning/40 bg-status-warning/10 p-4 text-caption leading-relaxed text-foreground"
         >
-          <PropertyTaxInputPanel v-model="form" />
-        </CalculatorInteractionTracker>
-      </div>
-    </section>
+          현재는 아파트를 단독 명의로 보유한 1세대 1주택만 지원합니다. 단독주택·공동명의·다주택·법인·주택 수 제외 특례는 잘못된 세액을 피하기 위해 결과를 숨깁니다.
+        </div>
 
-    <div
-      v-if="!result.isSupportedScenario"
-      class="rounded-xl border border-status-warning/40 bg-status-warning/10 p-4 text-caption leading-relaxed text-foreground"
-    >
-      현재는 아파트를 단독 명의로 보유한 1세대 1주택만 지원합니다. 단독주택·공동명의·다주택·법인·주택 수 제외 특례는 잘못된 세액을 피하기 위해 결과를 숨깁니다.
-    </div>
+        <!-- 요약 배너 — 입력 직후에 결과를 먼저 보여주고, 분해는 그 뒤로 -->
+        <SummaryBanner
+          v-if="result.isSupportedScenario"
+          :title="resultBasisTitle"
+          leader-label="연간 보유세"
+          :leader-value="formatWon(result.annualTotal)"
+          delta-label="월 환산"
+          :delta-value="formatWon(result.monthlyEquivalent)"
+          :facts="facts"
+          show-share
+          @share="share.openShare"
+        />
+      </template>
+    </ShCalculatorSplit>
 
-    <!-- 요약 배너 — 입력 직후에 결과를 먼저 보여주고, 분해는 그 뒤로 -->
-    <SummaryBanner
-      v-if="result.isSupportedScenario"
-      :title="resultBasisTitle"
-      leader-label="연간 보유세"
-      :leader-value="formatWon(result.annualTotal)"
-      delta-label="월 환산"
-      :delta-value="formatWon(result.monthlyEquivalent)"
-      :facts="facts"
-      show-share
-      @share="share.openShare"
-    />
-
+    <!-- 결과 칸이 입력보다 300px 이상 길어져(rule 2) 상세 내역은 1×2 아래 전폭으로 내린다 -->
     <AdSlot slot="120004" label="광고 · top" />
 
     <section v-if="result.isSupportedScenario" class="retro-panel overflow-hidden">

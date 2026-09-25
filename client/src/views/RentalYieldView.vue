@@ -6,9 +6,10 @@ import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import { HOUSE_RENTAL_YIELD_GUIDE } from "@/data/seoGuides";
-import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
+import { ShCalculatorSplit, ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
-import RentalYieldCalculator from "@/components/house/RentalYieldCalculator.vue";
+import RentalYieldCalculatorInput from "@/components/house/RentalYieldCalculatorInput.vue";
+import RentalYieldCalculatorResult from "@/components/house/RentalYieldCalculatorResult.vue";
 import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import { RENTAL_YIELD_FAQS } from "@/data/rentalYield";
 import { useRentalYield } from "@/composables/useRentalYield";
@@ -79,31 +80,40 @@ const faqJsonLd = {
   <div class="text-resize-layout sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="임대수익률 계산기" />
 
-    <section class="retro-panel overflow-hidden" aria-labelledby="rental-yield-input-title">
-      <div class="retro-titlebar rounded-t-2xl">
-        <h2 id="rental-yield-input-title" class="retro-title">투자 조건 입력</h2>
-      </div>
-      <div class="retro-panel-content">
-        <CalculatorInteractionTracker
-          calculator-id="rental_yield"
-          page-path="/house/rental-yield"
-        >
-          <RentalYieldCalculator v-model="form" :result="result" />
-        </CalculatorInteractionTracker>
-      </div>
-    </section>
+    <ShCalculatorSplit>
+      <template #input>
+        <section class="retro-panel overflow-hidden" aria-labelledby="rental-yield-input-title">
+          <div class="retro-titlebar rounded-t-2xl">
+            <h2 id="rental-yield-input-title" class="retro-title">투자 조건 입력</h2>
+          </div>
+          <div class="retro-panel-content">
+            <CalculatorInteractionTracker
+              calculator-id="rental_yield"
+              page-path="/house/rental-yield"
+            >
+              <RentalYieldCalculatorInput v-model="form" />
+            </CalculatorInteractionTracker>
+          </div>
+        </section>
+      </template>
 
-    <!-- 요약 배너 -->
-    <SummaryBanner
-      title="매매가·보증금·월세와 대출 조건을 기준으로 임대수익률을 분석한 결과입니다."
-      leader-label="순수익률"
-      :leader-value="formatPercent(result.netYield, 1)"
-      delta-label="월 순수익"
-      :delta-value="formatWon(result.monthlyNetIncome)"
-      :facts="facts"
-      show-share
-      @share="share.openShare"
-    />
+      <template #result>
+        <!-- 요약 배너 -->
+        <SummaryBanner
+          title="매매가·보증금·월세와 대출 조건을 기준으로 임대수익률을 분석한 결과입니다."
+          leader-label="순수익률"
+          :leader-value="formatPercent(result.netYield, 1)"
+          delta-label="월 순수익"
+          :delta-value="formatWon(result.monthlyNetIncome)"
+          :facts="facts"
+          show-share
+          @share="share.openShare"
+        />
+      </template>
+    </ShCalculatorSplit>
+
+    <!-- 결과 칸이 입력보다 300px 이상 길어져(rule 2) 상세 분석은 1×2 아래 전폭으로 내린다 -->
+    <RentalYieldCalculatorResult :form="form" :result="result" />
 
     <PopularCalculators />
 

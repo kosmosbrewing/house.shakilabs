@@ -6,9 +6,10 @@ import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import { HOUSE_ACQUISITION_TAX_GUIDE } from "@/data/seoGuides";
-import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
+import { ShCalculatorSplit, ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import ShareModal from "@/components/share/ShareModal.vue";
-import AcquisitionTaxCalculator from "@/components/house/AcquisitionTaxCalculator.vue";
+import AcquisitionTaxCalculatorInput from "@/components/house/AcquisitionTaxCalculatorInput.vue";
+import AcquisitionTaxCalculatorResult from "@/components/house/AcquisitionTaxCalculatorResult.vue";
 import PopularCalculators from "@/components/house/PopularCalculators.vue";
 import { ACQUISITION_TAX_FAQS } from "@/data/acquisitionTax";
 import { useAcquisitionTax } from "@/composables/useAcquisitionTax";
@@ -79,30 +80,39 @@ const faqJsonLd = {
   <div class="sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="주택 취득세 계산기" />
 
-    <section class="retro-panel overflow-hidden" aria-labelledby="acquisition-tax-input-title">
-      <div class="retro-titlebar rounded-t-2xl">
-        <h2 id="acquisition-tax-input-title" class="retro-title">취득 조건 입력</h2>
-      </div>
-      <div class="retro-panel-content">
-        <CalculatorInteractionTracker
-          calculator-id="acquisition_tax"
-          page-path="/house/acquisition-tax"
-        >
-          <AcquisitionTaxCalculator v-model="form" :result="result" />
-        </CalculatorInteractionTracker>
-      </div>
-    </section>
+    <ShCalculatorSplit>
+      <template #input>
+        <section class="retro-panel overflow-hidden" aria-labelledby="acquisition-tax-input-title">
+          <div class="retro-titlebar rounded-t-2xl">
+            <h2 id="acquisition-tax-input-title" class="retro-title">취득 조건 입력</h2>
+          </div>
+          <div class="retro-panel-content">
+            <CalculatorInteractionTracker
+              calculator-id="acquisition_tax"
+              page-path="/house/acquisition-tax"
+            >
+              <AcquisitionTaxCalculatorInput v-model="form" />
+            </CalculatorInteractionTracker>
+          </div>
+        </section>
+      </template>
 
-    <SummaryBanner
-      title="매매가, 주택 수, 조정대상지역 여부를 반영한 취득세 시뮬레이션 결과입니다."
-      leader-label="세금 합계"
-      :leader-value="formatWon(result.totalTax)"
-      delta-label="취득세율"
-      :delta-value="result.rateLabel"
-      :facts="facts"
-      show-share
-      @share="share.openShare"
-    />
+      <template #result>
+        <SummaryBanner
+          title="매매가, 주택 수, 조정대상지역 여부를 반영한 취득세 시뮬레이션 결과입니다."
+          leader-label="세금 합계"
+          :leader-value="formatWon(result.totalTax)"
+          delta-label="취득세율"
+          :delta-value="result.rateLabel"
+          :facts="facts"
+          show-share
+          @share="share.openShare"
+        />
+      </template>
+    </ShCalculatorSplit>
+
+    <!-- 결과 칸이 입력보다 300px 이상 길어져(rule 2) 상세 산출 내역은 1×2 아래 전폭으로 내린다 -->
+    <AcquisitionTaxCalculatorResult :form="form" :result="result" />
 
     <PopularCalculators />
 

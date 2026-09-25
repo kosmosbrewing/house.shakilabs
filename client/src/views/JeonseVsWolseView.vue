@@ -7,7 +7,7 @@ import SEOHead from "@/components/common/SEOHead.vue";
 import ShareModal from "@/components/share/ShareModal.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
 import { HOUSE_JEONSE_VS_WOLSE_GUIDE } from "@/data/seoGuides";
-import { ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
+import { ShCalculatorSplit, ShSummaryBanner as SummaryBanner } from "@shakilabs/ui";
 import JeonseVsWolseFAQ from "@/components/house/JeonseVsWolseFAQ.vue";
 import JeonseVsWolseInput from "@/components/house/JeonseVsWolseInput.vue";
 import JeonseVsWolseResult from "@/components/house/JeonseVsWolseResult.vue";
@@ -79,31 +79,38 @@ const faqJsonLd = {
   <div class="sh-container sh-container--tool space-y-5 py-5">
     <CalculatorPageHeader title="전세 vs 월세 비교 계산기" />
 
-    <section class="retro-panel overflow-hidden" aria-labelledby="jeonse-vs-wolse-input-title">
-      <div class="retro-titlebar rounded-t-2xl">
-        <h2 id="jeonse-vs-wolse-input-title" class="retro-title">비교 조건 입력</h2>
-      </div>
-      <div class="retro-panel-content">
-        <CalculatorInteractionTracker
-          calculator-id="jeonse_vs_wolse"
-          page-path="/house/jeonse-vs-wolse"
-        >
-          <JeonseVsWolseInput v-model="form" />
-        </CalculatorInteractionTracker>
-      </div>
-    </section>
+    <ShCalculatorSplit>
+      <template #input>
+        <section class="retro-panel overflow-hidden" aria-labelledby="jeonse-vs-wolse-input-title">
+          <div class="retro-titlebar rounded-t-2xl">
+            <h2 id="jeonse-vs-wolse-input-title" class="retro-title">비교 조건 입력</h2>
+          </div>
+          <div class="retro-panel-content">
+            <CalculatorInteractionTracker
+              calculator-id="jeonse_vs_wolse"
+              page-path="/house/jeonse-vs-wolse"
+            >
+              <JeonseVsWolseInput v-model="form" />
+            </CalculatorInteractionTracker>
+          </div>
+        </section>
+      </template>
 
-    <SummaryBanner
-      title="보증금 기회비용과 월세 현금지출만 비교합니다."
-      leader-label="손익분기 월세"
-      :leader-value="formatWon(result.breakEvenMonthlyRent)"
-      delta-label="현재 선택"
-      :delta-value="result.cheaperOption === 'jeonse' ? '전세 유리' : result.cheaperOption === 'wolse' ? '월세 유리' : '비슷함'"
-      :facts="facts"
-      show-share
-      @share="share.openShare"
-    />
+      <template #result>
+        <SummaryBanner
+          title="보증금 기회비용과 월세 현금지출만 비교합니다."
+          leader-label="손익분기 월세"
+          :leader-value="formatWon(result.breakEvenMonthlyRent)"
+          delta-label="현재 선택"
+          :delta-value="result.cheaperOption === 'jeonse' ? '전세 유리' : result.cheaperOption === 'wolse' ? '월세 유리' : '비슷함'"
+          :facts="facts"
+          show-share
+          @share="share.openShare"
+        />
+      </template>
+    </ShCalculatorSplit>
 
+    <!-- 결과 칸이 입력보다 300px 이상 길어져(rule 2) 상세 비교는 1×2 아래 전폭으로 내린다 -->
     <JeonseVsWolseResult :form="form" :result="result" />
     <CompareSourceFooter :sources="[...JEONSE_WOLSE_SOURCES]" :updated-at="JEONSE_WOLSE_DATA_UPDATED" />
     <JeonseVsWolseFAQ :faqs="mergedFaqs" />
