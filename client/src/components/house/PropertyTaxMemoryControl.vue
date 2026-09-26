@@ -22,6 +22,7 @@ const ROUTE_PATH = "/property-tax";
 type MemoryControlExposed = {
   save: (payload: unknown) => void;
   clear: () => void;
+  markRestored: () => void;
 };
 
 const control = ref<MemoryControlExposed | null>(null);
@@ -62,6 +63,8 @@ async function handleRestore(payload: unknown): Promise<void> {
     return;
   }
   if (!enteredBare) return;
+  // 실제로 되살리는 경우에만 "복원함" — 위에서 링크 값을 지키고 돌아간 경우는 "기억 중"으로 남는다(0.3.41)
+  control.value?.markRestored();
   trackEvent("recent_result_open", {
     app_id: "house",
     tool_id: "property_tax",
