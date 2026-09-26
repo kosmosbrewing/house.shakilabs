@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useId } from "vue";
 import { ShPresetGroup } from "@shakilabs/ui";
 import { PURCHASE_PRICE_PRESETS } from "@/data/acquisitionTax";
 import { formatWon, parseNumericInput } from "@/lib/utils";
@@ -10,6 +11,10 @@ const purchasePricePresetOptions = PURCHASE_PRICE_PRESETS.map((value) => ({
   value,
 }));
 
+// 왜: 보이는 "매매가" 제목을 <label for>로 칸에 묶어야 스크린리더가 "편집, 빈칸" 대신 칸 이름을 읽고
+// 제목을 눌러도 칸에 초점이 간다(aria-label만으로는 보이는 글자와 칸이 이어지지 않는다)
+const purchasePriceId = useId();
+
 function setPreset(price: number) {
   form.value = { ...form.value, purchasePrice: price };
 }
@@ -19,9 +24,9 @@ function setPreset(price: number) {
   <section class="retro-panel-muted space-y-4 p-4">
     <!-- 매매가 + 프리셋 -->
     <div class="space-y-1.5">
-      <label class="text-caption font-semibold text-foreground">매매가</label>
+      <label :for="purchasePriceId" class="text-caption font-semibold text-foreground">매매가</label>
       <input
-        aria-label="매매가"
+        :id="purchasePriceId"
         type="text"
         inputmode="numeric"
         class="retro-input"
