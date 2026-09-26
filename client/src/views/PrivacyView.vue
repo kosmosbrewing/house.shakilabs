@@ -149,7 +149,7 @@ const constantsStore = useConstantsStore();
         <p class="text-body text-muted-foreground">운영: ShakiLabs · 문의: skdba1313@gmail.com</p>
 
         <p class="text-tiny text-muted-foreground mt-6">
-          시행일: 2026년 3월 15일 · 최종 개정일: 2026년 8월 10일
+          시행일: 2026년 3월 15일 · 최종 개정일: 2026년 9월 26일
         </p>
       </div>
     </div>
