@@ -60,9 +60,9 @@ const constantsStore = useConstantsStore();
         <p class="text-body text-muted-foreground">
           보유세(재산세·종합부동산세) 계산기에는 이용자가 직접 켜야 동작하는 "이 탭에 입력 기억하기"
           기능이 있습니다. 이 기능을 켠 경우에만 브라우저의 sessionStorage에
-          <code>house:property-tax-session-draft:v1</code> 키로 값이 저장되며, 저장되는 내용은
-          공시가격 같은 금액 자체가 아니라 결과 화면을 다시 여는 주소와 저장 시각입니다. 보관 기간은
-          최대 8시간이고 그 이후에는 불러오지 않으며, 탭을 닫거나 화면의 "입력 기억 끄기"를 누르면
+          <code>shaki:draft:house:property-tax:v1</code> 키로 값이 저장되며, 저장되는 내용은
+          결과 화면을 다시 여는 주소(입력한 금액·조건이 파라미터로 담긴 주소)와 저장 시각입니다. 보관 기간은
+          최대 8시간이고 그 이후에는 불러오지 않으며, 탭을 닫거나 화면의 입력 기억 스위치를 끄면
           즉시 삭제됩니다. 이 값은 이용자 기기 밖으로 나가지 않습니다.
         </p>
 
@@ -149,7 +149,7 @@ const constantsStore = useConstantsStore();
         <p class="text-body text-muted-foreground">운영: ShakiLabs · 문의: skdba1313@gmail.com</p>
 
         <p class="text-tiny text-muted-foreground mt-6">
-          시행일: 2026년 3월 15일 · 최종 개정일: 2026년 8월 10일
+          시행일: 2026년 3월 15일 · 최종 개정일: 2026년 9월 26일
         </p>
       </div>
     </div>

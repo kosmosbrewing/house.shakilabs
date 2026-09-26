@@ -1,28 +1,28 @@
 {
   "schemaVersion": 2,
-  "characterCount": 800,
-  "characterSha256": "1856850abd78191670a0feaeae180a785f5065d08afbe706588380bf9c9d5d56",
+  "characterCount": 799,
+  "characterSha256": "0bafa3ca37ef1e5074df352e5ba16eec527137a5570e971d7b67becd0b89e21a",
   "fonts": [
     {
       "publicName": "Pretendard-Regular-subset.woff2",
-      "bytes": 58992,
-      "sha256": "b074546d189c35a8a4a27ca8962b04eeda6716b33f4478669f0e04454614743b"
+      "bytes": 58872,
+      "sha256": "80cc9a8ed4db34b7f6dfa43a03e519844efbfdb79db493aa3bc6c61e3c8046d8"
     },
     {
       "publicName": "Pretendard-SemiBold-subset.woff2",
-      "bytes": 59716,
-      "sha256": "cee6392eaab9f8ccf7978df1a28c58953c82610675492c28520364087b9c0628"
+      "bytes": 59612,
+      "sha256": "974766e6f26c1b04c58b0bbec0b2507d35c6a5774f78cd1bcdeb9e2ec02dca69"
     },
     {
       "publicName": "Pretendard-Bold-subset.woff2",
-      "bytes": 59916,
-      "sha256": "4e7cf669cd3fce7cf3edf18a61c226004bdbe7cc898ec208028dd5f95b5df009"
+      "bytes": 59876,
+      "sha256": "fedbd1831484a19f7af0b4e2464482e1097b3e43486d31ecb484eab981613434"
     },
     {
       "publicName": "GmarketSansBold-brand-v1.woff2",
-      "bytes": 9292,
-      "sha256": "b89d7f6f109b71b364ab133dbfb23767315a23ab6058d461234ff4337bb7e6d6",
-      "shippedCharacters": " %()+,-./0123456789sv~·가간개거건계과관교구금급기깡께내년는단대도동드득래력련률리만많명문묻미반방배범법벽보복부분비산상생서선세소수순스시아안애약양억역연와완용원월위유율이익인일임입자재적전점정제조종주중증지진질차찾처천청체초총최취침크택통투트팁파판포한함합험현혜환회후",
+      "bytes": 9268,
+      "sha256": "beac32f6bbe337b4b1b8ba3da5d83d1414c015c63fd824a666e6794c35acddb2",
+      "shippedCharacters": " %()+,-./0123456789sv~·가간개거건계과관교구금급기깡께내년는단대도동드득래력률리만많명문묻미반방배범법벽보복부분비산상생서선세소수순스시아안애약양억역연와완용원월위유율이익인일임입자재적전점정제조종주중증지진질차찾처천청체초총최취침크택통투트팁파판포한함합험현혜환회후",
       "droppedCharacters": ""
     }
   ]

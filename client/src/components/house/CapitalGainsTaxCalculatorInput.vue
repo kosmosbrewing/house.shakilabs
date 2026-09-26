@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useId } from "vue";
 import { ShPresetGroup, ShSlider } from "@shakilabs/ui";
 import { SELL_PRICE_PRESETS } from "@/data/capitalGainsTax";
 import { formatWon, parseNumericInput } from "@/lib/utils";
@@ -17,15 +18,20 @@ function setPreset(price: number) {
 function formatPresetPrice(price: number): string {
   return price % 100_000_000 === 0 ? `${price / 100_000_000}억원` : formatWon(price);
 }
+
+// 왜: 보이는 제목("양도가 (매도가)"·"취득가 (매입가)")을 <label for>로 칸에 묶는다.
+// 예전 aria-label("양도가"·"취득가")은 보이는 글자와 달라 접근 이름이 화면과 어긋났다 — 이름은 보이는 라벨 하나로.
+const sellPriceId = useId();
+const buyPriceId = useId();
 </script>
 
 <template>
   <section class="retro-panel-muted space-y-4 p-4">
     <!-- 양도가 + 프리셋 -->
     <div class="space-y-1.5">
-      <label class="text-caption font-semibold text-foreground">양도가 (매도가)</label>
+      <label :for="sellPriceId" class="text-caption font-semibold text-foreground">양도가 (매도가)</label>
       <input
-        aria-label="양도가"
+        :id="sellPriceId"
         type="text"
         inputmode="numeric"
         class="retro-input"
@@ -42,9 +48,9 @@ function formatPresetPrice(price: number): string {
 
     <!-- 취득가 -->
     <div class="space-y-1.5">
-      <label class="text-caption font-semibold text-foreground">취득가 (매입가)</label>
+      <label :for="buyPriceId" class="text-caption font-semibold text-foreground">취득가 (매입가)</label>
       <input
-        aria-label="취득가"
+        :id="buyPriceId"
         type="text"
         inputmode="numeric"
         class="retro-input"
