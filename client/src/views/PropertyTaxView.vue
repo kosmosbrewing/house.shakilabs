@@ -13,7 +13,7 @@ import ShareModal from "@/components/share/ShareModal.vue";
 import PropertyTaxInputPanel from "@/components/house/PropertyTaxInputPanel.vue";
 import PropertyTaxDetails from "@/components/house/PropertyTaxDetails.vue";
 import PopularCalculators from "@/components/house/PopularCalculators.vue";
-import SessionDraftControl from "@/components/house/SessionDraftControl.vue";
+import PropertyTaxMemoryControl from "@/components/house/PropertyTaxMemoryControl.vue";
 import { PROPERTY_TAX_FAQS } from "@/data/propertyTax";
 import { usePropertyTax } from "@/composables/usePropertyTax";
 import { useResultShare } from "@/composables/useResultShare";
@@ -89,9 +89,11 @@ const faqJsonLd = computed(() => ({
     :canonical-path="canonicalPath"
   />
   <div class="sh-container sh-container--tool space-y-5 py-5">
-    <CalculatorPageHeader title="재산세·보유세 계산기" />
-
-    <SessionDraftControl />
+    <CalculatorPageHeader title="재산세·보유세 계산기">
+      <template #control>
+        <PropertyTaxMemoryControl :query="shareQuery" />
+      </template>
+    </CalculatorPageHeader>
 
     <ShCalculatorSplit>
       <template #input>
