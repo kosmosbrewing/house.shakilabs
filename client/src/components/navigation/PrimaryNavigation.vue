@@ -13,32 +13,12 @@ const route = useRoute();
 
 const navigationItems = HOUSE_NAVIGATION_ITEMS;
 
-const mobileDefaultKeys = [
-  "delay-interest",
-  "property-tax",
-  "jeonse-wolse-rate",
-  "jeonse-vs-wolse",
-  "brokerage-fee",
-  "home",
-] as const;
-
 function isActive(item: PrimaryNavigationItem): boolean {
   if (item.key === "home") return route.path === "/";
   return route.path === item.to || route.path.startsWith(`${item.to}/`);
 }
 
 const activeItem = computed(() => navigationItems.find(isActive));
-const mobileItems = computed(() => {
-  const keys: string[] = [...mobileDefaultKeys];
-
-  if (activeItem.value && !keys.includes(activeItem.value.key)) {
-    keys[4] = activeItem.value.key;
-  }
-
-  return keys
-    .map((key) => navigationItems.find((item) => item.key === key))
-    .filter((item): item is PrimaryNavigationItem => Boolean(item));
-});
 
 function trackNavigation(item: PrimaryNavigationItem): void {
   trackEvent("nav_click", {
@@ -50,24 +30,13 @@ function trackNavigation(item: PrimaryNavigationItem): void {
 </script>
 
 <template>
-  <!-- 모바일(<48rem)은 헤더의 좌측 드로어가 대신한다(v3 §3.3-1) — 링크는
-       AppHeader의 nav-items(HOUSE_NAVIGATION_ITEMS, 같은 출처)로 드로어에
-       그대로 렌더되어 크롤 경로는 유지된다. -->
+  <!-- 모바일(<48rem)에서는 패키지가 이 탭 줄을 숨기고 헤더 ☰가 같은 목록을 연다(0.3.38).
+       ☰ 목록은 항상 DOM에 렌더되므로 크롤 경로는 끊기지 않는다. -->
   <ShPrimaryNavigation
-    class="house-secondary-nav"
     :items="navigationItems"
-    :mobile-items="mobileItems"
     :active-key="activeItem?.key"
     :link-component="RouterLink"
     aria-label="주요 계산기"
     @select="trackNavigation"
   />
 </template>
-
-<style scoped>
-@media (max-width: 47.99rem) {
-  .house-secondary-nav {
-    display: none;
-  }
-}
-</style>
