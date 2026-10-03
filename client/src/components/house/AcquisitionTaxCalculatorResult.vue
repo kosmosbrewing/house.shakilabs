@@ -68,7 +68,7 @@ const taxSegments = computed(() => [
           <p class="text-caption font-semibold text-foreground">취득세 산출 내역</p>
           <span
             v-if="result.isSurcharged"
-            class="ml-auto rounded-md bg-destructive/10 px-2 py-0.5 text-[10px] font-semibold text-destructive"
+            class="ml-auto rounded-md bg-destructive/10 px-2 py-0.5 text-caption font-semibold text-destructive"
           >
             다주택 중과
           </span>

@@ -41,7 +41,9 @@ const config: Config = {
         heading: ["1rem", { lineHeight: "1.35", fontWeight: "600" }],
         body: ["0.875rem", { lineHeight: "1.5", fontWeight: "400" }],
         caption: ["0.8125rem", { lineHeight: "1.45", fontWeight: "400" }],
-        tiny: ["0.6875rem", { lineHeight: "1.35", fontWeight: "400" }],
+        // BRIEF-V8 house 결함: 11px는 WCAG 권장 하한(13px) 미달이었다 — caption과
+        // 같은 13px로 올린다(이 토큰을 쓰는 화면 요소가 전부 떠서 개별 수정 불필요).
+        tiny: ["0.8125rem", { lineHeight: "1.35", fontWeight: "400" }],
       },
 
       colors: {

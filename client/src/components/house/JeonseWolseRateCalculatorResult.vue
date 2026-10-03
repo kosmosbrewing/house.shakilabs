@@ -187,7 +187,7 @@ function formatPercentagePoint(value: number): string {
           </span>
           <p class="text-caption font-semibold text-foreground">보증금 조정 시뮬레이션</p>
         </div>
-        <p class="mb-3 text-[10px] leading-relaxed text-muted-foreground">
+        <p class="mb-3 text-caption leading-relaxed text-muted-foreground">
           월세 보증금을 올리면 적정 월세가 낮아집니다. 법정 전환율 {{ formatPercent(result.legalRateCap, 1) }} 기준입니다.
         </p>
 

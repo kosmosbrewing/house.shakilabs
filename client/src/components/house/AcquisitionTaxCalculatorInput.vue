@@ -56,7 +56,7 @@ function setPreset(price: number) {
       <label class="space-y-1.5">
         <span class="text-caption font-semibold text-foreground">전용면적 (㎡)</span>
         <input v-model.number="form.exclusiveArea" class="retro-input" min="10" max="500" step="1" type="number" />
-        <p class="text-[10px] text-muted-foreground">85㎡ ≈ 25.7평, 초과 시 농특세 부과</p>
+        <p class="text-caption text-muted-foreground">85㎡ ≈ 25.7평, 초과 시 농특세 부과</p>
       </label>
     </div>
 
@@ -64,7 +64,7 @@ function setPreset(price: number) {
     <label class="retro-panel flex items-center gap-2 px-3 py-3 w-full">
       <input v-model="form.isRegulatedArea" class="retro-checkbox" type="checkbox" />
       <span class="text-caption font-semibold">조정대상지역</span>
-      <span class="text-[10px] text-muted-foreground ml-1">(2주택 이상 시 중과)</span>
+      <span class="text-caption text-muted-foreground ml-1">(2주택 이상 시 중과)</span>
     </label>
   </section>
 </template>

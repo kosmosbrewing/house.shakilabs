@@ -72,7 +72,7 @@ const buyPriceId = useId();
           :step="0.01"
           :value-text="`필요경비율 ${(form.expenseRate * 100).toFixed(0)}%`"
         />
-        <div class="grid grid-cols-2 text-[10px] text-muted-foreground tabular-nums">
+        <div class="grid grid-cols-2 text-caption text-muted-foreground tabular-nums">
           <span class="justify-self-start">0%</span>
           <span class="justify-self-end">15%</span>
         </div>

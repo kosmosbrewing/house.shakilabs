@@ -19,7 +19,7 @@ defineProps<{
             <Building2 class="h-3.5 w-3.5" />
           </span>
           <p class="text-caption font-semibold text-foreground">재산세 내역</p>
-          <span v-if="result.isSpecialRate" class="ml-auto rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+          <span v-if="result.isSpecialRate" class="ml-auto rounded-md bg-primary/10 px-2 py-0.5 text-caption font-semibold text-primary">
             1주택 특례
           </span>
         </div>
@@ -74,7 +74,7 @@ defineProps<{
             <Landmark class="h-3.5 w-3.5" />
           </span>
           <p class="text-caption font-semibold text-foreground">종부세 내역</p>
-          <span v-if="!result.isCompTaxSubject" class="ml-auto rounded-md bg-muted px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
+          <span v-if="!result.isCompTaxSubject" class="ml-auto rounded-md bg-muted px-2 py-0.5 text-caption font-semibold text-muted-foreground">
             대상 아님
           </span>
         </div>

@@ -65,7 +65,7 @@ function setDepositPreset(price: number) {
       <p class="text-caption font-semibold text-muted-foreground">
         법정 전환율 상한 = 기준금리({{ formatPercent(BOK_BASE_RATE, 1) }}) + {{ formatPercent(LEGAL_RATE_SPREAD, 1) }} = <span class="text-foreground">{{ formatPercent(form.legalRateCap, 1) }}</span>
       </p>
-      <p class="mt-1 text-[10px] text-muted-foreground">주택임대차보호법 시행령 §9 · 2026.03 기준</p>
+      <p class="mt-1 text-caption text-muted-foreground">주택임대차보호법 시행령 §9 · 2026.03 기준</p>
     </div>
   </section>
 </template>

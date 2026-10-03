@@ -8,9 +8,14 @@
  * 카드째 좁히면 폭을 채운 계산기 카드(1152px) 아래에 650px짜리 산문 카드가 놓여
  * 우변이 어긋난다 — 줄이 길어서 생기는 문제를 카드 폭으로 푼 것이 원인이었다.
  */
+import { chunkText } from "@/data/digests/format";
 export interface GuideSection {
   h2: string;
-  body: string;
+  // v8 결함(250자 초과 문단, 전 앱 확장): 작성자가 미리 쪼갠 배열을 줄 수도 있고
+  // (string[]), 평범한 긴 문자열을 줄 수도 있다(string) — 아래 paragraphsOf가
+  // 후자를 문장 경계에서 자동으로 ≤200자 문단으로 쪼갠다. 데이터 자체(문장·숫자)는
+  // 바뀌지 않는다.
+  body: string | string[];
 }
 
 export interface GuideFaq {
@@ -38,12 +43,13 @@ defineProps<{
   disclaimer?: string;
 }>();
 
-// v8 결함(250자 초과 문단): body는 여전히 문자열 하나다(다이제스트 테스트의
-// bodyOf(...).toContain() 부분 문자열 검사가 배열로 바뀌면 깨진다). 대신 작성자가
-// "\n\n"으로 명시한 자리만 별도 <p>로 쪼갠다 — "\n\n"이 없는 기존 섹션은 전부
-// 지금처럼 단일 문단으로 그대로 렌더링된다(화면 변화 없음).
-function splitParagraphs(body: string): string[] {
-  return body.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+// v8 결함(250자 초과 문단, 전 앱 확장): 배열로 미리 쪼갠 본문은 그대로 한 문단씩
+// 쓰고, 문자열 본문은 chunkText로 문장 경계에서 ≤200자 문단으로 그리디 포장한다.
+// 문장·숫자는 하나도 바뀌지 않는다(재배열만) — digests/format.test.ts와
+// digests.test.ts의 스윕 테스트가 복원 동등성을 검증한다.
+function paragraphsOf(body: string | string[]): string[] {
+  if (Array.isArray(body)) return body.map((p) => p.trim()).filter(Boolean);
+  return chunkText(body, 200);
 }
 </script>
 
@@ -63,7 +69,7 @@ function splitParagraphs(body: string): string[] {
         >
           <h3 class="text-body font-semibold text-foreground">{{ s.h2 }}</h3>
           <p
-            v-for="(para, pi) in splitParagraphs(s.body)"
+            v-for="(para, pi) in paragraphsOf(s.body)"
             :key="`sec-${i}-p-${pi}`"
             class="max-w-[65ch] text-caption leading-relaxed text-muted-foreground"
           >{{ para }}</p>
@@ -107,7 +113,7 @@ function splitParagraphs(body: string): string[] {
 
       <p
         v-if="disclaimer"
-        class="max-w-[65ch] border-t border-border/40 pt-3 text-xs text-muted-foreground"
+        class="max-w-[65ch] border-t border-border/40 pt-3 text-caption text-muted-foreground"
       >
         {{ disclaimer }}
       </p>

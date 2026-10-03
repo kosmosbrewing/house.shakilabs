@@ -11,6 +11,49 @@ export interface Finding {
   body: string;
 }
 
+// BRIEF-V8 house 결함: 문단이 250자를 넘으면 안 된다. 본문 자체(엔진이 만든 숫자·
+// 문장)는 그대로 두고, SeoRichGuide.vue가 렌더링 시점에 이 함수로 ≤200자 문단으로
+// 쪼갠다 — 문장 순서·숫자·단어는 하나도 바꾸지 않는다(재배열만).
+
+/**
+ * 문장 배열을 ≤maxChars 문단으로 그리디 포장한다. 다음 문장을 더했을 때만
+ * maxChars를 넘으면 새 문단을 연다 — 문장은 절대 쪼개지 않는다. 문장 하나가
+ * 이미 maxChars를 넘으면(드묾) 그 문장 혼자 한 문단이 된다.
+ */
+export function chunkSentences(sentences: string[], maxChars = 200): string[] {
+  const paragraphs: string[] = [];
+  let current = "";
+  for (const raw of sentences) {
+    const sentence = raw.trim();
+    if (!sentence) continue;
+    const candidate = current ? `${current} ${sentence}` : sentence;
+    if (current && candidate.length > maxChars) {
+      paragraphs.push(current);
+      current = sentence;
+    } else {
+      current = candidate;
+    }
+  }
+  if (current) paragraphs.push(current);
+  return paragraphs;
+}
+
+/**
+ * 문장 경계("다./요./.)" 뒤에 공백)에서 나눈다. 소수점(4.5%)은 점 뒤에 공백이
+ * 없어 안전하게 보존된다.
+ */
+export function splitSentences(text: string): string[] {
+  return text
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+/** 긴 본문 문자열을 문장 경계에서 쪼개 ≤maxChars 문단 배열로 만든다. */
+export function chunkText(text: string, maxChars = 200): string[] {
+  return chunkSentences(splitSentences(text), maxChars);
+}
+
 export function won(value: number): string {
   return `${Math.round(value).toLocaleString("ko-KR")}원`;
 }

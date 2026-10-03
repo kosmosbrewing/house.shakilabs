@@ -1,6 +1,6 @@
 // Engine-derived digests for the ten tool pages. Kept in one barrel so the
 // guide data and the gate test import the same objects.
-export { type Finding } from "./format";
+export { type Finding, chunkSentences, splitSentences, chunkText } from "./format";
 export { ACQUISITION_TAX_BASIS, ACQUISITION_TAX_DIGEST } from "./acquisitionTaxDigest";
 export { BROKERAGE_FEE_BASIS, BROKERAGE_FEE_DIGEST } from "./brokerageFeeDigest";
 export { CAPITAL_GAINS_BASIS, CAPITAL_GAINS_DIGEST } from "./capitalGainsDigest";

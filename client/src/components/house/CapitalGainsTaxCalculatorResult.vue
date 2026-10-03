@@ -66,13 +66,13 @@ const gainSegments = computed(() => [
           <p class="text-caption font-semibold text-foreground">양도소득세 산출 내역</p>
           <span
             v-if="result.isExempt && result.totalTax === 0"
-            class="ml-auto inline-flex shrink-0 whitespace-nowrap rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary"
+            class="ml-auto inline-flex shrink-0 whitespace-nowrap rounded-md bg-primary/10 px-2 py-0.5 text-caption font-semibold text-primary"
           >
             비과세
           </span>
           <span
             v-else-if="result.isExempt"
-            class="ml-auto inline-flex shrink-0 whitespace-nowrap rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary"
+            class="ml-auto inline-flex shrink-0 whitespace-nowrap rounded-md bg-primary/10 px-2 py-0.5 text-caption font-semibold text-primary"
           >
             12억 초과분 과세
           </span>
