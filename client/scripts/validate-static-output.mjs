@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
+import { validateBuiltFontSizes } from "./validate-built-font-sizes.mjs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -131,3 +132,7 @@ console.log(
     `${utilityCount} colour utilities generated, ${tinyTextCheckedCount} tiny-text ` +
     `occurrences checked (0 violations), and custom 404 output.`
 );
+
+// v8c(2026-10-04): 배포되는 CSS·HTML의 글자 크기를 직접 잰다 — 13px 미만은 차트 축 눈금(__scale)·차트 전용 text-[12px]만.
+const builtFontDeclarations = validateBuiltFontSizes({ distRoot: distRoot });
+console.log(`Validated built font sizes — ${builtFontDeclarations} declarations, 0 under 13px outside the chart-axis allowance.`);
