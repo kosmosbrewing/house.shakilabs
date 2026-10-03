@@ -9,6 +9,7 @@ const constantsStore = useConstantsStore();
   <SEOHead
     title="이용약관"
     description="shakilabs.com/house의 서비스 이용약관입니다. 서비스 제공 범위, 정보 제공의 한계(부동산·법률 자문 아님), 광고 게재, 면책 조항을 안내합니다."
+    policy-page
   />
 
   <div class="sh-container sh-container--prose py-5">

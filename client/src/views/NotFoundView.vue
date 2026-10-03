@@ -9,6 +9,7 @@ import { buttonVariants } from "@/components/ui/button";
     title="페이지를 찾을 수 없습니다"
     description="shakilabs.com/house에서 요청한 페이지를 찾을 수 없습니다."
     :noindex="true"
+    policy-page
   />
 
   <div class="sh-container sh-container--page py-20 text-center space-y-4">
