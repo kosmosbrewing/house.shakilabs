@@ -422,15 +422,10 @@
     line-height: 1.45;
   }
 
-  .text-caption {
-    font-size: 0.75rem;
-    line-height: 1.4;
-  }
-
-  .text-tiny {
-    font-size: 0.65625rem;
-    line-height: 1.3;
-  }
+  /* BRIEF-V8 house 결함: 이 모바일(<640px) 오버라이드가 .text-caption을 12px,
+     .text-tiny를 10.5px로 깎아 13px 하한을 어겼다 — 좁은 화면에서도 캡션은
+     기본 13px(0.8125rem)을 유지한다. tiny는 이제 caption과 같은 토큰이라
+     별도 모바일 규칙이 필요 없다(규칙 삭제). */
 
   .retro-titlebar {
     padding-left: 0.875rem;

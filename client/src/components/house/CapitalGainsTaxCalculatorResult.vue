@@ -43,7 +43,10 @@ const gainSegments = computed(() => [
 
 <template>
   <div class="space-y-4">
-    <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" :hero-index="0" />
+    <!-- v8 결함: 위 결과 카드(leader-value)와 같은 "양도소득세+지방세"를 26px 히어로로
+         한 번 더 보여줬다(BRIEF-V8 house). hero-index를 빼면 네 항목이 같은 크기 표로만
+         남아 중복 노출이 사라진다 — 숫자 자체는 그대로다. -->
+    <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" />
 
     <ShBreakdownBar
       label="양도차익의 세금·세후 이익 구성"
@@ -63,13 +66,13 @@ const gainSegments = computed(() => [
           <p class="text-caption font-semibold text-foreground">양도소득세 산출 내역</p>
           <span
             v-if="result.isExempt && result.totalTax === 0"
-            class="ml-auto inline-flex shrink-0 whitespace-nowrap rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary"
+            class="ml-auto inline-flex shrink-0 whitespace-nowrap rounded-md bg-primary/10 px-2 py-0.5 text-caption font-semibold text-primary"
           >
             비과세
           </span>
           <span
             v-else-if="result.isExempt"
-            class="ml-auto inline-flex shrink-0 whitespace-nowrap rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary"
+            class="ml-auto inline-flex shrink-0 whitespace-nowrap rounded-md bg-primary/10 px-2 py-0.5 text-caption font-semibold text-primary"
           >
             12억 초과분 과세
           </span>

@@ -11,6 +11,7 @@ import {
 } from "./seo-routes.mjs";
 import { validateRouteLists } from "./validate-route-lists.mjs";
 import { validateUtilitiesAreGenerated } from "./validate-tailwind-utilities.mjs";
+import { validateNoTinyTextUtilities } from "./validate-no-tiny-text.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
@@ -95,6 +96,7 @@ SEO_ROUTES.forEach(validateRoute);
 const sitemapUrls = validateSitemap();
 const routeLists = validateRouteLists({ projectRoot, distRoot, sitemapUrls });
 const utilityCount = validateUtilitiesAreGenerated({ projectRoot, distRoot });
+const tinyTextCheckedCount = validateNoTinyTextUtilities({ projectRoot });
 
 // The home must render its own content. If the router ever turns "/" into a
 // redirect, vite-ssg follows it during the prerender and copies the target page
@@ -126,5 +128,6 @@ console.log(
     `router cross-check ${routeLists.staticCount} static listed / ` +
     `${routeLists.redirectCount} redirects excluded, ` +
     `${routeLists.llmsLinkCount} llms.txt links, ` +
-    `${utilityCount} colour utilities generated, and custom 404 output.`
+    `${utilityCount} colour utilities generated, ${tinyTextCheckedCount} tiny-text ` +
+    `occurrences checked (0 violations), and custom 404 output.`
 );

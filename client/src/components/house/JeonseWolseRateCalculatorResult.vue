@@ -104,12 +104,14 @@ function formatPercentagePoint(value: number): string {
       </p>
     </div>
 
+    <!-- v8 결함: "실제 전환율"이 위 결과 카드의 facts 칩과 아래 26px 히어로에 두 번
+         찍혔다(BRIEF-V8 house). hero-index를 빼면 네 항목이 같은 크기 표로만 남는다 —
+         숫자 자체는 그대로다. -->
     <HouseStatGrid
       v-if="!isDepositInvalid"
       :items="statItems"
       :icons="statIcons"
       :icon-classes="statIconClasses"
-      :hero-index="0"
     />
 
     <ThresholdComparison
@@ -185,7 +187,7 @@ function formatPercentagePoint(value: number): string {
           </span>
           <p class="text-caption font-semibold text-foreground">보증금 조정 시뮬레이션</p>
         </div>
-        <p class="mb-3 text-[10px] leading-relaxed text-muted-foreground">
+        <p class="mb-3 text-caption leading-relaxed text-muted-foreground">
           월세 보증금을 올리면 적정 월세가 낮아집니다. 법정 전환율 {{ formatPercent(result.legalRateCap, 1) }} 기준입니다.
         </p>
 

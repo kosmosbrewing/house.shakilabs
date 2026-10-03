@@ -171,6 +171,10 @@ function ratioBlindToSeniorDebt(): Finding {
     .join(", ");
   return {
     h2: `전세가율은 선순위를 보지 못해 ${pct(rk().jeonseRatio, 1)} 그대로인데 부채비율만 ${pct(withDebt.debtRatio, 1)}로 뛴다`,
+    // v8 결함(250자 초과 문단)은 더 이상 여기서 손으로 쪼개지 않는다 — SeoRichGuide.vue가
+    // 렌더링 시점에 모든 GuideSection.body를 chunkText로 ≤200자 문단으로 자동 포장한다
+    // (digests.test.ts의 스윕 테스트가 전 앱 범위로 검증). body는 그대로 평범한 문자열
+    // 이라 bodyOf(...).toContain() 부분 문자열 검사도 그대로 통과한다.
     body:
       `전세가율은 보증금을 시세로 나눈 값이라 등기부에 무엇이 잡혀 있든 반응하지 않습니다. 기본 조건에 선순위 채권 ${manwon(debt)}만 얹으면 전세가율은 ${pct(withDebt.jeonseRatio, 1)}로 그대로인데 부채비율은 ${pct(withDebt.debtRatio, 1)}가 되고 등급은 주의에서 매우 위험으로 두 칸 내려갑니다. ` +
       `회수 추정에서도 선순위는 낙찰 대금에서 먼저 빠집니다. 낙찰가율 가정별 부족분이 ${rows}으로, 선순위가 없을 때의 0원과 달리 세 줄 모두 금액이 찍힙니다. ` +

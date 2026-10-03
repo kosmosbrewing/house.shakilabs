@@ -45,7 +45,10 @@ const taxSegments = computed(() => [
 
 <template>
   <div class="space-y-4">
-    <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" :hero-index="0" />
+    <!-- v8 결함: 위 결과 카드(leader-value)와 같은 "납부 세금 합계"를 26px 히어로로
+         한 번 더 보여줬다(BRIEF-V8 house). hero-index를 빼면 네 항목이 같은 크기 표로만
+         남아 중복 노출이 사라진다 — 숫자 자체는 그대로다. -->
+    <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" />
 
     <ShBreakdownBar
       label="취득 단계 세금 구성"
@@ -65,7 +68,7 @@ const taxSegments = computed(() => [
           <p class="text-caption font-semibold text-foreground">취득세 산출 내역</p>
           <span
             v-if="result.isSurcharged"
-            class="ml-auto rounded-md bg-destructive/10 px-2 py-0.5 text-[10px] font-semibold text-destructive"
+            class="ml-auto rounded-md bg-destructive/10 px-2 py-0.5 text-caption font-semibold text-destructive"
           >
             다주택 중과
           </span>

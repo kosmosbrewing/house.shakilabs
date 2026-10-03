@@ -63,7 +63,7 @@ function handleAction(action: "kakao" | "link"): void {
         <div class="relative z-10 mx-4 w-full max-w-sm max-h-[85vh] overflow-y-auto translate-y-[5vh] retro-panel border border-border sm:translate-y-0">
           <div class="retro-titlebar">
             <h3 id="share-modal-title" class="retro-title text-[1rem]!">공유하기</h3>
-            <button class="retro-kbd text-xs" aria-label="공유 모달 닫기" @click="emit('close')">ESC</button>
+            <button class="retro-kbd" aria-label="공유 모달 닫기" @click="emit('close')">ESC</button>
           </div>
 
           <div class="space-y-3 p-4">
@@ -88,7 +88,7 @@ function handleAction(action: "kakao" | "link"): void {
                   aria-hidden="true"
                   class="h-6 w-6 object-contain"
                 />
-                <span class="text-center text-[0.6875rem] font-bold leading-tight whitespace-nowrap sm:text-[0.72rem]">카카오톡 공유</span>
+                <span class="text-center text-caption font-bold leading-tight whitespace-nowrap">카카오톡 공유</span>
               </button>
 
               <button
@@ -97,7 +97,7 @@ function handleAction(action: "kakao" | "link"): void {
                 @click="handleAction('link')"
               >
                 <Link class="h-6 w-6 text-muted-foreground" />
-                <span class="text-center text-[0.6875rem] font-bold leading-tight whitespace-nowrap sm:text-[0.72rem]">링크 복사</span>
+                <span class="text-center text-caption font-bold leading-tight whitespace-nowrap">링크 복사</span>
               </button>
             </div>
           </div>

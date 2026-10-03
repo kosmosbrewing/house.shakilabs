@@ -71,7 +71,7 @@ import {
   HOUSE_RENTAL_YIELD_GUIDE,
   type GuideData,
 } from "../seoGuides";
-import { type Finding, manwon, num, pct, pp, won } from "./format";
+import { type Finding, chunkText, manwon, num, pct, pp, won } from "./format";
 import {
   ACQUISITION_TAX_BASIS,
   ACQUISITION_TAX_DIGEST,
@@ -318,6 +318,77 @@ describe("파생 다이제스트 — 가이드 배선", () => {
       bodies.add(basis.body);
     }
     expect(bodies.size).toBe(10);
+  });
+});
+
+// BRIEF-V8 house 결함(전 앱 확장): 12개 도구 가이드 전부에서 결과 아래 산문 섹션이
+// 250자를 넘는 문단을 숱하게 안고 있었다(빌드 스캔 160개 중 136개). SeoRichGuide.vue는
+// 이제 모든 섹션 본문을 chunkText로 렌더링 시점에 ≤200자 문단으로 쪼갠다 — 여기서는
+// 그 쪼개기가 (1) 어떤 문단도 250자를 넘기지 않고 (2) 문장·숫자를 하나도 잃지 않는지
+// 전 가이드·전 섹션에 걸쳐 스윕한다.
+describe("파생 다이제스트 — 문단 길이 캡 (BRIEF-V8)", () => {
+  const ALL_GUIDES: GuideData[] = [
+    HOUSE_HOME_GUIDE, HOUSE_ACQUISITION_TAX_GUIDE, HOUSE_BROKERAGE_FEE_GUIDE,
+    HOUSE_CAPITAL_GAINS_TAX_GUIDE, HOUSE_DELAY_INTEREST_GUIDE, HOUSE_FIRST_HOME_GUIDE,
+    HOUSE_HOUSING_SUBSCRIPTION_GUIDE, HOUSE_JEONSE_RISK_GUIDE, HOUSE_JEONSE_VS_WOLSE_GUIDE,
+    HOUSE_JEONSE_WOLSE_RATE_GUIDE, HOUSE_PROPERTY_TAX_GUIDE, HOUSE_RENTAL_YIELD_GUIDE,
+  ];
+
+  function paragraphsOf(body: string | string[]): string[] {
+    return Array.isArray(body) ? body : chunkText(body, 200);
+  }
+
+  it("12개 가이드를 전부 덮는다(새 가이드 추가 시 이 목록도 같이 늘려야 한다)", () => {
+    expect(ALL_GUIDES.length).toBe(12);
+  });
+
+  it("모든 섹션 본문이 렌더링 시 ≤250자 문단으로만 쪼개진다 — 재결합하면 원문과 글자 단위로 같다", () => {
+    let checked = 0;
+    let longestBefore = 0;
+    let bodiesOver250Before = 0;
+    for (const guide of ALL_GUIDES) {
+      for (const section of guide.sections ?? []) {
+        checked += 1;
+        const original = section.body;
+        const originalText = Array.isArray(original) ? original.join(" ") : original;
+        longestBefore = Math.max(longestBefore, originalText.length);
+        if (originalText.length > 250) bodiesOver250Before += 1;
+
+        const paragraphs = paragraphsOf(original);
+        for (const paragraph of paragraphs) {
+          expect(paragraph.length, `${guide.title} — ${section.h2}`).toBeLessThanOrEqual(250);
+        }
+
+        // 보존 검증: 문단을 공백으로 재결합해 공백만 지우고 비교하면 원문과 완전히 같다
+        // — 문장도 숫자도 단어도 하나 없어지거나 늘어나지 않았다는 뜻이다.
+        const collapsedOriginal = originalText.replace(/\s+/g, "");
+        const collapsedRejoined = paragraphs.join(" ").replace(/\s+/g, "");
+        expect(collapsedRejoined, `${guide.title} — ${section.h2}`).toBe(collapsedOriginal);
+      }
+    }
+    // 분모 보고: 몇 개 본문을 스윕했는지 — 160개 안팎이어야 한다(가이드 12개 × 섹션 ~13개).
+    expect(checked).toBeGreaterThanOrEqual(150);
+
+    // 역방향 검증: 쪼개기 전(원문 그대로를 한 문단으로 셌을 때) 250자를 넘는 본문이
+    // 다수 있었다는 사실 자체를 단언한다 — 이 캡 테스트가 아무것도 안 걸러도 통과하는
+    // 눈먼 테스트가 아니라는 증거다. chunkText 호출을 지우면(원문을 그대로 한 문단으로
+    // 돌려주면) 위 ≤250자 expect가 bodiesOver250Before건만큼 바로 red가 난다.
+    expect(longestBefore).toBeGreaterThan(250);
+    expect(bodiesOver250Before).toBeGreaterThan(100);
+  });
+
+  it("역방향: chunkText 없이 원문을 그대로 쓰면 ≤250자 단언이 깨진다", () => {
+    // 위 테스트가 실제로 chunkText에 의존함을 직접 보여준다 — 쪼개지 않은 원문 그대로를
+    // "문단 1개"로 취급하면 많은 섹션이 250자 캡을 넘는다.
+    let failingWithoutChunk = 0;
+    for (const guide of ALL_GUIDES) {
+      for (const section of guide.sections ?? []) {
+        const original = section.body;
+        const originalText = Array.isArray(original) ? original.join(" ") : original;
+        if (originalText.length > 250) failingWithoutChunk += 1;
+      }
+    }
+    expect(failingWithoutChunk).toBeGreaterThan(100);
   });
 });
 
@@ -1066,6 +1137,19 @@ describe("/jeonse-risk — 낙찰가율 밴드", () => {
     expect(scan.converse).toBeGreaterThan(0);
     expect(bodyOf(JEONSE_RISK_DIGEST, 8)).toContain(num(scan.checked));
     expect(bodyOf(JEONSE_RISK_DIGEST, 8)).toContain(num(scan.converse));
+  });
+
+  it("선순위 차단 발견(index 5)의 본문은 chunkText로 ≤200자 문단들로 쪼개진다", () => {
+    const body = JEONSE_RISK_DIGEST[5].body;
+    expect(body.length).toBe(591);
+    const paragraphs = chunkText(body, 200);
+    expect(paragraphs.length).toBeGreaterThan(1);
+    for (const paragraph of paragraphs) {
+      expect(paragraph.length).toBeLessThanOrEqual(250);
+    }
+    const collapsedBefore = body.replace(/\s+/g, "");
+    const collapsedAfter = paragraphs.join(" ").replace(/\s+/g, "");
+    expect(collapsedAfter).toBe(collapsedBefore);
   });
 });
 

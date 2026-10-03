@@ -69,7 +69,7 @@ function setPreset(price: number) {
           :value="(form.officialPrice ?? 0) || ''"
           @input="setAmount('officialPrice', ($event.target as HTMLInputElement).value)"
         />
-        <p class="text-[11px] leading-relaxed text-muted-foreground">
+        <p class="text-caption leading-relaxed text-muted-foreground">
           입력하면 시가 기반 현실화율 추정 대신 이 금액을 우선 사용합니다.
         </p>
       </div>
