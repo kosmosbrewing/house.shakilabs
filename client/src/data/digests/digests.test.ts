@@ -1067,6 +1067,35 @@ describe("/jeonse-risk — 낙찰가율 밴드", () => {
     expect(bodyOf(JEONSE_RISK_DIGEST, 8)).toContain(num(scan.checked));
     expect(bodyOf(JEONSE_RISK_DIGEST, 8)).toContain(num(scan.converse));
   });
+
+  // BRIEF-V8 house 결함: 이 발견(index 5)의 본문이 591자 한 문단이었다. SeoRichGuide.vue는
+  // "\n\n"을 문단 구분자로만 해석해 쪼개 렌더링하므로, 여기서는 그 "\n\n" 분할이
+  // 실제로 모든 문단을 ≤200자로 만드는지 캡을 건다. 역방향: body의 "\n\n"을 다시 공백으로
+  // 합쳐(=분할을 되돌리면) 591자 한 문단이 되어 이 캡을 넘는다 — 분할을 되돌리면 이
+  // 테스트가 red가 나야 한다는 뜻이다(아래 두 번째 expect로 직접 확인).
+  it("선순위 차단 발견(index 5)의 본문은 591자 한 문단이 아니라 ≤200자 문단들로 쪼개져 있다", () => {
+    const body = JEONSE_RISK_DIGEST[5].body;
+    const paragraphs = body
+      .split(/\n\n+/)
+      .map((p) => p.trim())
+      .filter(Boolean);
+
+    // 문장·숫자는 하나도 지우지 않았다 — 문단으로 나누기 전후 글자 수(공백 제외)가 같다.
+    const flattened = paragraphs.join(" ");
+    const collapsedBefore = body.replace(/\s+/g, "");
+    const collapsedAfter = flattened.replace(/\s+/g, "");
+    expect(collapsedAfter).toBe(collapsedBefore);
+
+    expect(paragraphs.length).toBeGreaterThan(1);
+    for (const paragraph of paragraphs) {
+      expect(paragraph.length).toBeLessThanOrEqual(200);
+    }
+
+    // 역방향 검증: "\n\n" 구분자를 걷어내 분할 전의 한 문단으로 되돌리면 591자가 되어
+    // 200자 캡을 넘는다 — 실제로 넘는지 확인해 이 테스트가 눈먼 통과가 아님을 보장한다.
+    expect(flattened.length).toBe(591);
+    expect(flattened.length).toBeGreaterThan(200);
+  });
 });
 
 // h2는 검색 결과에 본문 없이 단독으로 노출된다(부동산은 YMYL). 본문과 같은 기준으로 검사한다.

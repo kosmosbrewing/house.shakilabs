@@ -32,6 +32,9 @@ const statIconClasses = [
 
 <template>
   <div class="space-y-4">
+    <!-- v8 결함: 위 결과 카드(leader-value)와 같은 "의뢰인 1인 최대"를 26px 히어로로
+         한 번 더 보여줬다(BRIEF-V8 house). hero-index를 빼면 네 항목이 같은 크기 표로만
+         남아 중복 노출이 사라진다 — 숫자 자체는 그대로다. -->
     <HouseStatGrid
       :items="[
         { label: '환산 거래금액', value: formatWon(result.dealAmount), cls: '' },
@@ -41,7 +44,6 @@ const statIconClasses = [
       ]"
       :icons="statIcons"
       :icon-classes="statIconClasses"
-      :hero-index="2"
     />
 
     <Card class="border-border/50 bg-muted/30">

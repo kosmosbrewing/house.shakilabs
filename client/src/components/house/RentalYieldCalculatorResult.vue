@@ -49,7 +49,10 @@ const statIconClasses = [
 
 <template>
   <div class="space-y-4">
-    <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" :hero-index="0" />
+    <!-- v8 결함: 위 결과 카드(leader-value)와 같은 "순수익률"을 26px 히어로로
+         한 번 더 보여줬다(BRIEF-V8 house). hero-index를 빼면 네 항목이 같은 크기 표로만
+         남아 중복 노출이 사라진다 — 숫자 자체는 그대로다. -->
+    <HouseStatGrid :items="statItems" :icons="statIcons" :icon-classes="statIconClasses" />
 
     <RentalYieldCharts :result="result" />
 

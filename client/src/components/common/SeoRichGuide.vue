@@ -37,6 +37,14 @@ defineProps<{
   sources?: GuideSource[];
   disclaimer?: string;
 }>();
+
+// v8 결함(250자 초과 문단): body는 여전히 문자열 하나다(다이제스트 테스트의
+// bodyOf(...).toContain() 부분 문자열 검사가 배열로 바뀌면 깨진다). 대신 작성자가
+// "\n\n"으로 명시한 자리만 별도 <p>로 쪼갠다 — "\n\n"이 없는 기존 섹션은 전부
+// 지금처럼 단일 문단으로 그대로 렌더링된다(화면 변화 없음).
+function splitParagraphs(body: string): string[] {
+  return body.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+}
 </script>
 
 <template>
@@ -54,7 +62,11 @@ defineProps<{
           class="space-y-2"
         >
           <h3 class="text-body font-semibold text-foreground">{{ s.h2 }}</h3>
-          <p class="max-w-[65ch] text-caption leading-relaxed text-muted-foreground">{{ s.body }}</p>
+          <p
+            v-for="(para, pi) in splitParagraphs(s.body)"
+            :key="`sec-${i}-p-${pi}`"
+            class="max-w-[65ch] text-caption leading-relaxed text-muted-foreground"
+          >{{ para }}</p>
         </article>
       </div>
 
