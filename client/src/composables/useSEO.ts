@@ -4,13 +4,24 @@ import { useRoute } from "vue-router";
 import { getSiteUrl } from "@/lib/site";
 
 const CATEGORY = "주거 계산기";
-const TITLE_SUFFIX = ` | ${CATEGORY} | ShakiLabs`;
+const BRAND = "ShakiLabs";
+
+// 네이버 CTR 측정(2026-10): 검색 결과 제목이 ~35자에서 잘린다. 기존 레시피
+// `<페이지 제목> | 주거 계산기 | ShakiLabs`는 가운데 앱 이름 세그먼트가 20자 가까이
+// 차지해 핵심 구절과 브랜드가 동시에 잘려 나갔다("…택배비 비…"). 계산기·도구
+// 페이지는 그 세그먼트를 없애 `<페이지 제목> | ShakiLabs`로 단순화한다.
+// 소개·약관·개인정보·404처럼 검색 유입이 목적이 아닌 페이지는 35자 절단이
+// 문제되지 않으므로 앱 이름을 남긴다 — 그렇지 않으면 "이용약관 | ShakiLabs"가
+// 앱 12개에서 전부 똑같아져 도메인 안에서 제목이 중복된다.
+const CALCULATOR_SUFFIX = ` | ${BRAND}`;
+const POLICY_SUFFIX = ` · ${CATEGORY} | ${BRAND}`;
 const LEGACY_TITLE_SUFFIXES = [
+  ` | ${CATEGORY} | ${BRAND}`, // 이전 레시피(가운데 앱 이름 포함) — 가장 먼저 걸러야 일부만 벗겨지지 않는다
+  POLICY_SUFFIX,
   " | 오픈마켓 수수료 비교 계산기",
   " | 오픈마켓 수수료 계산기",
   " | 주거 계산기",
-  " | ShakiLabs",
-  TITLE_SUFFIX,
+  CALCULATOR_SUFFIX,
 ] as const;
 
 type SEOOptions = {
@@ -30,30 +41,37 @@ type SEOOptions = {
    * route becomes self-canonical again.
    */
   canonicalPath?: MaybeRefOrGetter<string | undefined>;
+  /**
+   * 소개·이용약관·개인정보처리방침·404처럼 검색 유입이 목적이 아닌 페이지용.
+   * true면 `<페이지 제목> · 주거 계산기 | ShakiLabs`로 앱 이름을 남긴다.
+   * 계산기·도구·가이드 페이지는 기본값(false)을 쓴다.
+   */
+  policyPage?: MaybeRefOrGetter<boolean | undefined>;
 };
 
-function normalizeTitle(rawTitle: string): string {
+function stripKnownSuffix(rawTitle: string): string {
   const trimmed = rawTitle.trim();
-  let baseTitle = trimmed;
-
   for (const suffix of LEGACY_TITLE_SUFFIXES) {
-    if (baseTitle.endsWith(suffix)) {
-      baseTitle = baseTitle.slice(0, -suffix.length).trimEnd();
-      break;
+    if (trimmed.endsWith(suffix)) {
+      return trimmed.slice(0, -suffix.length).trimEnd();
     }
   }
+  return trimmed;
+}
 
-  if (!baseTitle) {
-    return `주거 계산기${TITLE_SUFFIX}`;
+function normalizeTitle(rawTitle: string, isPolicyPage: boolean): string {
+  const baseTitle = stripKnownSuffix(rawTitle) || CATEGORY;
+
+  if (isPolicyPage) {
+    // 페이지 제목이 이미 카테고리 자체면("주거 계산기") 또 붙이지 않는다 —
+    // 홈이 "주거 계산기 · 주거 계산기 | ShakiLabs"로 중복되던 문제의 재발 방지.
+    if (baseTitle === CATEGORY) {
+      return `${CATEGORY}${CALCULATOR_SUFFIX}`;
+    }
+    return `${baseTitle}${POLICY_SUFFIX}`;
   }
 
-  // 페이지 이름이 이미 카테고리로 시작하면 배지를 또 붙이지 않는다.
-  // 홈이 "주거 계산기 | 주거 계산기 | ShakiLabs"로 중복 렌더되던 문제(라이브 실측).
-  if (baseTitle === CATEGORY || baseTitle.startsWith(`${CATEGORY} `)) {
-    return `${baseTitle} | ShakiLabs`;
-  }
-
-  return `${baseTitle}${TITLE_SUFFIX}`;
+  return `${baseTitle}${CALCULATOR_SUFFIX}`;
 }
 
 export function useSEO({
@@ -63,11 +81,12 @@ export function useSEO({
   noindex = false,
   jsonLd,
   canonicalPath,
+  policyPage = false,
 }: SEOOptions): void {
   const route = useRoute();
 
   useHead(() => {
-    const resolvedTitle = normalizeTitle(toValue(title));
+    const resolvedTitle = normalizeTitle(toValue(title), Boolean(toValue(policyPage)));
     const resolvedDescription = toValue(description);
     const resolvedNoindex = Boolean(toValue(noindex));
     const resolvedOgImage = toValue(ogImage);
