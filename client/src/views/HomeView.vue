@@ -123,7 +123,7 @@ const faqJsonLd = {
   <div class="sh-container sh-container--page py-5 space-y-5">
     <ShSurface padding="none" class="overflow-hidden">
       <div class="retro-titlebar rounded-t-2xl">
-        <ShText as="h1" variant="heading">주거 계산기 홈</ShText>
+        <ShText as="h1" variant="display">주거 계산기 홈</ShText>
       </div>
       <div class="retro-panel-content space-y-4">
         <p class="text-body leading-relaxed text-muted-foreground">
