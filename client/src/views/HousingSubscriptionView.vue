@@ -39,7 +39,7 @@ const faqJsonLd = {
 </script>
 
 <template>
-  <SEOHead
+  <SEOHead noindex
     title="청약 가점 계산기"
     description="무주택기간, 부양가족수, 청약통장 가입기간을 합산해 민영주택 청약 가점을 빠르게 계산합니다."
     :json-ld="faqJsonLd"

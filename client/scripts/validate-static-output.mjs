@@ -1,4 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
+import { validateNoindex } from "./validate-noindex.mjs";
+import { NOINDEX_ROUTES as NOINDEX_ROUTES_FOR_GATE } from "./seo-routes.mjs";
 import { validateBuiltFontSizes } from "./validate-built-font-sizes.mjs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -56,8 +58,11 @@ function validateRoute(route) {
     `og:url must match canonical for ${route}: expected ${expectedCanonical}`);
   // noindex would fight the canonical signal — consolidated variants stay
   // indexable and simply defer to their base page.
-  assert(!/name="robots" content="noindex/.test(html),
-    `Consolidated routes must not be noindex: ${route}`);
+  // 색인 소거(2026-10-16): NOINDEX_ROUTES의 base는 noindex를 단다(변형은 Googlebot robots 차단이라 신호 충돌 없음)
+  if (!NOINDEX_ROUTES_FOR_GATE.includes(route)) {
+    assert(!/name="robots" content="noindex/.test(html),
+      `Consolidated routes must not be noindex: ${route}`);
+  }
   assert(/<title>[^<]+<\/title>/.test(html), `Missing title for ${route}`);
   assert(html.includes('id="app"'), `Missing app root for ${route}`);
 
@@ -136,3 +141,7 @@ console.log(
 // v8c(2026-10-04): 배포되는 CSS·HTML의 글자 크기를 직접 잰다 — 13px 미만은 차트 축 눈금(__scale)·차트 전용 text-[12px]만.
 const builtFontDeclarations = validateBuiltFontSizes({ distRoot: distRoot });
 console.log(`Validated built font sizes — ${builtFontDeclarations} declarations, 0 under 13px outside the chart-axis allowance.`);
+
+// 색인 소거 게이트(2026-10-16): 사이트맵 ⇔ noindex 없음, 사이트맵 밖 self-canonical ⇔ noindex, NOINDEX_ROUTES 전수 확인
+const noindexChecked = validateNoindex({ distRoot: distRoot, siteUrl: "https://shakilabs.com/house", noindexRoutes: NOINDEX_ROUTES_FOR_GATE });
+console.log(`Validated noindex/sitemap consistency across ${noindexChecked} built pages (${NOINDEX_ROUTES_FOR_GATE.length} noindex routes).`);

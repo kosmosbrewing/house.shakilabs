@@ -38,7 +38,7 @@ const faqJsonLd = {
 </script>
 
 <template>
-  <SEOHead
+  <SEOHead noindex
     title="생애최초 주택 혜택 계산기"
     description="취득세 감면과 디딤돌 대출 한도를 기준으로 생애최초 주택 구입 혜택을 빠르게 계산합니다."
     :json-ld="faqJsonLd"

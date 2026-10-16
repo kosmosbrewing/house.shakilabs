@@ -5,6 +5,7 @@
 // still returns 200 in production. It only disappears from the places crawlers
 // read. These gates compare the copies against the router on every build.
 import { readFileSync } from "node:fs";
+import { NOINDEX_ROUTES as NOINDEX_ROUTES_FOR_GATE } from "./seo-routes.mjs";
 import { resolve } from "node:path";
 import {
   SITEMAP_ROUTES,
@@ -69,6 +70,8 @@ function validateRouterRoutesAreListed(projectRoot, sitemapUrls) {
     // Parameterised and catch-all routes are not static URLs; redirects are
     // excluded by the rule below.
     if (route.redirect || route.path.includes(":")) continue;
+    // 색인 소거(2026-10-16): NOINDEX_ROUTES는 라우터에 있고 프리렌더되지만 사이트맵에 없다(validate-noindex.mjs가 noindex 확인)
+    if (NOINDEX_ROUTES_FOR_GATE.includes(route.path)) continue;
     assert(sitemapUrls.has(canonicalUrlFor(route.path)),
       `Router route is missing from the sitemap: ${canonicalUrlFor(route.path)}`);
   }

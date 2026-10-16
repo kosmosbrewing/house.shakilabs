@@ -52,8 +52,13 @@ export const SEO_ROUTES = [
 
 // The sitemap advertises only self-canonical pages; consolidated variants
 // canonicalize away and must not be handed to crawlers as entry points.
+
+// 색인 소거(2026-10-16, 사용자 승인): 62일 활성 사용자 8명 미만 + 네이버 TOP 30 밖인 계산기·가이드.
+// 도구는 그대로 쓰이고(내부 링크 유지) 사이트맵·색인에서만 뺀다. 네이버 클릭이 월 10+ 되면 다시 넣는다.
+// validate-noindex.mjs가 사이트맵 ⇔ noindex 없음 / 사이트맵 밖 self-canonical ⇔ noindex를 빌드마다 대조한다.
+export const NOINDEX_ROUTES = ["/brokerage-fee", "/capital-gains-tax", "/first-home", "/housing-subscription", "/jeonse-vs-wolse", "/rental-yield"];
 export const SITEMAP_ROUTES = SEO_ROUTES.filter(
-  (route) => !PARAM_ROUTES.includes(route)
+  (route) => !PARAM_ROUTES.includes(route) && !NOINDEX_ROUTES.includes(route),
 );
 
 // Sitemap priority per listed route. This used to live in build.mjs behind a
@@ -62,19 +67,14 @@ export const SITEMAP_ROUTES = SEO_ROUTES.filter(
 // full calculator shipped at 0.5 while every sibling sat at 0.8, and nothing
 // complained. Keeping the table next to SEO_ROUTES lets the build gate assert
 // that the two cover exactly the same routes, so the fallback can go away.
+// 색인 소거 라우트(NOINDEX_ROUTES)는 사이트맵에 없으므로 여기에도 없다 — 게이트가 양방향으로 대조한다.
 export const SITEMAP_PRIORITIES = {
   "/": "1.0",
   "/delay-interest": "0.8",
-  "/jeonse-vs-wolse": "0.8",
   "/jeonse-risk": "0.8",
   "/jeonse-wolse-rate": "0.8",
-  "/brokerage-fee": "0.8",
-  "/first-home": "0.8",
-  "/housing-subscription": "0.8",
   "/property-tax": "0.8",
-  "/capital-gains-tax": "0.9",
   "/acquisition-tax": "0.9",
-  "/rental-yield": "0.8",
   "/about": "0.4",
   "/terms": "0.3",
   "/privacy": "0.3",
