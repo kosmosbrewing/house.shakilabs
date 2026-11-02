@@ -6,10 +6,6 @@ import { ShSurface, ShText } from "@shakilabs/ui";
 import { ActionCard } from "@/components/ui/action-card";
 import RelatedServices from "@/components/common/RelatedServices.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
-import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
-import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
-import { HOUSE_HOME_GUIDE } from "@/data/seoGuides";
-import { mergeFaqs } from "@/lib/faqMerge";
 
 type ToolItem = {
   title: string;
@@ -80,55 +76,23 @@ const tools: ToolItem[] = [
     icon: Award,
   },
 ];
-
-const faqItems = [
-  {
-    q: "shakilabs.com/house에서는 어떤 계산을 할 수 있나요?",
-    a: "보증금 반환 지연이자, 재산세·보유세, 전월세 전환율부터 취득세, 양도소득세, 임대수익률까지 한 번에 확인할 수 있습니다.",
-  },
-  {
-    q: "보증금 반환 지연이자는 언제 사용하면 되나요?",
-    a: "임대인이 보증금을 제때 돌려주지 않아 예상 지연이자 규모를 먼저 가늠하고 싶을 때 참고용으로 사용할 수 있습니다.",
-  },
-  {
-    q: "전세와 월세 비교는 어떤 기준으로 계산하나요?",
-    a: "보증금의 기회비용과 월세 지출을 함께 반영해 손익분기 월세를 계산하는 방식입니다.",
-  },
-] as const;
-
-// 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
-const mergedFaqs = mergeFaqs(faqItems, HOUSE_HOME_GUIDE.faqs);
-
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: mergedFaqs.map((faq) => ({
-    "@type": "Question",
-    name: faq.q,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: faq.a,
-    },
-  })),
-};
 </script>
 
 <template>
   <SEOHead
     title="주거 계산기"
     description="보증금 반환 지연이자, 재산세·보유세, 전월세 전환율 등 주거·부동산 계산기 10개를 한곳에서 제공합니다."
-    :json-ld="faqJsonLd"
   />
 
   <div class="sh-container sh-container--page py-5 space-y-5">
     <ShSurface padding="none" class="overflow-hidden">
       <div class="retro-titlebar rounded-t-2xl">
-        <ShText as="h1" variant="display">주거 계산기 홈</ShText>
+        <ShText as="h1" variant="display">주거 계산기</ShText>
       </div>
       <div class="retro-panel-content space-y-4">
+        <!-- 허브 도입은 한 문장. 허브 FAQ 8문항·"종합 가이드" 5절은 2026-11 UI 감사에서 뺐다(GA4 28일 허브 조회 2). -->
         <p class="text-body leading-relaxed text-muted-foreground">
-          주거 의사결정에서 자주 필요한 주요 계산을 한 번에 제공합니다. 각 계산기는 기본값이 바로 들어 있어
-          모바일에서도 즉시 결과를 볼 수 있습니다.
+          보증금 지연이자·전월세 전환율·취득세·양도세 등 주거 계산기 10개. 기본값이 들어 있어 바로 결과가 보입니다.
         </p>
         <div class="grid gap-3 md:grid-cols-3">
           <ActionCard
@@ -155,15 +119,6 @@ const faqJsonLd = {
         </div>
       </div>
     </ShSurface>
-
-    <FaqAccordionPanel :items="mergedFaqs" />
-
-    <SeoRichGuide
-      :title="HOUSE_HOME_GUIDE.title"
-      :intro="HOUSE_HOME_GUIDE.intro"
-      :sections="HOUSE_HOME_GUIDE.sections"
-      :disclaimer="HOUSE_HOME_GUIDE.disclaimer"
-    />
 
     <RelatedServices />
   </div>
